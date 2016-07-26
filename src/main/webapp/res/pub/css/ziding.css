@@ -1,0 +1,31 @@
+.zd-top-title{  margin-top:14px; font-size:20px;width:300px;}
+.middle-box h1{ font-size:150px;}
+.form-control{ height:25px; padding:0}
+.zd-btn-pd1{ padding-left:2em; padding-right:2em;}
+.wrapper-content{ padding:0px;}
+.zd-er-t1{background-color:#FFF; border:1px solid #ccc; border-radius:1em; overflow:hidden; padding:5px; margin:20px;}
+.zd-er-t2{background-color:#F2F2F2; border-bottom:1px solid #F2F2F2; font-size:30px; color:#F33; border-radius:0.3em 0.3em 0 0 ; padding-left:5px; padding-right:5px;}
+.zd-er-t3{ font-size:14px;}
+.single-line{ padding:0px 12px;}
+.ziding-ibox{ padding: 15px 20px 2px 0px}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{ line-height:1; }
+.pagination{ margin:0}
+.ziding-font-center{ text-align:center}
+.float-e-margins .btn{ margin-bottom:0px;}
+.btn-xs{ line-height:1}
+.ibox-content{ padding:15px 10px 10px; border:0}
+.ziding-ibox-modal{ margin:5px; float:left;border:0; width:100%}
+.ziding-ibox-modal label{ margin-top:5px;}
+.ziding-td table td{word-break: keep-all;white-space:nowrap;}
+.ziding-td>table>thead>tr>th{word-break: keep-all;white-space:nowrap;}
+.footer{ height:26px; border-top:0; line-height:26px; padding:0 10px 0 10px}
+#content-main{ height:calc(100% - 70px)}
+.form-horizontal .control-label{padding-top:3px;}
+.select_org select { width:150px; float:left; margin-left:15px}
+.model_left_z{ margin-top:3px; text-align:right}
+.model_alert_1 select{ margin-left:0px;}
+.zd-cl{position:absolute; width:15px; height:15px;right:0; top:0; border-radius:0 0 0 3px;background-color:#ccc; color:#fff; text-align:center; cursor:pointer}
+.content-tabs .roll-left{left:40px}
+nav.page-tabs{ margin-left:80px;}
+.nav-header{ padding:15px 25px;}
+.table-hover>tbody>tr:hover{background-color:#d9ffcc}

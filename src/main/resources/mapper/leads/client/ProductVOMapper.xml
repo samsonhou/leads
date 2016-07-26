@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezh.dao.leads.client.ProductDao">
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.ProductVO">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ABNAME" jdbcType="VARCHAR" property="abname" />
+    <result column="PNAME" jdbcType="VARCHAR" property="pname" />
+    <result column="PDESCRIBE" jdbcType="VARCHAR" property="pdescribe" />
+    <result column="PDETAIL" jdbcType="VARCHAR" property="pdetail" />
+    <result column="PID" jdbcType="DECIMAL" property="pid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, ABNAME, PNAME, PDESCRIBE, PDETAIL, PID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from LM_PRODUCT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from LM_PRODUCT
+    where ID in(select id from lm_product t start with t.id = #{id,jdbcType=DECIMAL} connect by prior t.id = t.pid)
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.ProductVO">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select S_LM_PRODUCT_ID.Nextval as id from dual 
+    </selectKey>
+    insert into LM_PRODUCT (ID,ABNAME, PNAME, PDESCRIBE, 
+      PDETAIL, PID)
+    values (#{id,jdbcType=DECIMAL},#{abname,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, #{pdescribe,jdbcType=VARCHAR}, 
+      #{pdetail,jdbcType=VARCHAR}, #{pid,jdbcType=DECIMAL})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.ProductVO">
+    update LM_PRODUCT
+    <set >
+      <if test="abname != null" >
+        ABNAME = #{abname,jdbcType=VARCHAR},
+      </if>
+      <if test="pname != null" >
+        PNAME = #{pname,jdbcType=VARCHAR},
+      </if>
+
+        PDETAIL = #{pdetail,jdbcType=VARCHAR},
+
+        PDESCRIBE = #{pdescribe,jdbcType=VARCHAR},
+
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="queryProducts"  resultType="map" >
+	 SELECT ID,ABNAME NAME,PID FROM lm_product
+	 order by ID
+   
+  </select>
+  
+  <select id="queryRootProducts"  resultType="map">
+	 SELECT ID,ABNAME NAME,PID FROM lm_product where pid='0'
+	 order by ID
+  </select>
+
+  <!-- add by cj 根据PID获取产品所有子项-->
+  <select id="queryChildProductsByPid" resultType="map" parameterType="java.lang.Long">
+	 SELECT ID,ABNAME NAME,PID FROM lm_product where pid=#{pid,jdbcType=DECIMAL}
+	 order by ID
+  </select>
+</mapper>

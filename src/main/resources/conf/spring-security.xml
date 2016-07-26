@@ -1,0 +1,54 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+	<!-- 过滤掉的资源 -->
+	<http pattern="/**/exchange/**"   security="none" />
+	<http pattern="/res/pub/**" security="none" />
+	<http pattern="/**/*.js*"   security="none" />
+	<http pattern="/**/*.css*"  security="none" />
+	<http pattern="/**/*.html*" security="none" />
+	<http pattern="/index.jsp"  security="none" />
+	<http pattern="/index.do"   security="none" />
+	<!-- 受控的资源 -->
+	<http>
+	
+		<intercept-url pattern="/**" access="ROLE_USER"  />
+		<form-login  login-page='/index.do' always-use-default-target="true" default-target-url="/login.do" authentication-failure-url="/index.do?error"/>
+		<custom-filter ref="customLogoutFilter" position="LOGOUT_FILTER" />
+
+		<!-- <logout delete-cookies="JSESSIONID" invalidate-session="true" logout-success-url="/index.jsp" /> -->
+
+		<session-management invalid-session-url="/index.do" session-fixation-protection="newSession">
+			<concurrency-control session-registry-ref="sessionRegistry" max-sessions="100" error-if-maximum-exceeded="true" />
+		</session-management>
+
+	</http>
+
+	<!-- 权限验证 -->
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref='authorService'>
+			<password-encoder ref="md5PasswordEncode" />
+		</authentication-provider>
+	</authentication-manager>
+
+	<!-- <debug /> -->
+
+	<beans:bean id="customLogoutFilter" class="com.jiezh.content.base.logout.CustomLogout">
+		<beans:property name="filterProcessesUrl" value="/j_spring_security_logout" />
+		<beans:constructor-arg index="0" value="/index.jsp" />
+		<beans:constructor-arg index="1">
+			<beans:array>
+				<beans:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+				<beans:bean id="customLogoutSuccessHandler"   class="com.jiezh.content.base.logout.CustomLogoutHandler" />
+			</beans:array>
+		</beans:constructor-arg>
+	</beans:bean>
+
+
+</beans:beans>

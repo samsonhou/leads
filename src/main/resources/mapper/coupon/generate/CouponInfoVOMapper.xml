@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.coupon.generate.CouponInfoVODao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.coupon.generate.CouponInfoVO">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="COUPON_TYPE_ID" property="couponTypeId"
+			jdbcType="DECIMAL" />
+		<result column="PARTNER_ID" property="partnerId" jdbcType="DECIMAL" />
+		<result column="COUPON_CODE" property="couponCode" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="DECIMAL" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="CREATED_USER_ID" property="createdUserId"
+			jdbcType="DECIMAL" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATED_USER_ID" property="updatedUserId"
+			jdbcType="DECIMAL" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, COUPON_TYPE_ID couponTypeId, PARTNER_ID partnerId,
+		COUPON_CODE
+		couponCode, VALUE, START_DATE startDate, END_DATE endDate,
+		STATUS,
+		CREATED_TIME cretedTime, CREATED_USER_ID createdUserId,
+		UPDATED_TIME
+		updatedTime, UPDATED_USER_ID updatedUserId, REMARK
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from T_COUPON_INFO
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_COUPON_INFO
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.jiezh.dao.coupon.generate.CouponInfoVO">
+
+		insert into T_COUPON_INFO (ID,
+		COUPON_TYPE_ID, PARTNER_ID,
+		COUPON_CODE, VALUE, START_DATE,
+		END_DATE,
+		STATUS,UPDATED_TIME,
+		CREATED_USER_ID,
+		REMARK)
+		select
+		S_COUPON_INFO.nextval, #{couponTypeId,jdbcType=DECIMAL},
+		#{partnerId,jdbcType=DECIMAL},
+		dbms_random.string('X',8),
+		#{value,jdbcType=DECIMAL}, #{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{status,jdbcType=VARCHAR},#{updatedTime,jdbcType=TIMESTAMP},
+		#{createdUserId,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR}
+		from dual
+	</insert>
+	<insert id="insertSelective" parameterType="com.jiezh.dao.coupon.generate.CouponInfoVO">
+		insert into T_COUPON_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="couponName != null">
+				COUPON_TYPE_ID,
+			</if>
+			<if test="partnerId != null">
+				PARTNER_ID,
+			</if>
+			<if test="couponCode != null">
+				COUPON_CODE,
+			</if>
+			<if test="value != null">
+				VALUE,
+			</if>
+			<if test="startDate != null">
+				START_DATE,
+			</if>
+			<if test="endDate != null">
+				END_DATE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME,
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID,
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME,
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="couponName != null">
+				#{couponTypeId,jdbcType=DECIMAL},
+			</if>
+			<if test="partnerId != null">
+				#{partnerId,jdbcType=DECIMAL},
+			</if>
+			<if test="couponCode != null">
+				#{couponCode,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=DECIMAL},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				#{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				#{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				#{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.coupon.generate.CouponInfoVO">
+		update T_COUPON_INFO
+		<set>
+			<if test="couponName != null">
+				COUPON_TYPE_ID = #{couponTypeId,jdbcType=DECIMAL},
+			</if>
+			<if test="partnerId != null">
+				PARTNER_ID = #{partnerId,jdbcType=DECIMAL},
+			</if>
+			<if test="couponCode != null">
+				COUPON_CODE = #{couponCode,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				VALUE = #{value,jdbcType=DECIMAL},
+			</if>
+			<if test="startDate != null">
+				START_DATE = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				END_DATE = #{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.coupon.generate.CouponInfoVO">
+		update
+		T_COUPON_INFO
+		set COUPON_TYPE_ID = #{couponTypeId,jdbcType=DECIMAL},
+		PARTNER_ID = #{partnerId,jdbcType=DECIMAL},
+		COUPON_CODE =
+		#{couponCode,jdbcType=VARCHAR},
+		VALUE = #{value,jdbcType=DECIMAL},
+		START_DATE = #{startDate,jdbcType=TIMESTAMP},
+		END_DATE =
+		#{endDate,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=VARCHAR},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		CREATED_USER_ID =
+		#{createdUserId,jdbcType=DECIMAL},
+		UPDATED_TIME =
+		#{updatedTime,jdbcType=TIMESTAMP},
+		UPDATED_USER_ID =
+		#{updatedUserId,jdbcType=DECIMAL},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="selectCouponInfoByVO" parameterType="com.jiezh.dao.coupon.generate.CouponInfoVO"
+		resultType="com.jiezh.dao.coupon.generate.CouponInfoVO">
+		select c.partner_name partnerName,
+		b.coupon_name couponName,
+		a.value,
+		a.status,
+		c.partner_code partnerCode,
+		count(1) count
+		from t_coupon_info
+		a, t_coupon_type b, t_coupon_partner c
+		where a.coupon_type_id = b.id
+		and a.partner_id = c.id
+		and b.partner_id = c.id
+		<if test="partnerId != null">
+			and a.partner_id = #{partnerId,jdbcType=DECIMAL}
+		</if>
+		<if test="couponTypeId != null">
+			and a.coupon_type_id = #{couponTypeId,jdbcType=DECIMAL}
+		</if>
+		<if test="status != null">
+			and a.status = #{status,jdbcType=DECIMAL}
+		</if>
+		group by c.partner_name, b.coupon_name, a.value,
+		a.status,c.partner_code
+
+	</select>
+
+	<update id="updateByImport" parameterType="com.jiezh.dao.coupon.client.CouponClientVO">
+		update t_coupon_info t
+		set t.is_match = '1'
+		where t.is_match = '0'
+		and t.value =
+		#{value,jdbcType=DECIMAL}
+		and t.id in (select a.coupon_id
+		from
+		t_coupon_client a
+		where a.client_name = #{clientName,jdbcType=VARCHAR}
+		and a.client_tel = #{clientTel,jdbcType=VARCHAR}
+		and a.partner_code
+		=#{partnerCode,jdbcType=VARCHAR}
+		)
+	</update>
+
+	<update id="updateByCouponCode" parameterType="map">
+		update
+		t_coupon_info t set t.status='3',t.updated_time =
+		sysdate,t.updated_user_id=#{userId,jdbcType=DECIMAL} where
+		t.coupon_code=#{couponCode,jdbcType=VARCHAR}
+		and t.status='2'
+	</update>
+
+	<select id="selectByCheck" parameterType="com.jiezh.dao.coupon.client.CouponClientVO"
+		resultType="map">
+		select case
+		when count(1) >= #{count, jdbcType = DECIMAL}
+		then
+		'success'
+		when count(1) > 0 then
+		'库存数量不足'
+		else
+		'不存在可用赠券'
+		end msg
+		from
+		t_coupon_info a, t_coupon_partner b, t_coupon_type c
+		where a.partner_id
+		= b.id
+		and a.coupon_type_id = c.id
+		and b.id = c.partner_id
+		and a.is_match
+		!= '1'
+		and b.partner_code = #{partnerCode,
+		jdbcType = VARCHAR}
+		and
+		c.coupon_name = #{couponName, jdbcType = VARCHAR}
+		and a.value =
+		#{value, jdbcType = DECIMAL}
+	</select>
+
+
+
+</mapper>

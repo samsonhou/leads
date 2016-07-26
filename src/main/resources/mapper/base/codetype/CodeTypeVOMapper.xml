@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.codetype.BaseCodeTypeDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.codetype.CodeTypeVO" >
+    <id column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR"    />
+    <result column="SQL" property="txtSql" jdbcType="VARCHAR"  />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CODE_TYPE, NAME, CREATE_DATE, STATUS,TYPE,SQL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_CODE_TYPE
+    where CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_CODE_TYPE
+    where CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.codetype.CodeTypeVO" >
+    insert into T_CODE_TYPE (CODE_TYPE, NAME,STATUS,TYPE,SQL)
+    values (
+    (Select max(to_number(code_type))+1 as codeType from t_code_type ) , 
+    #{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{txtSql,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.codetype.CodeTypeVO" >
+  <selectKey resultType="java.lang.Long" keyProperty="codeType" order="BEFORE" >
+      select S_CODE_TYPE_ID.Nextval as groupId from dual 
+  </selectKey>
+    insert into T_CODE_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="codeType != null" >
+        CODE_TYPE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="txtSql != null" >
+        SQL,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="codeType != null" >
+        #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="txtSql != null" >
+        #{txtSql,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.codetype.CodeTypeVO" >
+    update T_CODE_TYPE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_CODE_TYPE
+  </select>
+  <select id="selectByCodeType" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.codetype.CodeTypeVO" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_CODE_TYPE 
+   <where>  
+    <if test="codeType != null and '' != codeType">  
+        AND  CODE_TYPE = #{codeType}
+    </if>
+    <if test="name != null and '' != name">  
+        AND  NAME = #{name}
+    </if>
+    <if test="type != null and '' != type">  
+        AND  TYPE = #{type}
+    </if>
+  <if test="status != null and '' != status">   
+       AND  STATUS = #{status}
+  </if>
+  </where>
+   order by CODE_TYPE
+  </select>
+  
+  <select id="findByMax" resultMap="BaseResultMap" >
+    Select max(to_number(t.code_type)) as codeType from t_code_type t
+  </select>
+</mapper>

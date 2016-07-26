@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezh.dao.weixin.agent.AgentDao">
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.weixin.agent.AgentVO">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="WX_USER_ID" jdbcType="DECIMAL" property="wxUserId" />
+    <result column="AGENT_ID" jdbcType="VARCHAR" property="agentId" />
+    <result column="AGENT_NAME" jdbcType="VARCHAR" property="agentName" />
+    <result column="USER_CODE" jdbcType="VARCHAR" property="userCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, WX_USER_ID, AGENT_ID, AGENT_NAME, USER_CODE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_WEIXIN_USER_AGENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from T_WEIXIN_USER_AGENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.weixin.agent.AgentVO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select S_USER_AGENT_ID.Nextval as id from dual 
+    </selectKey>
+    insert into T_WEIXIN_USER_AGENT (WX_USER_ID, AGENT_ID, AGENT_NAME, 
+      USER_CODE)
+    values (#{wxUserId,jdbcType=DECIMAL}, #{agentId,jdbcType=VARCHAR}, #{agentName,jdbcType=VARCHAR}, 
+      #{userCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.weixin.agent.AgentVO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select S_USER_AGENT_ID.Nextval as id from dual 
+    </selectKey>
+    insert into T_WEIXIN_USER_AGENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wxUserId != null">
+        WX_USER_ID,
+      </if>
+      <if test="agentId != null">
+        AGENT_ID,
+      </if>
+      <if test="agentName != null">
+        AGENT_NAME,
+      </if>
+      <if test="userCode != null">
+        USER_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wxUserId != null">
+        #{wxUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null">
+        #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.weixin.agent.AgentVO">
+    update T_WEIXIN_USER_AGENT
+    <set>
+      <if test="wxUserId != null">
+        WX_USER_ID = #{wxUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="agentId != null">
+        AGENT_ID = #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null">
+        AGENT_NAME = #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.weixin.agent.AgentVO">
+    update T_WEIXIN_USER_AGENT
+    set WX_USER_ID = #{wxUserId,jdbcType=DECIMAL},
+      AGENT_ID = #{agentId,jdbcType=VARCHAR},
+      AGENT_NAME = #{agentName,jdbcType=VARCHAR},
+      USER_CODE = #{userCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getWxAgents" parameterType="int" resultType="map">
+		select id               APPS_ID,
+			   app_id           AGENT_ID,
+		       app_name         AGENT_NAME,
+		       token            TOKEN,
+		       encoding_aes_key ENCODING_AES_KEY,
+		       call_back_url    CALL_BACK_URL,
+		       secret           SECRET
+		  from t_weixin_apps
+		 where main_id = #{mainId}
+		 order by app_id
+	</select>
+  
+</mapper>

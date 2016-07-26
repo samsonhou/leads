@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.client.ClientTraceDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.ClientTraceVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="T_ID" property="tId" jdbcType="DECIMAL" />
+    <result column="REDATE" property="redate" jdbcType="TIMESTAMP" />
+    <result column="U_ID" property="uId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TITLE, T_ID, REDATE,U_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LM_CLIENTRACE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LM_CLIENTRACE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.ClientTraceVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      select S_LM_CLIENTTRACE_ID.Nextval as id from dual 
+    </selectKey>
+    insert into LM_CLIENTRACE (ID,TITLE, T_ID, REDATE,U_ID,RANK,REASON,SID,IDD,IFK,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,DD_TIME
+      )
+    values (#{id,jdbcType=DECIMAL},#{title,jdbcType=VARCHAR}, #{tId,jdbcType=DECIMAL}, #{redate,jdbcType=TIMESTAMP}, #{uId,jdbcType=VARCHAR}, #{rank,jdbcType=VARCHAR}
+    		, #{reason,jdbcType=VARCHAR}, #{sid,jdbcType=DECIMAL},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR}, #{will,jdbcType=VARCHAR}, #{isSubMaterial,jdbcType=VARCHAR}
+    		, #{isGetCar,jdbcType=VARCHAR}, #{getCarDate,jdbcType=TIMESTAMP}, #{carno,jdbcType=VARCHAR}, #{firstTimeComing,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.ClientTraceVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      select S_LM_CLIENTTRACE_ID.Nextval as id from dual 
+    </selectKey>
+    insert into LM_CLIENTRACE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="tId != null" >
+        T_ID,
+      </if>
+      <if test="redate != null" >
+        REDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="tId != null" >
+        #{tId,jdbcType=DECIMAL},
+      </if>
+      <if test="redate != null" >
+        #{redate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.client.ClientTraceVO" >
+    update LM_CLIENTRACE
+    <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="tId != null" >
+        T_ID = #{tId,jdbcType=DECIMAL},
+      </if>
+      <if test="redate != null" >
+        REDATE = #{redate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.ClientTraceVO" >
+    update LM_CLIENTRACE
+    set TITLE = #{title,jdbcType=VARCHAR},
+      T_ID = #{tId,jdbcType=DECIMAL},
+      REDATE = #{redate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

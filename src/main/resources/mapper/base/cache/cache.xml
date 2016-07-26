@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.cache.CacheDao">
+	<!-- 缓存 60s 60*60*1000=1小时 20=72000000 -->
+	<!-- <cache eviction="FIFO" flushInterval="60000" size="1024000" readOnly="true" 
+		/> -->
+	<select id="getUserByKey" resultType="com.jiezh.dao.base.user.UserVO"
+		parameterType="java.lang.Long">
+		select USER_ID userId,
+		USER_CODE userCode,
+		USER_NAME
+		userName,
+		REAL_NAME realName,
+		JZ_CODE jzCode,
+		ORGAN_ID organId,
+		PASSWORD,
+		STATUS,
+		CREATE_DATE createDate,
+		ORGAN_CODE organCode,
+		ROLE,
+		(select
+		dbms_random.string('a',72 ) from dual) uuid
+		from T_USER
+		where USER_ID =
+		#{userId, jdbcType = DECIMAL}
+	</select>
+
+	<select id="getUserByUserName" resultType="com.jiezh.content.base.pub.author.AuthorUser"
+		parameterType="java.lang.String">
+		select USER_ID userId,
+		USER_CODE userCode,
+		USER_NAME
+		userName,
+		REAL_NAME realName,
+		JZ_CODE jzCode,
+		ORGAN_ID organId,
+		PASSWORD,
+		STATUS enable,
+		T_USER.CREATE_DATE createDate,
+		T_USER.ORGAN_CODE
+		organCode,
+		ROLE,T_ORGAN.ORGAN_NAME organName
+		,(select
+		t_organ_company.name from t_organ_company where
+		t_organ_company.organ_id=T_USER.ORGAN_ID and
+		T_USER.Organ_Code=t_organ_company.ORGAN_CODE ) as organCompanyName
+		,STATUS,EMAIL,TEL,ISPASS,
+		(s_lm_login_id.nextval||dbms_random.string('a',72 )) uuid,
+		(select
+		t_user_lock.lock_status from t_user_lock where t_user_lock.user_id =
+		t_user.user_id and t_user_lock.lock_status = '1' and rownum =1) isLock,
+		(select t_organ_company.organ_level from t_organ_company where t_organ_company.organ_id=T_USER.ORGAN_ID) organLevel
+		from T_USER LEFT JOIN T_ORGAN on T_USER.Organ_Code=T_ORGAN.ORGAN_CODE
+		where USER_NAME = #{userName}
+	</select>
+
+	<select id="getModuleGroup" parameterType="java.lang.Long"
+		resultType="com.jiezh.content.base.login.model.GroupBean">
+		select a.user_id userId, b.group_id groupId, b.group_name
+		groupName
+		from t_user_group a, t_module_group b
+		where a.group_id =
+		b.group_id
+		and a.user_id = #{userId}
+		order by b.group_order
+	</select>
+	<select id="getModuleGroupAll" parameterType="java.lang.Long"
+		resultType="com.jiezh.content.base.login.model.GroupBean">
+		select a.user_id userId, b.group_id groupId, b.group_name
+		groupName
+		from t_user_group a, t_module_group b
+		where a.group_id =
+		b.group_id
+		order by b.group_order
+	</select>
+	<select id="getModuleOrganAll" parameterType="java.lang.Long"
+		resultType="com.jiezh.content.base.login.model.GroupBean">
+		select t.id organId ,
+		t.organ_name organName,
+		t.organ_code
+		organCode,
+		t.create_date createDeate
+		from t_organ t order by t.id
+	</select>
+
+	<select id="getModuleOrganByUserOrganCode" parameterType="java.lang.Long"
+		resultType="com.jiezh.content.base.login.model.GroupBean">
+		select t.id organId ,
+		t.organ_name organName,
+		t.organ_code
+		organCode,
+		t.create_date createDeate
+		from t_organ t where t.organCode =
+		#{organCode}
+	</select>
+
+	<select id="getModuleUrl" parameterType="java.lang.Long"
+		resultType="com.jiezh.content.base.login.model.ModelBean">
+		select aa.module_id moduleId, aa.module_name moduleName,
+		aa.module_url moduleUrl,bb.group_id groupId
+		from t_module_url aa,
+		t_module_group_url bb
+		where aa.module_id = bb.module_id
+		and bb.group_id
+		=#{groupId}
+		order by bb.seq
+	</select>
+
+	<select id="getOptions" parameterType="map" resultType="map">
+		select b.name name, b.value value
+		from t_code_type a, t_code_item b
+		where a.code_type = b.code_type
+		and b.status = '1'
+		and a.status = '1'
+		and a.code_type=#{codeType}
+		<if test="whereCase ==null or whereCase =='' ">
+			order by b.seq
+		</if>
+		<if test="whereCase !=null and whereCase !='' ">
+			${whereCase}
+		</if>
+	</select>
+
+
+	<select id="getCustomSql" parameterType="map" resultType="String">
+		select
+		sql
+		from t_code_type
+		where type = '0'
+		and status = '1'
+		and code_type
+		=#{codeType}
+	</select>
+
+	<select id="getCustomOptions" parameterType="map" resultType="map">
+		${sql}
+	</select>
+
+	<select id="getOrganInfo" parameterType="map" resultType="map">
+		select organ_id, abbr_name name,parent_id
+		from t_organ_company
+		where
+		parent_id = #{parentId}
+		and status = #{status}
+		<if test=" organCode !=null and organCode !=''  and organCode !='ALL' ">
+			and organ_code =#{organCode}
+		</if>
+		ORDER BY organ_id
+	</select>
+
+	<select id="getOrganByOrganId" parameterType="map" resultType="map">
+		select * from t_organ_company where organ_id=#{organId} and
+		organ_code=#{organCode}
+	</select>
+
+	<select id="getOrganLevel" parameterType="map" resultType="map">
+		SELECT distinct organ_id
+		FROM t_organ_company
+		where organ_code
+		=#{organCode}
+		and parent_id not in ('0')
+		and status = '1'
+		START WITH
+		organ_id =#{organId}
+		CONNECT BY PRIOR PARENT_ID=organ_id
+		order by
+		organ_id
+	</select>
+
+	<select id="getUserRole" parameterType="java.lang.Long"
+		resultType="java.lang.String">
+		SELECT id role_id
+		FROM T_USER A, T_ROLE B, T_USER_ROLE C
+		WHERE A.USER_ID = C.USER_ID
+		AND B.ID = C.ROLE_ID
+		AND A.USER_ID =
+		#{userId}
+		and b.status = '1'
+	</select>
+	<select id="getOrgans" parameterType="map" resultType="map">
+		select
+		t.ORGAN_ID id, t.ABBR_NAME name, t.parent_id pId,case
+		t.organ_level
+		when '3' then
+		'false'
+		else
+		'true'
+		end isParent
+		from t_organ_company t
+		WHERE
+		t.status = '1'
+		START WITH organ_id
+		= 00
+		CONNECT BY PRIOR organ_id =
+		PARENT_ID
+	</select>
+
+</mapper>

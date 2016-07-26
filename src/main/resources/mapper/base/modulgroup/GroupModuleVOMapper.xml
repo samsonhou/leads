@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.modulgroup.BaseGroupModuleDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.modulgroup.GroupModuleVO" >
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="MODULE_ID" property="moduleId" jdbcType="DECIMAL" /> 
+    <result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR" />
+    <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+    <result column="SEQ" property="seq" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jiezh.dao.base.modulgroup.GroupModuleVO" >
+    insert into T_MODULE_GROUP_URL (GROUP_ID, MODULE_ID, SEQ
+      )
+    values (#{groupId,jdbcType=DECIMAL}, #{moduleId,jdbcType=DECIMAL}, #{seq,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.modulgroup.GroupModuleVO" >
+    insert into T_MODULE_GROUP_URL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="moduleId != null" >
+        MODULE_ID,
+      </if>
+      <if test="seq != null" >
+        SEQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=DECIMAL},
+      </if>
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=DECIMAL},
+      </if>
+      <if test="seq != null" >
+        #{seq,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectGroupModule" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.modulgroup.GroupModuleVO" >
+   select T_MODULE_GROUP_URL.GROUP_ID, T_MODULE_GROUP.GROUP_NAME,   T_MODULE_GROUP_URL.MODULE_ID,T_MODULE_URL.MODULE_NAME, SEQ from  T_MODULE_GROUP_URL 
+   LEFT JOIN T_MODULE_URL ON T_MODULE_GROUP_URL.MODULE_ID=T_MODULE_URL.MODULE_ID
+   LEFT JOIN T_MODULE_GROUP ON T_MODULE_GROUP_URL.GROUP_ID=T_MODULE_GROUP.GROUP_ID
+   <where>
+   <if test="groupId != null and '' != groupId">  
+        AND  T_MODULE_GROUP.GROUP_ID = #{groupId}
+    </if>
+    <if test="moduleId != null and '' != moduleId">  
+        AND  T_MODULE_URL.MODULE_ID = #{moduleId}
+    </if>
+   </where>
+    order by SEQ
+  </select>
+  <delete id="deleteGroup" parameterType="java.lang.Long" >
+   delete from T_MODULE_GROUP_URL where GROUP_ID = #{groupId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteModule" parameterType="java.lang.Long" >
+   delete from T_MODULE_GROUP_URL where MODULE_ID = #{moduleId,jdbcType=DECIMAL}
+  </delete>
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.client.update.ClientUpdateDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.update.ClientUpdateVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CLIENT_ID" property="clientId" jdbcType="DECIMAL" />
+    <result column="FIELD" property="field" jdbcType="VARCHAR" />
+    <result column="FIELD_BEFORE" property="fieldBefore" jdbcType="VARCHAR" />
+    <result column="FIELD_AFTER" property="fieldAfter" jdbcType="VARCHAR" />
+    <result column="UPDATE_INDEX" property="updateIndex" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CLIENT_ID, FIELD, FIELD_BEFORE, FIELD_AFTER, UPDATE_INDEX, CREATED_TIME, CREATED_USER_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LM_CLIENT_UPDATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LM_CLIENT_UPDATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.update.ClientUpdateVO" >
+  <selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+	select S_ClIENT_UPDATE_ID.Nextval as id from dual
+		</selectKey>
+    insert into LM_CLIENT_UPDATE (ID, CLIENT_ID, FIELD, 
+      FIELD_BEFORE, FIELD_AFTER, UPDATE_INDEX, CREATED_USER_ID)
+    values (#{id,jdbcType=DECIMAL}, #{clientId,jdbcType=DECIMAL}, #{field,jdbcType=VARCHAR}, 
+      #{fieldBefore,jdbcType=VARCHAR}, #{fieldAfter,jdbcType=VARCHAR}, #{updateIndex,jdbcType=VARCHAR}, #{createdUserId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.update.ClientUpdateVO" >
+    insert into LM_CLIENT_UPDATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="clientId != null" >
+        CLIENT_ID,
+      </if>
+      <if test="field != null" >
+        FIELD,
+      </if>
+      <if test="fieldBefore != null" >
+        FIELD_BEFORE,
+      </if>
+      <if test="fieldAfter != null" >
+        FIELD_AFTER,
+      </if>
+      <if test="updateIndex != null" >
+        UPDATE_INDEX,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="clientId != null" >
+        #{clientId,jdbcType=DECIMAL},
+      </if>
+      <if test="field != null" >
+        #{field,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldBefore != null" >
+        #{fieldBefore,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAfter != null" >
+        #{fieldAfter,jdbcType=VARCHAR},
+      </if>
+      <if test="updateIndex != null" >
+        #{updateIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.client.update.ClientUpdateVO" >
+    update LM_CLIENT_UPDATE
+    <set >
+      <if test="clientId != null" >
+        CLIENT_ID = #{clientId,jdbcType=DECIMAL},
+      </if>
+      <if test="field != null" >
+        FIELD = #{field,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldBefore != null" >
+        FIELD_BEFORE = #{fieldBefore,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAfter != null" >
+        FIELD_AFTER = #{fieldAfter,jdbcType=VARCHAR},
+      </if>
+      <if test="updateIndex != null" >
+        UPDATE_INDEX = #{updateIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.update.ClientUpdateVO" >
+    update LM_CLIENT_UPDATE
+    set CLIENT_ID = #{clientId,jdbcType=DECIMAL},
+      FIELD = #{field,jdbcType=VARCHAR},
+      FIELD_BEFORE = #{fieldBefore,jdbcType=VARCHAR},
+      FIELD_AFTER = #{fieldAfter,jdbcType=VARCHAR},
+      UPDATE_INDEX = #{updateIndex,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.user.BaseUserDao" >
+
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.user.UserVO" >
+    <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+    <result column="JZ_CODE" property="jzCode" jdbcType="VARCHAR" />
+    <result column="ORGAN_ID" property="organId" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="TEL" property="tel" jdbcType="VARCHAR" />
+    <result column="ISPASS"  property="isPass" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ORGAN_CODE" property="organCode" jdbcType="VARCHAR" />
+    <result column="ORGAN_NAME" property="organName" jdbcType="VARCHAR" />
+    <result column="ORGAN_COMPANY_NAME" property="organCompanyName" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLE" property="role" jdbcType="VARCHAR" />
+    <result column="LOCK_TIME" property="lockTime" jdbcType="TIMESTAMP"/>
+    <result column="LOCK_TIMES" property="lockTimes" jdbcType="VARCHAR"/>
+  </resultMap>
+   <resultMap id="BaseRoleResultMap" type="com.jiezh.dao.base.user.RoleVO" >
+    
+   </resultMap>
+  <sql id="Base_Column_List" >
+    USER_ID, USER_CODE, USER_NAME, REAL_NAME, JZ_CODE, ORGAN_ID, PASSWORD, STATUS,EMAIL,TEL,ISPASS, CREATE_DATE,ORGAN_CODE,ROLE
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.jiezh.dao.base.user.UserVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="userId" order="BEFORE" >
+      select S_USER_ID.Nextval as userId from dual 
+    </selectKey>
+    insert into T_USER (USER_ID,USER_CODE, USER_NAME, REAL_NAME, 
+      JZ_CODE, ORGAN_ID, 
+      <if test="password != null" >
+        PASSWORD, 
+      </if>
+      STATUS,EMAIL,TEL,ORGAN_CODE,ROLE)
+    values (#{userId,jdbcType=DECIMAL},#{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      'JY'||lpad(#{userId,jdbcType=VARCHAR},6,'0') , #{organId,jdbcType=VARCHAR},
+       <if test="password != null" >
+      #{password,jdbcType=VARCHAR},  
+      </if>
+      #{status,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{tel,jdbcType=VARCHAR},#{organCode,jdbcType=VARCHAR},#{role,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.user.UserVO" >
+    update T_USER
+    <set >
+      <if test="userCode != null" >
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        REAL_NAME = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="jzCode != null" >
+        JZ_CODE = #{jzCode,jdbcType=VARCHAR},
+      </if>
+      <if test="organId != null" >
+        ORGAN_ID = #{organId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isPass != null" >
+        ISPASS = #{isPass,jdbcType=VARCHAR},
+      </if>
+ 
+      <if test="tel != null" >
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="organCode != null" >
+        ORGAN_CODE = #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        ROLE = #{role,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </update>
+
+ 
+  <select id="selectByrecord" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.user.UserVO" >
+    select USER_ID, USER_CODE, USER_NAME, REAL_NAME, JZ_CODE, ORGAN_ID, PASSWORD , STATUS,EMAIL,TEL,ISPASS,T_USER.CREATE_DATE,T_USER.ORGAN_CODE
+ ,ROLE ,T_ORGAN.ORGAN_NAME
+ ,(select t_organ_company.name from t_organ_company where t_organ_company.organ_id=T_USER.ORGAN_ID and T_USER.Organ_Code=t_organ_company.ORGAN_CODE ) as ORGAN_COMPANY_NAME
+ , ((select tro.role_name from t_role tro where tro.id = 1 and tro.id in (select tr.role_id from t_User_Role tr where tr.user_id = T_USER.USER_ID ))
+   || '     ' ||(select tro.role_name from t_role tro where tro.id = 2 and tro.id in (select tr.role_id from t_User_Role tr where tr.user_id = T_USER.USER_ID ))
+   || '     ' ||(select tro.role_name from t_role tro where tro.id = 3 and tro.id in (select tr.role_id from t_User_Role tr where tr.user_id = T_USER.USER_ID ))) ROLE_NAME
+from T_USER  LEFT JOIN T_ORGAN on T_USER.Organ_Code=T_ORGAN.ORGAN_CODE 
+<where>
+<if test="realName != null and '' != realName"> 
+ and REAL_NAME LIKE CONCAT('%', CONCAT(#{realName}, '%'))
+</if>
+<if test="userCode != null and '' != userCode"> 
+ AND USER_CODE = #{userCode} 
+</if>
+<if test="userId != null and '' != userId" > 
+ AND USER_ID = #{userId} 
+</if>
+<if test="jzCode != null and '' != jzCode" > 
+ AND jz_code = #{jzCode} 
+</if>
+<if test="status != null and '' != status"> 
+ AND status = #{status} 
+</if>
+<if test="organCode != null and '' != organCode"> 
+ AND T_USER.Organ_Code = #{organCode} 
+</if>
+<if test="organId != null and '' != organId"> 
+ AND T_USER.ORGAN_ID in (
+	SELECT ORGAN_ID
+          FROM t_organ_company t
+         START WITH ORGAN_ID = #{organId}
+        CONNECT BY PRIOR ORGAN_ID = Parent_ID
+
+)
+</if>
+<if test="roleId != null and '' != roleId"> 
+AND exists (select tr.role_id from t_User_Role tr where tr.user_id = T_USER.USER_ID and tr.role_id =#{roleId} )
+</if>
+</where>
+order by ORGAN_ID, USER_ID asc
+</select>
+<select id="selectUsreRolesByUserId" parameterType="java.lang.Long" resultMap="BaseRoleResultMap"  >
+SELECT id as Id,
+     ROLE_NAME as roleName ,
+     STATUS as status,
+     CREATE_DATE as  createDate
+     from t_role where STATUS=1 and id in (select role_id from t_user_role where USER_ID = #{userId,jdbcType=DECIMAL} ) 
+</select>
+
+
+<select id="selectUsreRoles" resultMap="BaseRoleResultMap" parameterType="com.jiezh.dao.base.user.RoleVO">
+SELECT id as Id,
+	   ROLE_NAME as roleName ,
+	   STATUS as status,
+	   CREATE_DATE as  createDate
+	   from t_role 
+	   <where>
+	     STATUS=1
+	   <if test="Id !=null and Id !='' "> 
+	     AND  ID =#{Id}
+	   </if>
+	   </where>  
+</select>
+
+<delete id="deleteUser2RoleById" parameterType="map" >
+ delete from T_USER_ROLE
+ <where>
+  <if test="userId !=null and userId !='' "> 
+    USER_ID = #{userId,jdbcType=DECIMAL}
+  </if>
+  <if test="roleId !=null and roleId !='' "> 
+    ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </if>
+ </where>
+</delete>
+<insert id="insertUser2Role" parameterType="map" >
+insert into T_USER_ROLE (USER_ID, ROLE_ID)values (#{userId,jdbcType=DECIMAL},#{roleId,jdbcType=DECIMAL})
+</insert>
+
+<delete id="deleteUserGroupByUserid" parameterType="java.lang.Long" >
+delete from t_user_group where USER_ID = #{userId,jdbcType=DECIMAL}
+</delete>
+
+<insert id="insertUserGroup" parameterType="com.jiezh.content.base.login.model.GroupBean" >
+insert into T_USER_GROUP (USER_ID,GROUP_ID) values (#{userId,jdbcType=DECIMAL},#{groupId,jdbcType=DECIMAL})
+</insert>
+
+
+
+<!-- add by cj 通讯录 -->
+ <select id="selectByrecordOfAdBook" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.user.UserVO" >
+    select USER_ID, USER_CODE, USER_NAME, REAL_NAME, JZ_CODE, ORGAN_ID, PASSWORD , STATUS,EMAIL,TEL,ISPASS,T_USER.CREATE_DATE,T_USER.ORGAN_CODE
+ ,ROLE ,T_ORGAN.ORGAN_NAME
+ ,(select t_organ_company.name from t_organ_company where t_organ_company.organ_id=T_USER.ORGAN_ID and T_USER.Organ_Code=t_organ_company.ORGAN_CODE ) as ORGAN_COMPANY_NAME
+from (select a.*,b.role_id from T_USER a left join t_user_role b on a.user_id=b.user_id where b.role_id=#{isPass}) T_USER  LEFT JOIN T_ORGAN on T_USER.Organ_Code=T_ORGAN.ORGAN_CODE 
+<where>
+<if test="realName != null and '' != realName"> 
+ and REAL_NAME LIKE CONCAT('%', CONCAT(#{realName}, '%'))
+</if>
+<if test="userCode != null and '' != userCode"> 
+ AND USER_CODE = #{userCode} 
+</if>
+<if test="userId != null and '' != userId" > 
+ AND USER_ID = #{userId} 
+</if>
+<if test="jzCode != null and '' != jzCode" > 
+ AND jz_code = #{jzCode} 
+</if>
+<if test="status != null and '' != status"> 
+ AND status = #{status} 
+</if>
+<if test="organCode != null and '' != organCode"> 
+ AND T_USER.Organ_Code = #{organCode} 
+</if>
+<if test="organId != null and '' != organId"> 
+ AND T_USER.ORGAN_ID in (
+ select ORGAN_ID   from 
+(select ORGAN_ID,Parent_ID from t_organ_company t where  t.organ_code= #{organCode} 
+order by t.organ_id asc)
+start with ORGAN_ID= #{organId}  connect by prior ORGAN_ID=Parent_ID
+
+)
+</if>
+
+</where>
+order by USER_ID asc
+</select>
+<select id="selectLockUser" resultType="map" parameterType="com.jiezh.dao.base.user.UserVO">
+select a.user_name USERNAME,
+       a.jz_code JZCODE,
+       (select toc.name
+          from t_organ_company toc
+         where toc.organ_id = a.organ_id
+         and rownum=1) ORGANID,
+       decode(a.status, '0', '是', '1', '否') STATUS,
+       b.lock_time LOCKTIME,
+       (select sum(b.lock_times) from t_user_lock c where c.user_id = a.user_id) LOCKTIMES,
+       a.user_id USERID,
+       b.id ID
+  from t_user a join t_user_lock b 
+  on a.user_id = b.user_id
+  where b.lock_status = '1'
+  <if test="userName != null and '' != userName">
+  	and a.user_name like CONCAT('%', CONCAT(#{userName}, '%'))
+  </if>
+  <if test="organId != null and '' != organId">
+  	and a.organ_id = #{organId,jdbcType=DECIMAL}
+  </if>
+</select>
+
+<update id="updateUserLock" parameterType="map">
+	update t_user_lock t set t.lock_status = '0',t.unlock_time = sysdate,t.lock_time = null,t.unlock_user = #{oprUserCode,jdbcType=VARCHAR} 
+	where t.id  =  #{id,jdbcType=DECIMAL} and t.lock_status = '1'
+</update>
+
+<update id="updateBatchUserLock" parameterType="map">
+	update t_user_lock t set t.lock_status = '0',t.unlock_time = sysdate,t.lock_time = null,t.unlock_user = #{oprUserCode,jdbcType=VARCHAR} 
+	where t.id  in  
+	<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+	  #{item}  
+	</foreach>
+</update>
+<select id="selectSmsInfo" parameterType="map" resultType="map">
+	select a.tel TEL,a.real_name NAME,b.address ADDRESS from t_user a,t_organ_company b where a.organ_id = b.organ_id and a.user_id=#{userId,jdbcType=DECIMAL} and rownum=1 
+</select>
+</mapper>

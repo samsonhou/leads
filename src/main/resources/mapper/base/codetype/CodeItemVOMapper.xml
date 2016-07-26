@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.codetype.BaseCodeItemVODao" >
+   <resultMap id="BaseResultMap" type="com.jiezh.dao.base.codetype.CodeItemVO" >
+    <id column="CODE_ITEM_ID" property="codeItemId" jdbcType="DECIMAL" />
+    <result column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
+    <result column="CODE_TYPE_Name" property="codeTypeName" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="SEQ" property="seq" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ASSISTANT" property="assistant" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CODE_ITEM_ID, CODE_TYPE, NAME, VALUE, SEQ, STATUS, CREATE_DATE, ASSISTANT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_CODE_ITEM
+    where CODE_ITEM_ID = #{codeItemId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_CODE_ITEM
+    where CODE_ITEM_ID = #{codeItemId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.codetype.CodeItemVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="codeItemId" order="BEFORE" >
+      select S_CODE_ITEM_ID.Nextval as companyId from dual 
+    </selectKey>
+    insert into T_CODE_ITEM (CODE_ITEM_ID,CODE_TYPE, NAME, VALUE, 
+      SEQ, STATUS,  
+      ASSISTANT)
+    values (#{codeItemId,jdbcType=DECIMAL},#{codeType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
+      #{seq,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR},  
+      #{assistant,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.codetype.CodeItemVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="codeItemId" order="AFTER" >
+      select S_CODE_ITEM_ID.Nextval as companyId from dual 
+    </selectKey>
+    insert into T_CODE_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="codeType != null" >
+        CODE_TYPE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="value != null" >
+        VALUE,
+      </if>
+      <if test="seq != null" >
+        SEQ,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="assistant != null" >
+        ASSISTANT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="codeType != null" >
+        #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null" >
+        #{seq,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assistant != null" >
+        #{assistant,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.codetype.CodeItemVO" >
+    update T_CODE_ITEM
+    <set >
+      <if test="codeType != null" >
+        CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        VALUE = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null" >
+        SEQ = #{seq,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assistant != null" >
+        ASSISTANT = #{assistant,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CODE_ITEM_ID = #{codeItemId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.base.codetype.CodeItemVO" >
+    update T_CODE_ITEM
+    set CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      VALUE = #{value,jdbcType=VARCHAR},
+      SEQ = #{seq,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ASSISTANT = #{assistant,jdbcType=VARCHAR}
+    where CODE_ITEM_ID = #{codeItemId,jdbcType=DECIMAL}
+  </update>
+  <select id="selectByType" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.codetype.CodeTypeVO" >
+  select CODE_ITEM_ID, T_CODE_ITEM.CODE_TYPE, T_CODE_TYPE.NAME  as CODE_TYPE_Name, T_CODE_ITEM.NAME, VALUE, SEQ, T_CODE_ITEM.STATUS, T_CODE_ITEM.CREATE_DATE, ASSISTANT  
+  from  t_code_item ,t_code_type 
+  <where>  
+    <if test="codeType != null and '' != codeType">  
+      T_CODE_ITEM.code_type =t_code_type.code_type and T_CODE_ITEM.code_type = #{codeType,jdbcType=VARCHAR}
+    </if>
+    </where>
+  </select>
+  <select id="selectByType1" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.codetype.CodeItemVO" >
+  select CODE_ITEM_ID, T_CODE_ITEM.CODE_TYPE, T_CODE_TYPE.NAME  as CODE_TYPE_Name, T_CODE_ITEM.NAME, VALUE, SEQ, T_CODE_ITEM.STATUS, T_CODE_ITEM.CREATE_DATE, ASSISTANT  
+  from  t_code_item ,t_code_type 
+  <where>  
+    <if test="codeType != null and '' != codeType">  
+      T_CODE_ITEM.code_type =t_code_type.code_type and T_CODE_ITEM.code_type = #{codeType,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null and '' != name">  
+        AND  T_CODE_ITEM.NAME = #{name}
+    </if>
+  <if test="status != null and '' != status">   
+       AND  T_CODE_ITEM.STATUS = #{status}
+  </if>
+    </where>
+  </select>
+</mapper>

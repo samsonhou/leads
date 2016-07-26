@@ -1,0 +1,26 @@
+1.扫描dao层  com.jiezh.dao
+2.扫描service层  com.jiezh
+3.扫描controller层  com.jiezh
+4.扫描事务 com.jiezh..service.imp.*.*(..)
+
+java包的分层 
+content下面每个应用分一个包名
+页面层也是一样
+
+自动注解 
+
+//修改 添加日记
+SimpleUrlAuthenticationSuccessHandler
+SessionRegistryImpl
+
+//token add by liangds 2015-12-22
+加入token重复提交判断
+1.在页面中加处<@token />
+2.在进入页面的方添加@Token(generate=true) 生成token
+2.在提交的方法上添加@Token(validate=true) 验证token
+
+//add by liangds 2015-12-25 
+//加入poi包
+
+//add by liangds 2015-12-25
+list.ftl info.ftl 为前页开发模板

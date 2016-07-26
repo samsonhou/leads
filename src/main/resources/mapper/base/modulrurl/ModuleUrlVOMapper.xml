@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.modulrurl.BaseModuleUrlDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.modulrurl.ModuleUrlVO" >
+    <id column="MODULE_ID" property="moduleId" jdbcType="DECIMAL" />
+    <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+    <result column="MODULE_URL" property="moduleUrl" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MODULE_ID, MODULE_NAME, MODULE_URL, REMARK, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+   <include refid="Base_Column_List" />
+    from T_MODULE_URL
+    where MODULE_ID = #{moduleId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_MODULE_URL
+    where MODULE_ID = #{moduleId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.modulrurl.ModuleUrlVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="moduleId" order="BEFORE" >
+      select S_MOD_URL_ID.Nextval as moduleId from dual 
+    </selectKey>
+    insert into T_MODULE_URL (MODULE_ID,MODULE_NAME, MODULE_URL, REMARK, 
+      CREATE_DATE)
+    values (#{moduleId,jdbcType=DECIMAL},#{moduleName,jdbcType=VARCHAR}, #{moduleUrl,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.modulrurl.ModuleUrlVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="moduleId" order="BEFORE" >
+      select S_MOD_URL_ID.Nextval as moduleId from dual 
+    </selectKey>
+    insert into T_MODULE_URL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     <if test="moduleId != null" >
+        MODULE_ID,
+      </if>
+      <if test="moduleName != null" >
+        MODULE_NAME,
+      </if>
+      <if test="moduleUrl != null" >
+        MODULE_URL,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     <if test="moduleId != null" >
+        #{moduleId,jdbcType=DECIMAL},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null" >
+        #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.modulrurl.ModuleUrlVO" >
+    update T_MODULE_URL
+    <set >
+      <if test="moduleName != null" >
+        MODULE_NAME = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null" >
+        MODULE_URL = #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+        REMARK = #{remark,jdbcType=VARCHAR},
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where MODULE_ID = #{moduleId,jdbcType=DECIMAL}
+  </update>
+  <select id="findAll" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.modulrurl.ModuleUrlVO" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_MODULE_URL
+  </select>
+</mapper>

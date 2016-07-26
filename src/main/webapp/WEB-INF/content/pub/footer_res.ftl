@@ -1,0 +1,10 @@
+<script src="${contextPath}/res/pub/js/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script src="${contextPath}/res/pub/js/bootstrap.min.js?v=3.4.0" type="text/javascript"></script>
+<script src="${contextPath}/res/pub/js/plugins/metisMenu/jquery.metisMenu.js" type="text/javascript"></script>
+<script src="${contextPath}/res/pub/js/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="${contextPath}/res/pub/js/plugins/layer/layer.min.js" type="text/javascript"></script>
+<!-- 自定义js -->
+<script src="${contextPath}/res/pub/js/hplus.min.js?v=3.0.1" type="text/javascript"></script>
+<script src="${contextPath}/res/pub/js/contabs.min.js"  type="text/javascript"></script>
+<!-- 第三方插件 -->
+<script src="${contextPath}/res/pub/js/plugins/pace/pace.min.js" type="text/javascript"></script>

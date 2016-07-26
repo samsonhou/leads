@@ -1,0 +1,2762 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.client.ClientDao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.ClientVO">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="CLIENT_NAME" property="clientName" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="CHAR" />
+		<result column="PERSONID" property="personid" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="FROMTYPE" property="fromtype" jdbcType="DECIMAL" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="QDATE" property="qdate" jdbcType="TIMESTAMP" />
+		<result column="BIG_PID" property="bigPid" jdbcType="DECIMAL" />
+		<result column="SMALL_PID" property="smallPid" jdbcType="DECIMAL" />
+		<result column="RID" property="rid" jdbcType="DECIMAL" />
+		<result column="IFURGENT" property="ifurgent" jdbcType="CHAR" />
+		<result column="CITYID" property="cityid" jdbcType="CHAR" />
+		<result column="COMPANYID" property="companyid" jdbcType="CHAR" />
+		<result column="SID" property="sid" jdbcType="DECIMAL" />
+		<result column="DDATE" property="ddate" jdbcType="TIMESTAMP" />
+		<result column="NEXTDATE" property="nextdate" jdbcType="TIMESTAMP" />
+		<result column="RANK" property="rank" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="QQ" property="qq" jdbcType="CHAR" />
+		<result column="WEIXIN" property="weixin" jdbcType="CHAR" />
+		<result column="PHONE" property="phone" jdbcType="CHAR" />
+		<result column="REASON" property="reason" jdbcType="CHAR" />
+		<result column="REASONCONT" property="reasonCont" jdbcType="VARCHAR" />
+		<result column="IFK" property="ifk" jdbcType="CHAR" />
+		<result column="IDD" property="idd" jdbcType="CHAR" />
+		<result column="CONTRACTNO" property="contractno" jdbcType="VARCHAR" />
+		<result column="ALLOTDATE" property="allotdate" jdbcType="TIMESTAMP" />
+		<result column="INIT_RANK " property="init_rank" jdbcType="TIMESTAMP" />
+		<result column="CADTMP " property="cadTmp" jdbcType="VARCHAR" />
+
+		<result column="PRODUCT " property="product" jdbcType="VARCHAR" />
+		<result column="IS_SUB_MATERIAL " property="isSubMaterial"
+			jdbcType="VARCHAR" />
+		<result column="GET_CAR_DATE " property="getCarDate" jdbcType="TIMESTAMP" />
+		<result column="WILL " property="will" jdbcType="VARCHAR" />
+		<result column="IS_GET_CAR " property="isGetCar" jdbcType="VARCHAR" />
+		<result column="TEL1 " property="tel1" jdbcType="VARCHAR" />
+		<result column="DEPOSIT_STATUS" property="depositStatus"
+			jdbcType="VARCHAR" />
+		<result column="FROMTYPE_BIG" property="fromtypeBig"
+			jdbcType="VARCHAR" />
+		<result column="CHANNEL" property="channel"
+			jdbcType="VARCHAR" />
+
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, CLIENT_NAME, TEL, SEX, PERSONID, EMAIL, FROMTYPE,
+		TITLE, QDATE,
+		BIG_PID, SMALL_PID,
+		RID, IFURGENT, CITYID, COMPANYID, SID,
+		DDATE, NEXTDATE, RANK, STATUS ,QQ ,
+		WEIXIN , PHONE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,CHANNEL
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from LM_CLIENT
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		LM_CLIENT
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.jiezh.dao.leads.client.ClientVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_LM_CLIENT_ID.Nextval as id from dual
+		</selectKey>
+		insert into LM_CLIENT (ID,CLIENT_NAME, TEL, SEX,
+		PERSONID, EMAIL,
+		FROMTYPE,
+		TITLE, QDATE, BIG_PID,
+		SMALL_PID, RID, IFURGENT,
+		CITYID,
+		COMPANYID, SID,
+		DDATE, NEXTDATE, RANK,
+		STATUS,QQ , WEIXIN ,
+		PHONE,ALLOTDATE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,FIRST_TIME_COMING,CHANNEL,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,
+		IDD,IFK,CONTRACTNO)
+		values
+		(#{id,jdbcType=DECIMAL},#{clientName,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
+		#{personid,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		#{fromtype,jdbcType=DECIMAL},
+		#{title,jdbcType=VARCHAR},
+		#{qdate,jdbcType=TIMESTAMP}, #{bigPid,jdbcType=DECIMAL},
+		#{smallPid,jdbcType=DECIMAL}, #{rid,jdbcType=DECIMAL},
+		#{ifurgent,jdbcType=CHAR},
+		#{cityid,jdbcType=CHAR},
+		#{companyid,jdbcType=CHAR}, #{sid,jdbcType=DECIMAL},
+		#{ddate,jdbcType=TIMESTAMP}, #{nextdate,jdbcType=TIMESTAMP},
+		#{rank,jdbcType=CHAR},
+		#{status,jdbcType=CHAR}, #{qq,jdbcType=CHAR},
+		#{weixin,jdbcType=CHAR},
+		#{phone,jdbcType=CHAR},#{allotdate,jdbcType=TIMESTAMP},
+		#{depositStatus,jdbcType=VARCHAR},#{tel1,jdbcType=VARCHAR},#{fromtypeBig,jdbcType=VARCHAR},#{firstTimeComing,jdbcType=TIMESTAMP},#{channel,jdbcType=VARCHAR},
+		#{product,jdbcType=VARCHAR},#{will,jdbcType=VARCHAR},#{isSubMaterial,jdbcType=VARCHAR},#{isGetCar,jdbcType=VARCHAR},#{getCarDate,jdbcType=TIMESTAMP},
+		#{carno,jdbcType=VARCHAR},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR},#{contractno,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.ClientVO">
+		update LM_CLIENT
+		<set>
+			<if test="clientName != null">
+				CLIENT_NAME = #{clientName,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				TEL = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex,jdbcType=CHAR},
+			</if>
+			<if test="personid != null">
+				PERSONID = #{personid,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="fromtype != null and 0 != fromtype">
+				FROMTYPE = #{fromtype,jdbcType=DECIMAL},
+			</if>
+			<if test="title != null">
+				TITLE = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="qdate != null">
+				QDATE = #{qdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="bigPid != null  and 0 != bigPid">
+				BIG_PID = #{bigPid,jdbcType=DECIMAL},
+			</if>
+			<if test="smallPid != null and 0 != bigPid">
+				SMALL_PID = #{smallPid,jdbcType=DECIMAL},
+			</if>
+			<if test="rid != null  and 0 != rid">
+				RID = #{rid,jdbcType=DECIMAL},
+			</if>
+			<if test="ifurgent != null">
+				IFURGENT = #{ifurgent,jdbcType=CHAR},
+			</if>
+			<if test="cityid != null">
+				CITYID = #{cityid,jdbcType=CHAR},
+			</if>
+			<if test="companyid != null">
+				COMPANYID = #{companyid,jdbcType=CHAR},
+			</if>
+			<if test="sid != null and 0 != sid">
+				SID = #{sid,jdbcType=DECIMAL},
+			</if>
+			<if test="ddate != null">
+				DDATE = #{ddate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nextdate != null">
+				NEXTDATE = #{nextdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rank != null">
+				RANK = #{rank,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=CHAR},
+			</if>
+			<if test="qq != null">
+				QQ = #{qq,jdbcType=CHAR},
+			</if>
+			<if test="weixin != null">
+				WEIXIN = #{weixin,jdbcType=CHAR},
+			</if>
+			<if test="phone != null">
+				PHONE = #{phone,jdbcType=CHAR},
+			</if>
+			<if test="reason != null">
+				REASON = #{reason,jdbcType=CHAR},
+			</if>
+			<if test="idd != null">
+				IDD = decode(LM_CLIENT.IDD,'1','1',#{idd,jdbcType=CHAR}),
+			</if>
+			<if test="contractno != null">
+				CONTRACTNO = #{contractno,jdbcType=CHAR},
+			</if>
+			<if test="product != null">
+				PRODUCT = #{product,jdbcType=VARCHAR},
+			</if>
+			<if test="isSubMaterial != null">
+				IS_SUB_MATERIAL = #{isSubMaterial,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="getCarDate != null"> GET_CAR_DATE = #{getCarDate,jdbcType=VARCHAR}, 
+				</if> -->
+			<if test="will != null">
+				WILL = #{will,jdbcType=VARCHAR},
+			</if>
+			<if test="isGetCar != null">
+				IS_GET_CAR = #{isGetCar,jdbcType=VARCHAR},
+			</if>
+			<if test="depositStatus != null">
+				DEPOSIT_STATUS = #{depositStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="depositStatus != null">
+				TEL1 = #{tel1,jdbcType=VARCHAR},
+			</if>
+			<if test="carno != null">
+				CARNO = #{carno,jdbcType=VARCHAR},
+			</if>
+			<if test="firstTimeComing != null">
+				first_time_coming = nvl(LM_CLIENT.first_time_coming,#{firstTimeComing,jdbcType=TIMESTAMP}),
+			</if>
+
+			REASONCONT = #{reasonCont,jdbcType=VARCHAR}, ALLOTDATE = sysdate ,
+			IFK = #{ifk,jdbcType=CHAR},INIT_RANK=#{init_rank,jdbcType=VARCHAR},
+			GET_CAR_DATE = #{getCarDate,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="selectClient" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		nvl((select name from t_code_item where
+		code_item_id = lmc.fromtype),'')
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE, 'YYYY-MM-DD') QDATE,
+		nvl((select title from
+		LM_CATEGORY where ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from
+		LM_CATEGORY where id=lmc.small_pid),'') SMALL_PID,
+		nvl((select
+		real_name from t_user where user_id=lmc.rid),'') RID,
+		nvl((select
+		real_name from t_user where user_id=lmc.sid),'') SID,
+		to_char(DDATE,
+		'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD') NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE,
+		lmc.REASON,
+		lmc.REASONCONT,
+		DECODE(lmc.IDD,'','','0','','1','1') IDD,
+		DECODE(lmc.IFK,'','','0','','1','1') IFK,
+		lmc.CONTRACTNO,
+		lmc.INIT_RANK,
+		lmc.PRODUCT PRODUCT,
+		lmc.IS_SUB_MATERIAL ISSUBMATERIAL,
+		lmc.GET_CAR_DATE GETCARDATE,
+		lmc.WILL WILL,
+		lmc.IS_GET_CAR ISGETCAR,
+		lmc.carno CARNO,
+		lmc.tel1 TEL1,
+		(select tci.name from t_code_item tci
+		where tci.code_type='1040' and tci.value = lmc.deposit_status)
+		DEPOSITSTATUS,
+		lmc.fromtype_big FROMTYPEBIG,
+		lmc.channel
+		from
+		lm_client lmc
+		where lmc.ID = #{id,jdbcType=DECIMAL}
+	</select>
+
+
+	<select id="getClientList" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big)||' - '||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel)
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.sex = '1'
+			and b.user_id =#{rid}
+			and
+			b.organ_code =#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
+			and
+			exists (select role_id from t_user_role where user_id =#{rid} )
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="ifurgent != null and '' != ifurgent">
+				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+		</where>
+		order by lmc.id desc
+	</select>
+
+	<select id="getClientListByTel" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) ||' - '||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel)
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.sex = '1'
+			and b.organ_code
+			=#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+		</where>
+		order by lmc.id desc
+	</select>
+
+	<select id="getSearchList" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) || ' - ' ||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel) FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select real_name
+		from t_user a, t_organ_company b where a.organ_id =
+		b.organ_id and
+		a.user_id = lmc.sid),'') SID,
+		nvl((select name from t_user a,
+		t_organ_company b where a.organ_id = b.organ_id
+		
+		and a.user_id =
+		lmc.sid),'') COMNAME,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD') NEXTDATE,
+		nvl((select name from
+		t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'')
+		IFURGENT,
+		nvl((select name from t_code_item where code_type ='1026' and
+		value=lmc.rank),'')
+		RANK,
+		nvl((select name from t_code_item where
+		code_type ='1027' and
+		value=lmc.status),'') STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE,
+		lmc.REASON,
+		lmc.REASONCONT REASONCONT,
+		(select ert.l_create_time from
+		link_erp_report_temp ert where ert.client_id =
+		lmc.id) INCOMEDATE,
+		(select er.l_create_time from link_erp_report er where er.client_id =
+		lmc.id)
+		DEALDATE,
+		(select ci.name from t_code_item ci where ci.code_type
+		= '1036' and ci.value
+		= lmc.PRODUCT) PRODUCT,
+		(select ci.name from
+		t_code_item ci where ci.code_type = '1038' and ci.value
+		=
+		lmc.IS_SUB_MATERIAL) ISSUBMATERIAL,
+		(select ci.name from t_code_item ci
+		where ci.code_type = '1035' and ci.value
+		= lmc.WILL) WILL,
+		(select
+		ci.name from t_code_item ci where ci.code_type = '1037' and ci.value
+		=
+		lmc.IS_GET_CAR) ISGETCAR,
+		lmc.GET_CAR_DATE GETCARDATE,
+		lmc.idd
+		IDD,lmc.CREDIT_STATUS,(select count(id) from lm_clientrace lmt where
+		lmt.t_id = lmc.id) LMTNUM,
+		lmc.DEPOSIT_STATUS DEPOSITSTATUS,
+		lmc.CONTRACTNO CONTRACTNO,
+		(select max(a.redate) from lm_clientrace a
+		where a.t_id = lmc.id ) RDATE,
+		(select a.title from lm_clientrace a
+		where a.t_id = lmc.id and a.id = (select max(a.id) from lm_clientrace
+		a where a.t_id = lmc.id )) RDETAIL
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.sex = '1'
+			and (lmc.companyid in(SELECT ORGAN_ID from t_organ_company where
+			status = '1' START WITH ORGAN_ID =#{cadTmp} CONNECT BY PRIOR ORGAN_ID
+			= PARENT_ID)
+			or lmc.companyid is null)
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="ifurgent != null and '' != ifurgent">
+				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+			<if test="sid != null and '0' != sid and '' != sid">
+				AND lmc.sid = #{sid,jdbcType=DECIMAL}
+			</if>
+			<if test="email != null and '' != email">
+				AND to_char(lmc.QDATE, 'YYYY-MM-DD') >= #{email}
+			</if>
+			<if test="title != null and '' != title">
+				AND <![CDATA[to_char(lmc.QDATE, 'YYYY-MM-DD') <= #{title}]]>
+			</if>
+			<!-- add by cj加入来源条件 -->
+			<if test="fromtype != null and '' != fromtype">
+				AND lmc.fromtype = #{fromtype,jdbcType=DECIMAL}
+			</if>
+
+			<!-- add by houjiq 是否进件 -->
+			<if test="isIncome == 1">
+				AND exists (select 1 from link_erp_report_temp ert where
+				ert.client_id
+				= lmc.id)
+			</if>
+			<!-- add by houjiq 是否进件 -->
+			<if test="isIncome == 0">
+				AND not exists (select 1 from link_erp_report_temp ert
+				where
+				ert.client_id = lmc.id)
+			</if>
+			<!-- add by houjiq 是否成交 -->
+			<if test="isDeal == 1">
+				AND exists (select 1 from link_erp_report er where
+				er.client_id =
+				lmc.id)
+			</if>
+			<!-- add by houjiq 是否成交 -->
+			<if test="isDeal == 0">
+				AND not exists (select 1 from link_erp_report er where
+				er.client_id =
+				lmc.id)
+			</if>
+			<if test="product != null">
+				And lmc.product = #{product,jdbcType=VARCHAR}
+			</if>
+			<if test="will != null">
+				And lmc.will = #{will,jdbcType=VARCHAR}
+			</if>
+			<if test="isSubMaterial != null">
+				And lmc.is_sub_material =
+				#{isSubMaterial,jdbcType=VARCHAR}
+			</if>
+			<if test="isGetCar != null">
+				And lmc.is_get_car = #{isGetCar,jdbcType=VARCHAR}
+			</if>
+			<if test="getCarDate != null">
+				And lmc.get_car_date = #{product,jdbcType=TIMESTAMP}
+			</if>
+			<if test="idd != null">
+				And lmc.idd = #{idd,jdbcType=VARCHAR}
+			</if>
+			<if test="depositStatus != null">
+				And lmc.deposit_status =
+				#{depositStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="fromtypeBig != null">
+				And lmc.fromtype_big = #{fromtypeBig,jdbcType=VARCHAR}
+			</if>
+			<if test="channel != null">
+				And lmc.channel = #{channel,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by lmc.id desc
+	</select>
+
+
+	<!-- add by cj 回收站线索查询 begin -->
+	<select id="getSearchList1" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),'')
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.cityid =#{sysOrganCode}
+			and (lmc.companyid
+			in(SELECT ORGAN_ID FROM (select * from
+			t_organ_company where status =
+			'1' and organ_code =#{sysOrganCode})
+			START WITH ORGAN_ID =#{companyid}
+			CONNECT BY PRIOR ORGAN_ID =
+			PARENT_ID)
+			or lmc.companyid is null)
+			and
+			exists (select role_id from t_user_role where user_id =#{rid} and
+			role_id = 1) and lmc.sex = '0'
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="status != null and '' != status">
+				AND lmc.status = #{status,jdbcType=CHAR}
+			</if>
+			<if test="sid != null and '0' != sid and '' != sid">
+				AND lmc.sid = #{sid,jdbcType=DECIMAL}
+			</if>
+			<if test="email != null and '' != email">
+				AND to_char(lmc.QDATE, 'YYYY-MM-DD') >= #{email}
+			</if>
+			<if test="title != null and '' != title">
+				AND <![CDATA[to_char(lmc.QDATE, 'YYYY-MM-DD') <= #{title}]]>
+			</if>
+		</where>
+		order by lmc.id desc
+	</select>
+	<!-- add by cj 回收站线索查询 end -->
+
+	<select id="querySub" resultType="map" parameterType="java.lang.String">
+		select
+		to_char(ID) ID, TITLE
+		from lm_category
+		where PID = #{pid}
+	</select>
+	<select id="queryOrgPerson" resultType="map" parameterType="map">
+		select t.organ_id ID,t.name NAME,t.parent_id PID,'nocheck' CHE
+		from
+		(select * from t_organ_company where organ_code = #{organCode} and
+		status = '1') t
+		where t.status ='1'
+		start with t.organ_id = #{organId}
+		connect by prior t.organ_id = t.parent_id
+		union all
+		SELECT
+		decode(
+		(select max(lg.last_request)
+		from t_user_login lg where
+		lg.user_id=u.user_id and lg.expired = '0'
+		and lg.last_request between
+		sysdate-0.5/24 and sysdate),null
+		,'C*'||to_char(u.user_id),'B*'||to_char(u.user_id)) ID,
+		decode( (select
+		max(lg.last_request)
+		from t_user_login lg where lg.user_id=u.user_id
+		and lg.expired = '0'
+		and lg.last_request between sysdate-0.5/24 and
+		sysdate),null
+		,u.real_name,'在线：'||u.real_name) NAME,
+		u.organ_id
+		PID,'check' CHE
+		FROM t_user u ,t_user_role b where u.user_id=b.user_id
+		and b.role_id=2 and
+		u.status ='1' and u.organ_code = #{organCode}
+		and
+		exists ( select q.name from (select * from t_organ_company where
+		organ_code = #{organCode} and status = '1') q
+		where q.organ_id =
+		u.organ_id
+		start with q.organ_id = #{organId}
+		connect by prior
+		q.organ_id = q.parent_id
+		)
+		order by ID
+
+	</select>
+
+	<select id="queryOrgPersonManager" resultType="map"
+		parameterType="map">
+		select t.organ_id ID,t.name NAME,t.parent_id PID,'nocheck' CHE
+		from
+		(select * from t_organ_company where status = '1') t
+		where t.status
+		='1'
+		start with t.organ_id = #{organId}
+		connect by prior t.organ_id =
+		t.parent_id
+		union all
+		SELECT
+		decode(b.role_id,1,'A*'
+		||to_char(u.user_id),
+		decode( (select max(lg.last_request)
+		from
+		t_user_login lg where lg.user_id=u.user_id and lg.expired = '0'
+		and
+		lg.last_request between sysdate-0.5/24 and sysdate),null ,'C*'
+		||to_char(u.user_id),'B*'||to_char(u.user_id))) ID,
+		decode(b.role_id,1,'管理员：' ||u.real_name,
+		decode( (select
+		max(lg.last_request)
+		from t_user_login lg where lg.user_id=u.user_id
+		and lg.expired = '0'
+		and lg.last_request between sysdate-0.5/24 and
+		sysdate),
+       <![CDATA[
+       null ,u.real_name || '/' ||
+                     (select count(1)
+                        from LM_ALLCATION_ITEM t
+                       where to_char(sysdate, 'yyyy-MM') =
+                             to_char(t.allocation_time, 'yyyy-MM')
+                         and t.user_id = u.user_id) || '/' ||
+                     (select count(1)
+                        from LM_ALLCATION_ITEM t
+                       where to_char(sysdate, 'yyyy-MM-dd') =
+                             to_char(t.allocation_time, 'yyyy-MM-dd')
+                         and t.user_id = u.user_id) || '/' || 
+                         decode(
+                         (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm')
+                         and a.allotdate < sysdate and a.sid = u.user_id )
+                         ,
+		                     0,
+		                     '0.00%',
+		                      trim(to_char(round((
+                          (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm') 
+                         and a.allotdate < sysdate and a.sid = u.user_id and exists (select * from lm_clientrace where t_id = a.id and sid=a.sid))
+                          ) / 
+                          (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm') 
+                         and a.allotdate < sysdate and a.sid = u.user_id )
+                           * 100, 2),9999990.99))|| '%')
+       
+       ,'在线：'||u.real_name || '/' ||
+                     (select count(1)
+                        from LM_ALLCATION_ITEM t
+                       where to_char(sysdate, 'yyyy-MM') =
+                             to_char(t.allocation_time, 'yyyy-MM')
+                         and t.user_id = u.user_id) || '/' ||
+                     (select count(1)
+                        from LM_ALLCATION_ITEM t
+                       where to_char(sysdate, 'yyyy-MM-dd') =
+                             to_char(t.allocation_time, 'yyyy-MM-dd')
+                         and t.user_id = u.user_id) || '/' || 
+                         decode(
+                         (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm')
+                         and a.allotdate < sysdate and a.sid = u.user_id )
+                         ,
+		                     0,
+		                     '0.00%',
+		                      trim(to_char(round((
+                          (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm') 
+                         and a.allotdate < sysdate and a.sid = u.user_id and exists (select * from lm_clientrace where t_id = a.id and sid=a.sid))
+                          ) / 
+                          (select count(1) 
+                         from lm_client a 
+                         where a.allotdate >= trunc(sysdate, 'mm') 
+                         and a.allotdate < sysdate and a.sid = u.user_id )
+                           * 100, 2),9999990.99))|| '%')       
+       )) NAME,
+       ]]>
+		u.organ_id PID,'check' CHE
+		FROM t_user u ,t_user_role b where
+		u.user_id=b.user_id and b.role_id in
+		(1,2) and u.status ='1' and
+		u.organ_id !='00' and u.organ_code =
+		#{organCode}
+		and not exists (select
+		1 from t_user_lock l where l.user_id = u.user_id
+		and l.lock_status='1')
+		and exists ( select q.name from (select * from t_organ_company where
+		status = '1') q
+		where q.organ_id = u.organ_id
+		start with q.organ_id =
+		#{organId}
+		connect by prior q.organ_id = q.parent_id
+		)
+		order by ID
+
+	</select>
+
+	<select id="queryOrgPersonByRole" resultType="map"
+		parameterType="map">
+		select t.organ_id ID,t.name NAME,t.parent_id
+		PID,'nocheck' CHE
+		from (select * from t_organ_company where organ_code
+		= #{organCode} and
+		status = '1') t
+		where t.status ='1'
+		start with
+		t.organ_id = #{organId}
+		connect by prior t.organ_id = t.parent_id
+		union
+		all
+		SELECT to_char(u.user_id)|| '**' ID ,
+		decode( (select
+		max(lg.last_request)
+		from t_user_login lg where lg.user_id=u.user_id
+		and lg.expired = '0'
+		and lg.last_request between sysdate-0.5/24 and
+		sysdate),null
+		,u.real_name,'在线：'||u.real_name) NAME,
+		u.organ_id
+		PID,'check' CHE
+		FROM t_user u ,t_user_role b where u.user_id=b.user_id
+		and b.role_id=1 and
+		u.status ='1' and u.organ_code = #{organCode}
+		and
+		exists ( select q.name from (select * from t_organ_company where
+		organ_code = #{organCode} and status = '1') q
+		where q.organ_id =
+		u.organ_id
+		start with q.organ_id = #{organId}
+		connect by prior
+		q.organ_id = q.parent_id
+		)
+		order by NAME desc
+
+	</select>
+
+	<select id="getClientInfoByIds" parameterType="java.util.List"
+		resultType="map">
+		select a.ID, a.CLIENT_NAME NAME,b.REAL_NAME from lm_client a left join
+		t_user b on a.sid=b.user_id
+		where a.id
+		in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by a.id
+	</select>
+
+	<update id="updateAssign" parameterType="map">
+		update lm_client set
+		SID=#{newUserId},COMPANYID=#{newUserOrganId},DDATE=SYSDATE,INIT_RANK=(case
+		when RANK = 'C' then 'C' else init_rank end),RANK=(case when RANK =
+		'C' then '' else RANK end),
+		<if test="newUserId != null and 0 != newUserId">
+			ALLOTDATE=SYSDATE
+		</if>
+		where id in
+		<foreach item="item" index="index" collection="ids" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="getTotal" resultType="map">
+		select COUNT(1) num,s.real_name name from lm_client t left join t_user
+		s on t.rid=s.user_id
+		where rid = #{userid} and 
+     <![CDATA[
+     to_char(t.QDATE, 'YYYY-MM-DD') >=#{stime} AND to_char(t.QDATE, 'YYYY-MM-DD') <=#{etime}
+     ]]>
+		group by real_name
+	</select>
+
+
+
+	<update id="delData" parameterType="map">
+		update lm_client set sex='0' where id in
+		<foreach item="item" index="index" collection="ids" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="renewData" parameterType="map">
+		update lm_client set sex='1' where id in
+		<foreach item="item" index="index" collection="ids" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="searchTrace" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select a.ID TID, a.title TITLE,to_char(a.redate,'YYYY-MM-DD :
+		HH24:mi:ss') TDATE,a.u_id UNAME from lm_clientrace a
+		<where>
+			<if test="id != null and '' != id">
+				AND a.t_id = #{id,jdbcType=DECIMAL}
+			</if>
+		</where>
+		order by a.redate desc
+	</select>
+
+	<select id="searchPerson" resultType="java.lang.String"
+		parameterType="java.lang.Long">
+		select u.real_name from lm_client lm ,t_user u
+		where
+		lm.id =#{id,jdbcType=DECIMAL} and lm.sid = u.user_id
+	</select>
+
+
+	<select id="getVistList" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value= lmc.fromtype_big) || ' - ' ||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel)
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		nvl((select real_name from t_user
+		where user_id=lmc.rid),'') RID,
+		nvl((select real_name||'-'||name
+		real_name from t_user a,
+		t_organ_company b where a.organ_id =
+		b.organ_id  and a.user_id =
+		lmc.sid),'') SID,
+		to_char(DDATE,
+		'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD') NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE,
+		lmc.REASON,
+		lmc.REASONCONT,
+		lmc.CARNO
+		from lm_client lmc,
+		t_user b
+		<where>
+			lmc.sid = b.user_id and lmc.sex = '1'
+			and b.user_id = #{sid}
+			and
+			exists (select role_id from t_user_role where user_id =#{sid} and
+			role_id = 2)
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="ifurgent != null and '' != ifurgent">
+				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+		</where>
+		order by IFURGENT desc, lmc.id desc
+	</select>
+
+	<select id="getAssignList" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),'')
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.sex = '1'
+			and b.user_id =#{rid}
+			and
+			b.organ_code =#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
+			and
+			exists (select role_id from t_user_role where user_id =#{rid} and
+			role_id = 3)
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="ifurgent != null and '' != ifurgent">
+				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+		</where>
+		order by IFURGENT desc, lmc.id desc
+	</select>
+
+	<select id="getAssignListByTel" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) || ' - ' ||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel)
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.sex = '1'
+			and b.organ_code
+			=#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+		</where>
+		order by IFURGENT desc, lmc.id desc
+	</select>
+
+	<select id="getAssignByManager" resultType="map"
+		parameterType="com.jiezh.dao.leads.client.ClientVO">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value = lmc.fromtype_big) || ' - ' ||
+		nvl((select name from t_code_item where code_item_id =
+		lmc.fromtype),lmc.channel)
+		FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE,
+		'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where
+		ID=lmc.big_pid),'') BIG_PID,
+		nvl((select title from LM_CATEGORY where
+		id=lmc.small_pid),'') SMALL_PID,
+		b.real_name RID,
+		nvl((select
+		real_name||'-'||name real_name from t_user a, t_organ_company b where
+		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
+		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD')
+		NEXTDATE,
+		nvl((select name from t_code_item where code_type ='1000' and
+		value=lmc.ifurgent),'') IFURGENT,
+		nvl((select name from t_code_item
+		where code_type ='1026' and value=lmc.rank),'')
+		RANK,
+		nvl((select name
+		from t_code_item where code_type ='1027' and
+		value=lmc.status),'')
+		STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc, t_user b
+		<where>
+			lmc.rid = b.user_id and lmc.cityid =#{sysOrganCode} and lmc.sex = '1'
+			and (nvl(lmc.companyid,'00') in(SELECT ORGAN_ID FROM (select * from
+			t_organ_company where status = '1' and organ_code =#{sysOrganCode})
+			START WITH ORGAN_ID =#{companyid} CONNECT BY PRIOR ORGAN_ID =
+			PARENT_ID)
+			or lmc.rid = #{rid})
+			<if test="clientName != null and '' != clientName">
+				AND lmc.CLIENT_NAME like '%${clientName}%'
+			</if>
+			<if test="id != null and '' != id">
+				AND lmc.ID = #{id,jdbcType=DECIMAL}
+			</if>
+			<if test="tel != null and '' != tel">
+				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="bigPid != null and '' != bigPid">
+				AND lmc.BIG_PID = #{bigPid,jdbcType=DECIMAL}
+			</if>
+			<if test="smallPid != null and '' != smallPid">
+				AND lmc.SMALL_PID = #{smallPid,jdbcType=DECIMAL}
+			</if>
+			<if test="rank != null and '' != rank">
+				AND lmc.rank = #{rank,jdbcType=CHAR}
+			</if>
+			<if test="ifurgent != null and '' != ifurgent">
+				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+			<if test="sid != null and 0 != sid and '' != sid">
+				AND lmc.sid = #{sid,jdbcType=DECIMAL}
+			</if>
+		</where>
+		order by IFURGENT desc, lmc.id desc
+	</select>
+
+	<select id="checkTel" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select max(tel) from lm_client t where t.tel= #{tel}
+	</select>
+
+	<select id="getReportHead" resultType="map">
+		select '分公司' name from
+		dual
+		union all
+		select '咨询分类' name from dual
+		union all
+		select '总和' name from dual
+		union all
+	    select '渠道' name from dual
+	    union all
+	    select '直销' name from dual  
+		union all
+		select name from (select t.name from t_code_item t
+		where t.code_type =
+		'1025' and t.status =1 order by t.code_item_id)
+	</select>
+
+	<select id="getReportHeadForExcel" resultType="map">
+		select '分公司' name
+		from dual
+		union all
+		select '咨询分类' name from dual
+		union all
+	    select '渠道' name from dual
+	    union all
+	    select '直销' name from dual  
+		union all
+		select name
+		from (select t.name from t_code_item t where t.code_type =
+		'1025' and
+		t.status =1 order by t.code_item_id)
+		union all
+		select '合计' name from
+		
+		dual
+	</select>
+
+	<select id="getCountAll" resultType="map" parameterType="map">
+
+		select aa.companyid organ_id,
+       aa.small_pid pid,
+       (select t.name from t_organ_company t where t.organ_id = aa.companyid) name,
+       (select l.title from lm_category l where l.id = aa.small_pid) title,
+       nvl(sum(decode(aa.fromtype_big, 1, aa.total)), 0) +
+       nvl(sum(decode(aa.fromtype_big, 2, aa.total)), 0) +
+       nvl(sum(decode(aa.fromtype_big, 3, aa.total)), 0) madd,
+       nvl(sum(decode(aa.fromtype_big, 2, aa.total)), 0) m1,
+       nvl(sum(decode(aa.fromtype_big, 3, aa.total)), 0) m2,
+       nvl(avg(decode(aa.fromtype, 1, aa.total)), 0) m3,
+       nvl(avg(decode(aa.fromtype, 4, aa.total)), 0) m4,
+       nvl(avg(decode(aa.fromtype, 6, aa.total)), 0) m5,
+       nvl(avg(decode(aa.fromtype, 9, aa.total)), 0) m6,
+       nvl(avg(decode(aa.fromtype, 10, aa.total)), 0) m7,
+       nvl(avg(decode(aa.fromtype, 11, aa.total)), 0) m8,
+       nvl(avg(decode(aa.fromtype, 12, aa.total)), 0) m9,
+       nvl(avg(decode(aa.fromtype, 14, aa.total)), 0) m10,
+       nvl(avg(decode(aa.fromtype, 15, aa.total)), 0) m11,
+       nvl(avg(decode(aa.fromtype, 16, aa.total)), 0) m12,
+       nvl(avg(decode(aa.fromtype, 17, aa.total)), 0) m13,
+       nvl(avg(decode(aa.fromtype, 19, aa.total)), 0) m14,
+       nvl(avg(decode(aa.fromtype, 29, aa.total)), 0) m15,
+       nvl(avg(decode(aa.fromtype, 351, aa.total)), 0) m16,
+       nvl(avg(decode(aa.fromtype, 352, aa.total)), 0) m17,
+       nvl(avg(decode(aa.fromtype, 353, aa.total)), 0) m18,
+       nvl(avg(decode(aa.fromtype, 357, aa.total)), 0) m19,
+       nvl(avg(decode(aa.fromtype, 358, aa.total)), 0) m20,
+       nvl(avg(decode(aa.fromtype, 359, aa.total)), 0) m21,
+       nvl(avg(decode(aa.fromtype, 360, aa.total)), 0) m22,
+       nvl(avg(decode(aa.fromtype, 361, aa.total)), 0) m23,
+       nvl(avg(decode(aa.fromtype, 362, aa.total)), 0) m24,
+       nvl(avg(decode(aa.fromtype, 363, aa.total)), 0) m25,
+       nvl(avg(decode(aa.fromtype, 390, aa.total)), 0) m26,
+       nvl(avg(decode(aa.fromtype, 391, aa.total)), 0) m27,
+       nvl(avg(decode(aa.fromtype, 392, aa.total)), 0) m28,
+       nvl(avg(decode(aa.fromtype, 510, aa.total)), 0) m29,
+       nvl(avg(decode(aa.fromtype, 511, aa.total)), 0) m30,
+       nvl(avg(decode(aa.fromtype, 550, aa.total)), 0) m31,
+       nvl(avg(decode(aa.fromtype, 630, aa.total)), 0) m32,
+       nvl(avg(decode(aa.fromtype, 631, aa.total)), 0) m33,
+       nvl(avg(decode(aa.fromtype, 690, aa.total)), 0) m34,
+       nvl(avg(decode(aa.fromtype, 710, aa.total)), 0) m35
+       
+  from (select lc.companyid,
+               lc.small_pid,
+               lc.fromtype,
+               lc.fromtype_big,
+               count(1) total
+          from lm_client lc
+         where lc.big_pid = 1
+           and lc.sex = '1'
+           and lc.qdate between to_date(#{stime}, 'YYYY-MM-DD HH24:mi:ss') and
+               to_date(#{etime}, 'YYYY-MM-DD HH24:mi:ss')   
+           and lc.companyid in
+               (select oc.organ_id
+                  from t_organ_company oc
+                 where oc.status = 1
+                 start with oc.organ_id = #{organId}
+                connect by oc.parent_id = prior oc.organ_id)
+         group by lc.fromtype, lc.small_pid, lc.companyid, lc.fromtype_big) aa
+ group by aa.companyid, aa.small_pid
+ order by aa.companyid, aa.small_pid
+
+
+	</select>
+
+	<select id="getHfCount" resultType="map">
+
+		select (select real_name from t_user where user_id = #{userid}) name,
+		(select count(1)
+		from lm_client
+		where sid = #{userid} and
+            <![CDATA[
+            to_char(QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+            ]]>
+		) total,
+		(select count(1)
+		from lm_client a
+		where a.sid = #{userid} and
+            <![CDATA[
+            to_char(a.QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(a.QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+            ]]>
+		and (select count(1) from lm_clientrace b where b.t_id = a.id) > 0)
+		reTotal
+		from dual
+
+	</select>
+
+
+
+	<select id="getTotalAll" resultType="map">
+		select COUNT(1) num,s.real_name name from lm_client t left join t_user
+		s on t.rid=s.user_id
+		where rid in
+		(
+		select a.user_id value
+		from t_user a,
+		t_user_role b
+		where a.user_id = b.user_id
+		and b.ROLE_ID = 3
+		) and 
+     <![CDATA[
+     to_char(t.QDATE, 'YYYY-MM-DD') >=#{stime} AND to_char(t.QDATE, 'YYYY-MM-DD') <=#{etime}
+     ]]>
+		group by real_name
+	</select>
+
+	<select id="getTotalPer" resultType="map">
+
+		select count(1) total,b.name
+		from (select * from lm_client a left join
+		(SELECT t.user_id,s.name FROM
+		T_USER t
+		left join t_organ_company s on
+		t.organ_id=s.organ_id where
+		t.organ_code='JY') b
+		on a.rid = b.user_id) b
+		where 
+       <![CDATA[
+          to_char(QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+       ]]>
+		group by name
+	</select>
+
+
+	<select id="getReTotalPer" resultType="map">
+		select count(1) reTotal,a.name
+		from (select * from lm_client a left
+		join (SELECT t.user_id,s.name FROM
+		T_USER t left join
+		t_organ_company s
+		on t.organ_id=s.organ_id where t.organ_code='JY') b
+		on a.rid =
+		b.user_id) a
+		where 
+          <![CDATA[
+          to_char(QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+          ]]>
+		and (select count(1) from lm_clientrace b where b.t_id = a.id) > 0
+		group by name
+	</select>
+
+
+
+	<select id="getTotalPerOc" resultType="map">
+
+		select count(1) total,b.name,user_name,b.user_id
+		from (select * from
+		lm_client a left join (SELECT
+		t.user_id,s.name,user_name FROM T_USER t
+		left join t_organ_company s on t.organ_id=s.organ_id where
+		t.organ_code='JY') b
+		on a.rid = b.user_id) b
+		where 
+       <![CDATA[
+          to_char(QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+       ]]>
+		group by name,user_name,user_id
+	</select>
+
+
+	<select id="getReTotalPerOc" resultType="map">
+		select count(1) reTotal,a.name,user_name,user_id
+		from (select * from
+		lm_client a left join (SELECT
+		t.user_id,s.name,user_name FROM T_USER t
+		left join
+		t_organ_company s on t.organ_id=s.organ_id where
+		t.organ_code='JY') b
+		on a.rid = b.user_id) a
+		where 
+          <![CDATA[
+          to_char(QDATE, 'YYYY-MM-DD HH:mi') >=#{stime} AND to_char(QDATE, 'YYYY-MM-DD HH:mi') <=#{etime}
+          ]]>
+		and (select count(1) from lm_clientrace b where b.t_id = a.id) > 0
+		group by name,user_name,user_id
+	</select>
+	<!-- add by cj 获取所有用户 -->
+	<select id="getAllUser" resultType="map">
+		select count(1),name,user_name,user_id from lm_client a right join
+		(SELECT t.user_id,s.name,user_name FROM T_USER t
+		join t_organ_company s
+		on t.organ_id=s.organ_id
+		<where>
+			s.organ_code=#{orgcode} and 
+        <![CDATA[ 
+        t.organ_id <> '00' 
+       ]]>
+			<if test="organId != null and '' != organId and organId !='00' ">
+				and t.organ_id= #{organId}
+			</if>
+			) b
+		</where>
+		on a.rid = b.user_id group by name,user_name,user_id order by name
+	</select>
+
+	<!-- add by cj 获取所有用户 -->
+	<select id="getAllOrgan" resultType="map">
+		select count(1),name,organ_id from lm_client a right join (SELECT
+		t.user_id,s.name,user_name,t.organ_id FROM T_USER t
+		join
+		t_organ_company s on t.organ_id=s.organ_id
+		<where>
+			s.organ_code=#{orgcode} and
+       <![CDATA[ 
+        t.organ_id <> '00'
+       ]]>
+			<if test="organId != null and '' != organId and organId !='00' ">
+				and t.organ_id= #{organId}
+			</if>
+			) b
+		</where>
+		on a.rid = b.user_id group by name,organ_id order by organ_id
+	</select>
+
+	<select id="selectTel" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select COUNT(tel) num from lm_client
+		where tel= #{tel}
+	</select>
+
+	<select id="analyzeRepleat" statementType="CALLABLE"
+		parameterType="map">
+  	<![CDATA[  
+    {call analyze_repleat_client (#{in_organ_id,mode=IN,jdbcType=VARCHAR},#{in_start_date,mode=IN,jdbcType=VARCHAR},#{in_end_date ,mode=IN,jdbcType=VARCHAR},#{in_query_id,mode=OUT,jdbcType=VARCHAR})}  
+	]]>
+	</select>
+
+	<select id="getAllReplyOrgan" parameterType="java.lang.String"
+		resultType="map">
+		select *
+		from (select t1.organ_id,
+		t1.name,
+		nvl(t2.total, 0)
+		total,
+		nvl(t2.re_total, 0) re_total,
+		nvl(t2.un_re_total, 0) un_re_total,
+		decode(nvl(t2.total, 0), 0, '0.00%',
+		trim(to_char(round((nvl(t2.re_total, 0) /
+		nvl(t2.total, 0)) * 100,
+		2),9999990.99))|| '%') percent
+		from t_organ_company t1,
+		(select
+		organ_id,
+		(select name
+		from t_Organ_Company
+		where organ_id = t.organ_id
+		and organ_code = 'JY') organ_name,
+		sum(total) total,
+		sum(re_total)
+		re_total,
+		sum(un_re_total) un_re_total
+		from lm_repleat_result t
+		where
+		query_id =#{queryId}
+		group by organ_id) t2
+		where t1.organ_id =
+		t2.organ_id
+		and t1.organ_code = 'JY'
+		and t1.status =1
+		and t1.organ_id !=
+		'00')
+		order by organ_id
+	</select>
+
+	<select id="getReplyList" parameterType="map" resultType="map">
+		select
+		real_name,
+		total,
+		re_total,
+		un_re_total,
+		decode(nvl(total, 0),
+		0,
+		'0.00%',
+		trim(to_char(round((nvl(re_total, 0) / nvl(total, 0)) * 100,
+		2),9999990.99))|| '%') percent
+		from lm_repleat_result
+		where organ_id
+		=#{organId}
+		and query_id =#{queryId}
+		order by total desc
+	</select>
+	<select id="getClientCount" resultType="String" parameterType="map">
+		select count(1) from lm_client t
+	</select>
+	<select id="getPlanList" resultType="map" parameterType="map">
+		select t.user_id ID,t.real_name||case t.status when '0' then '(离职)'
+		end USER_NAME,
+		o.name name,
+		o.organ_id,
+		t.Jz_Code CODE
+		,p.plan_num
+		COUNT,p.month MONTH,p.create_date CREATEDATE
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join lm_sale_plan p ON t.user_id
+		= p.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		<where>
+			s.role_id = '2' AND o.organ_code='JY'
+			<if test="organId != null and '' != organId and organId !='00' ">
+				and t.organ_id= #{organId}
+			</if>
+			<if test="month != null and '' != month">
+				and p.month= #{month}
+			</if>
+		</where>
+		order by MONTH desc
+	</select>
+	<delete id="deletePlanByID" parameterType="map">
+		delete from
+		lm_sale_plan
+		where USER_ID = #{user_id,jdbcType=DECIMAL} and MONTH =
+		#{month,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertPlan" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_SALES_PLAN.Nextval as id from dual
+		</selectKey>
+		insert into lm_sale_plan (ID,USER_ID, MONTH, PLAN_NUM,
+		FIRST_TIP,
+		PERFORM)
+		values (#{id,jdbcType=DECIMAL},#{user_id,jdbcType=VARCHAR},
+		#{month,jdbcType=VARCHAR}, #{plan_num,jdbcType=DECIMAL},
+		#{first_tip,jdbcType=VARCHAR},#{perform,jdbcType=DECIMAL})
+	</insert>
+	<select id="getPlan" resultType="map" parameterType="map">
+		select ID
+		id,USER_ID user_id, MONTH month, PLAN_NUM plan_num,
+		FIRST_TIP
+		first_tip,CREATE_DATE create_date,PERFORM perform
+		from lm_sale_plan
+		where USER_ID = #{user_id,jdbcType=DECIMAL} and month =
+		#{month,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateTaskStateByID" parameterType="java.lang.Long">
+		update
+		lm_sale_plan set FIRST_TIP = '1' where ID =
+		#{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="getTimeoutList" resultType="map" parameterType="map">
+		select ID id,CLIENT_ID client_id, MONTH month, OVERTIME_TYPE
+		overtime_type,
+		STATUS status,CREATE_DATE create_date, USER_ID user_id,
+		CLIENT_NAME
+		client_name,BUSINESS_TYPE business_type,TEL tel
+		from
+		LM_TIMEOUT_TASK
+		where USER_ID = #{user_id,jdbcType=DECIMAL} and STATUS
+		='0'
+		and exists(select 1 from lm_client l where l.id =
+		LM_TIMEOUT_TASK.client_id and l.sid = LM_TIMEOUT_TASK.user_id)
+     <![CDATA[ 
+      and rownum<=30 
+     ]]>
+		order by ALLOTDATE,OVERTIME_TYPE,ID
+	</select>
+
+
+	<select id="getScore" resultType="map" parameterType="map">
+		select
+		nvl(sum(abs(score)),0) score,'1' type from lm_task_score t
+		where
+		t.user_id=#{user_id,jdbcType=DECIMAL} and
+		month=#{month,jdbcType=VARCHAR} and t.SCORE_TYPE='1'
+		union
+		select
+		nvl(sum(abs(score)),0) score,'2' from lm_task_score t where
+		t.user_id=#{user_id,jdbcType=DECIMAL} and
+		month=#{month,jdbcType=VARCHAR} and t.SCORE_TYPE in ('2','3')
+	</select>
+
+
+	<update id="updateTimeTaskByID" parameterType="java.lang.Long">
+		update
+		lm_timeout_task
+		set status = '1'
+		where CLIENT_ID =
+		#{id,jdbcType=DECIMAL}
+	</update>
+
+	<update id="updateUrgeTaskByID" parameterType="java.lang.Long">
+		update lm_urge
+		set
+		URGE_STATUS = '1'
+		where URGE_AFFAIR_ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="getTotalScore" resultType="java.lang.String"
+		parameterType="map">
+		select lock_score from t_user_lock t where MONTH =
+		#{month,jdbcType=VARCHAR}
+		and USER_ID = #{user_id,jdbcType=DECIMAL}
+	</select>
+
+	<select id="getIsExist" resultType="map" parameterType="map">
+		select
+		ID,USER_ID,CLIENT_ID,MONTH,PLAN_STATE,SCORE_STATE,CREATE_DATE
+		from
+		LM_PLAN_SCORE_STATE t
+		where MONTH = #{month,jdbcType=VARCHAR} and
+		USER_ID =
+		#{user_id,jdbcType=DECIMAL} and CLIENT_ID =
+		#{client_id,jdbcType=DECIMAL}
+	</select>
+
+	<update id="updatePlan" parameterType="map">
+		update lm_sale_plan set
+		PERFORM=PERFORM+1 where MONTH =
+		#{month,jdbcType=VARCHAR} and USER_ID =
+		#{user_id,jdbcType=DECIMAL}
+	</update>
+
+	<update id="updateScoreLock" parameterType="map">
+		update t_user_lock
+		set LOCK_SCORE=LOCK_SCORE+#{score,jdbcType=DECIMAL} where
+		MONTH =
+		#{month,jdbcType=VARCHAR} and USER_ID =
+		#{user_id,jdbcType=DECIMAL}
+	</update>
+
+	<insert id="updateScore" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_TASK_SCORE.Nextval as id from dual
+		</selectKey>
+		insert into lm_task_score (ID,CLIENT_ID, USER_ID, MONTH,
+		SCORE,SCORE_TYPE)
+		values
+		(#{id,jdbcType=DECIMAL},#{client_id,jdbcType=DECIMAL},#{user_id,jdbcType=VARCHAR},
+		#{month,jdbcType=VARCHAR},
+		#{score,jdbcType=VARCHAR},
+		#{score_type,jdbcType=DECIMAL})
+	</insert>
+
+	<insert id="insertPlanScore" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_PLAN_SCORE_ID.Nextval as id from dual
+		</selectKey>
+		insert into LM_PLAN_SCORE_STATE
+		(ID,USER_ID,CLIENT_ID,MONTH,PLAN_STATE,SCORE_STATE)
+		values
+		(#{id,jdbcType=DECIMAL},#{user_id,jdbcType=VARCHAR},#{client_id,jdbcType=DECIMAL},
+		#{month,jdbcType=VARCHAR},
+		#{plan_state,jdbcType=VARCHAR},
+		#{score_state,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updatePlanScore" parameterType="map">
+		update LM_PLAN_SCORE_STATE
+		<set>
+			<if test="plan_state != null">
+				PLAN_STATE = #{plan_state,jdbcType=VARCHAR},
+			</if>
+			<if test="score_state != null">
+				SCORE_STATE = #{score_state,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where MONTH = #{month,jdbcType=VARCHAR} and USER_ID =
+		#{user_id,jdbcType=DECIMAL} and CLIENT_ID =
+		#{client_id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="getIsTimeOutTask" resultType="java.lang.String"
+		parameterType="map">
+		select count(1) from lm_timeout_task t where MONTH =
+		#{month,jdbcType=VARCHAR} and USER_ID = #{user_id,jdbcType=DECIMAL}
+		and CLIENT_ID = #{client_id,jdbcType=DECIMAL}
+		and t.status = '0'
+	</select>
+
+	<select id="getU_TCount" resultType="map" parameterType="map">
+		select
+		count(1) count, 'u' type
+		from lm_urge t
+		where t.urge_to_person_id =
+		#{user_id,jdbcType=DECIMAL}
+		and t.urge_status = '0'
+		and exists (select 1
+		from lm_client l where l.id = t.urge_affair_id and
+		l.sid =
+		t.urge_to_person_id)
+		union
+		select count(1) count, 't' type
+		from
+		lm_timeout_task t
+		where user_id = #{user_id,jdbcType=DECIMAL}
+		and status
+		= '0'
+		and exists (select 1 from lm_client l where l.id = t.client_id
+		and l.sid
+		= t.user_id)
+	</select>
+
+	<select id="getPlanExistOfMonth" resultType="java.lang.String"
+		parameterType="map">
+		select count(1) from lm_sale_plan t where MONTH =
+		#{month,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="initPlan" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_SALES_PLAN.Nextval as id from dual
+		</selectKey>
+		insert into lm_sale_plan (ID,USER_ID, MONTH, PLAN_NUM, FIRST_TIP,
+		PERFORM)
+		values (#{id,jdbcType=DECIMAL},
+		#{user_id,jdbcType=DECIMAL},#{month,jdbcType=VARCHAR}, '0', '0','0')
+	</insert>
+
+	<select id="getUserList" resultType="map" parameterType="map">
+		select
+		t.user_id from t_user t left join t_user_role s on t.user_id =
+		s.user_id
+		left join t_organ_company o on o.organ_id = t.organ_id where
+		s.role_id = '2' and o.organ_code='JY' and t.status='1'
+	</select>
+
+
+	<select id="getIsExistsOfClient" resultType="java.lang.String"
+		parameterType="map">
+		select count(1) from lm_client t where CONTRACTNO =
+		#{contractno,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertAllocationItem" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_LM_ALLOCATION_ITEM_ID.Nextval as id from dual
+		</selectKey>
+		insert into LM_ALLCATION_ITEM
+		(ID,USER_ID,CLIENT_ID,ALLOCATION_USER_ID)
+		values
+		(#{id,jdbcType=DECIMAL},#{user_id,jdbcType=DECIMAL},#{client_id,jdbcType=DECIMAL},#{allocation_user_id,jdbcType=DECIMAL})
+	</insert>
+
+
+	<select id="getExcelData" resultType="map" parameterType="map">
+		select * from (
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'1' type
+		from lm_client a
+		join (select t.user_id,
+		t.real_name, o.name, o.organ_id
+		from t_user t
+		join t_user_role s on
+		t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on
+		a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'1' type
+		from lm_client a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name,b.organ_id
+		) union all
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'2' type
+		from lm_client a
+		join (select
+		t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.idd = '1'
+		and
+		to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'2' type
+		from lm_client a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.idd = '1'
+		and to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name, b.organ_id
+		) union all
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'3' type
+		from lm_client a
+		join (select
+		t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.ifk = '1'
+		and
+		to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'3' type
+		from lm_client a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.ifk = '1'
+		and to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name, b.organ_id
+		) union all
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'4' type
+		from lm_client a
+		join (select
+		t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.rank = 'O'
+		and
+		to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'4' type
+		from lm_client a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.rank = 'O'
+		and to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name,b.organ_id
+		) union all
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'5' type
+		from lm_client a
+		join (select
+		t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.rank = 'C'
+		and
+		to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'5' type
+		from lm_client a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where a.rank = 'C'
+		and to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name, b.organ_id
+		) union all
+		(select b.real_name,
+		b.name,
+		b.user_id,
+		b.organ_id,
+		count(1) num,
+		'6' type
+		from lm_task_score a
+		join
+		(select t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join
+		t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.user_id = b.user_id
+		where a.score_type = '3'
+		and to_char(a.create_date, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,
+		b.name,
+		-1 user_id,
+		b.organ_id,
+		count(1) num,
+		'6' type
+		from lm_task_score a
+		join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.user_id = b.user_id
+		where a.score_type = '3'
+		and to_char(a.create_date, 'yyyy-mm-dd')
+		between
+		#{stnextdate,jdbcType=VARCHAR} and
+		#{stnextdate1,jdbcType=VARCHAR}
+		group by b.name, b.organ_id
+		)
+		union all
+		select real_name, name, user_id, organ_id, count(1) num, '7' type
+		from
+		(select t_id, b.real_name, b.name, b.user_id, b.organ_id
+		from lm_client
+		f
+		join (select t_id, min(redate) redate
+		from lm_clientrace
+		where
+		to_char(redate, 'yyyy-mm-dd') between #{stnextdate,jdbcType=VARCHAR}
+		and #{stnextdate1,jdbcType=VARCHAR}
+		group by t_id) s on f.id = s.t_id
+		join (select t.user_id, t.real_name, o.name, o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on
+		o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on sid = b.user_id)
+		group by real_name, name,
+		user_id, organ_id
+		union all
+		select 'TOTAL' real_name,
+		name,
+		-1 user_id,
+		organ_id,
+		count(1) num,
+		'7' type
+		from (select t_id, b.real_name, b.name,
+		b.user_id, b.organ_id
+		from lm_client f
+		join (select t_id, min(redate)
+		redate
+		from lm_clientrace
+		where to_char(redate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR}
+		and #{stnextdate1,jdbcType=VARCHAR}
+		group by t_id) s on f.id = s.t_id
+		join (select t.user_id, t.real_name,
+		o.name, o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id =
+		s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where
+		s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on sid =
+		b.user_id)
+		group by name, organ_id
+		union all
+		(
+		select
+		b.real_name,b.name,b.user_id,b.organ_id,count(1) num,'8' type
+		from (
+		select a.* from lm_client a join link_erp_report_temp b on
+		a.id=b.client_id) a join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,b.name,-1 user_id,b.organ_id,count(1) num,'8' type
+		from ( select a.* from lm_client a join link_erp_report_temp b on
+		a.id=b.client_id) a join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name,b.organ_id
+		)
+		union all
+		(
+		select
+		b.real_name,b.name,b.user_id,b.organ_id,count(1) num,'9' type
+		from (
+		select a.* from lm_client a join link_erp_report b on
+		a.id=b.client_id) a join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.real_name, b.name, b.user_id, b.organ_id
+		union all
+		select
+		'TOTAL' real_name,b.name,-1 user_id,b.organ_id,count(1) num,'9' type
+		from ( select a.* from lm_client a join link_erp_report b on
+		a.id=b.client_id) a join (select t.user_id, t.real_name, o.name,
+		o.organ_id
+		from t_user t
+		join t_user_role s on t.user_id = s.user_id
+		join t_organ_company o on o.organ_id = t.organ_id
+		where s.role_id = '2'
+		and o.organ_code = 'JY'
+		and t.status = '1') b on a.sid = b.user_id
+		where to_char(a.allotdate, 'yyyy-mm-dd') between
+		#{stnextdate,jdbcType=VARCHAR} and #{stnextdate1,jdbcType=VARCHAR}
+		group by b.name,b.organ_id
+		)
+		)
+		<where>
+			<if test="organId != null and '' != organId and organId !='00' ">
+				and organ_id in (SELECT qq.organ_id
+				FROM t_organ_company
+				qq
+				WHERE qq.status = '1'
+				start with qq.organ_id = #{organId}
+				connect by
+				qq.parent_id = prior qq.organ_id)
+			</if>
+		</where>
+
+		order by type, name, user_id desc
+	</select>
+
+	<select id="selectClentByType" parameterType="map" resultType="map">
+		select lmc.id ID,
+		lmc.CLIENT_NAME NAME,
+		lmc.TEL,
+		lmc.PERSONID,
+		lmc.EMAIL,
+		(select t.name from t_code_item t where t.code_type='1044' and t.value = lmc.fromtype_big) || ' - ' ||
+		nvl((select name from t_code_item where code_item_id = lmc.fromtype),lmc.channel) FROMTYPE,
+		lmc.title TITLE,
+		to_char(lmc.QDATE, 'YYYY-MM-DD') QDATE,
+		nvl((select title from LM_CATEGORY where ID = lmc.big_pid), '')
+		BIG_PID,
+		nvl((select title from LM_CATEGORY where id = lmc.small_pid),
+		'')
+		SMALL_PID,
+		nvl((select real_name from t_user where user_id =
+		lmc.rid), '') RID,
+		nvl((select real_name || '-' || name real_name
+		from
+		t_user a, t_organ_company b
+		where a.organ_id = b.organ_id
+		and
+		a.organ_code = #{sysOrganCode}
+		and b.organ_code = #{sysOrganCode}
+		and
+		a.user_id = lmc.sid),
+		'') SID,
+		to_char(DDATE, 'YYYY-MM-DD') DDATE,
+		to_char(NEXTDATE, 'YYYY-MM-DD') NEXTDATE,
+		nvl((select name
+		from
+		t_code_item
+		where code_type = '1000'
+		and value = lmc.ifurgent),
+		'')
+		IFURGENT,
+		nvl((select name
+		from t_code_item
+		where code_type = '1026'
+		and
+		value = lmc.rank),
+		'') RANK,
+		nvl((select name
+		from t_code_item
+		where
+		code_type = '1027'
+		and value = lmc.status),
+		'') STATUS,
+		lmc.rank RANKID,
+		lmc.status STATUSID,
+		lmc.QQ,
+		lmc.WEIXIN,
+		lmc.PHONE
+		from lm_client lmc,
+		t_user b
+		where lmc.sid = b.user_id
+		and lmc.sex = '1'
+		and b.organ_code =
+		#{sysOrganCode}
+		and lmc.cityid = #{sysOrganCode}
+		and exists (select
+		role_id
+		from t_user_role
+		where user_id = #{sid,jdbcType=DECIMAL}
+		and
+		role_id = 2)
+		and b.user_id = #{sid,jdbcType=DECIMAL}
+
+		<if test="agingTrackType == 1">
+   			<![CDATA[
+   			and lmc.allotdate >= sysdate - 1
+		   	and lmc.allotdate <= sysdate
+		   	and (lmc.rank in ('A','B','D') or lmc.rank is null)
+		   	and not exists (select 1
+		          from lm_clientrace lc
+		         where lc.t_id = lmc.id
+		           and lc.sid = lmc.sid)
+		   ]]>
+		</if>
+		<if test="agingTrackType == 2">
+   			<![CDATA[
+   			and lmc.allotdate >= sysdate - 4
+		   	and lmc.allotdate <= sysdate -3
+		   	and (lmc.rank in ('A','B','D') or lmc.rank is null)
+		   	and exists (select lc.t_id
+		          from lm_clientrace lc
+		         where lc.t_id = lmc.id
+		           and lc.sid = lmc.sid
+		         group by lc.t_id
+		        having count(1) = 1)
+		   ]]>
+		</if>
+		<if test="agingTrackType == 3">
+   			<![CDATA[
+   			and lmc.allotdate >= sysdate - 8
+		   	and lmc.allotdate <= sysdate - 7
+		   	and (lmc.rank in ('A','B','D') or lmc.rank is null)
+		   	and exists (select lc.t_id
+		          from lm_clientrace lc
+		         where lc.t_id = lmc.id
+		           and lc.sid = lmc.sid
+		         group by lc.t_id
+		        having count(1) = 2)
+		   ]]>
+		</if>
+	</select>
+
+	<select id="getDDReport" resultType="map" parameterType="map">
+		select a.companyid,
+		b.name ABBR_NAME,
+		sum(1) TOTNUM,
+		sum(nvl((select 1
+		from lm_clientrace c where c.t_id = a.id and rownum=1),0)) YYNUM,
+		sum(case a.idd
+		when '1' then
+		1
+		else
+		0
+		end) DDNUM,
+		sum(nvl((select 1 from
+		link_erp_report_temp d where d.client_id = a.id and rownum=1),0))
+		JJNUM,
+		sum(case a.credit_status
+		when '信审通过' then
+		1
+		when '合同审核中' then
+		1
+		when '签约中' then
+		1
+		else
+		0
+		end) TGNUM,
+		sum(case a.is_get_car
+		when '1' then
+		1
+		else
+		0
+		end) TCNUM
+		from lm_client a
+		left join t_organ_company b on a.companyid = b.organ_id
+		where
+		a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.companyid is not null
+		and a.qdate between
+		to_date(#{stime,jdbcType=VARCHAR}||' 00:00:00','yyyy-mm-dd
+		hh24:mi:ss') and to_date(#{etime,jdbcType=VARCHAR}||'
+		23:59:59','yyyy-mm-dd hh24:mi:ss')
+		<if test="depositStatus != null and '' != depositStatus">
+			and a.deposit_status = #{depositStatus,jdbcType=VARCHAR}
+		</if>
+		and a.companyid in
+		(select e.organ_id
+		from t_organ_company e
+		where
+		e.status = '1'
+		start with e.organ_id = #{organId,jdbcType=VARCHAR}
+		connect by e.parent_id = prior e.organ_id)
+		group by a.companyid, b.name
+		order by a.companyid
+	</select>
+
+	<select id="selectDDRank" parameterType="map" resultType="map">
+		select
+		(select b.name
+		from t_organ_company b
+		where b.organ_id = aa.orgid
+		and
+		b.status = '1') ORGNAME,
+		(select c.real_name from t_user c where
+		c.user_id = aa.sid) USERNAME,
+		aa.fk FK,
+		aa.cj CJ
+		from (select l.companyid
+		orgid,
+		l.sid sid,
+		sum(decode(l.ifk, '1', 1, 0)) fk,
+		sum(nvl((select 1
+		from link_erp_report a
+		where a.client_id = l.id),
+		0)) cj
+		from lm_client l
+		where l.fromtype = #{fromType,jdbcType=DECIMAL}
+		and l.sex = '1'
+		and l.sid != 0
+		and l.qdate
+		between
+		to_date(#{startDate,jdbcType=VARCHAR} || '00:00:00',
+		'yyyy-mm-dd hh24:mi:ss') and
+		to_date(#{endDate,jdbcType=VARCHAR} ||
+		'23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+		and l.companyid in
+		(select
+		d.organ_id
+		from t_organ_company d
+		where d.status = '1'
+		start with
+		d.organ_id = #{organId,jdbcType=VARCHAR}
+		connect by d.parent_id = prior
+		d.organ_id)
+		group by l.companyid, l.sid) aa
+		where (aa.fk + aa.cj) > 0
+		order by aa.cj desc, aa.fk desc
+	</select>
+
+	<select id="selectDDStatistics" parameterType="map" resultType="map">
+		select cast('付费线索' as varchar2(12)) CATALOG,
+		b.name,
+		sum(1) TOTNUM,
+		round(sum(nvl((select 1
+		from lm_clientrace c
+		where c.t_id = a.id
+		and
+		rownum = 1),
+		0)) / sum(1) * 100,
+		2) || '%' YYP,
+		round(sum(case a.idd
+		when
+		'1' then
+		1
+		else
+		0
+		end) / sum(1) * 100,
+		2) || '%' DDP,
+		round(sum(nvl((select
+		1
+		from link_erp_report_temp d
+		where d.client_id = a.id),
+		0)) / sum(1) *
+		100,
+		2) || '%' JJP,
+		round(sum(case a.credit_status
+		when '信审通过' then
+		1
+		else
+		0
+		end) / sum(1) * 100,
+		2) || '%' TGP,
+		round(sum(case a.is_get_car
+		when '1'
+		then
+		1
+		else
+		0
+		end) / sum(1) * 100,
+		2) || '%' TCP,
+		round(sum(case a.big_pid
+		when 4 then
+		1
+		else
+		0
+		end) / sum(1) * 100,
+		2) || '%' TSP
+		from lm_client a
+		left join t_organ_company b on a.companyid = b.organ_id
+		where
+		a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.companyid is not null
+		and a.deposit_status =
+		'2'
+		and a.sex = '1'
+		and a.deposit_status = '2'
+		and a.qdate between
+		to_date(#{startDate,jdbcType=VARCHAR} || '00:00:00', 'yyyy-mm-dd
+		hh24:mi:ss')
+		and
+		to_date(#{endDate,jdbcType=VARCHAR} || '23:59:59',
+		'yyyy-mm-dd hh24:mi:ss')
+		and a.companyid in
+		(select e.organ_id
+		from
+		t_organ_company e
+		where e.status = '1'
+		start with e.organ_id =
+		#{organId,jdbcType=VARCHAR}
+		connect by e.parent_id = prior e.organ_id)
+		group by a.companyid, b.name
+		union all
+		select cast('免费线索' as
+		varchar2(12)) catalog,
+		b.name,
+		sum(1) TOTNUM,
+		round(sum(nvl((select 1
+		from lm_clientrace c
+		where c.t_id = a.id
+		and rownum = 1),
+		0)) / sum(1) *
+		100,
+		2) || '%' YYP,
+		round(sum(case a.idd
+		when '1' then
+		1
+		else
+		0
+		end) / sum(1)
+		* 100,
+		2) || '%' DDP,
+		round(sum(nvl((select 1
+		from link_erp_report_temp d
+		where d.client_id = a.id),
+		0)) / sum(1) * 100,
+		2) || '%' JJP,
+		round(sum(case a.credit_status
+		when '信审通过' then
+		1
+		else
+		0
+		end) / sum(1) *
+		100,
+		2) || '%' TGP,
+		round(sum(case a.is_get_car
+		when '1' then
+		1
+		else
+		0
+		end) /
+		sum(1) * 100,
+		2) || '%' TCP,
+		round(sum(case a.big_pid
+		when 4 then
+		1
+		else
+		0
+		end) / sum(1) * 100,
+		2) || '%' TSP
+		from lm_client a
+		left join
+		t_organ_company b on a.companyid = b.organ_id
+		where a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.companyid is not null
+		and a.sex = '1'
+		and a.deposit_status = '3'
+		and a.qdate between to_date(#{startDate,jdbcType=VARCHAR} ||
+		'00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+		and
+		to_date(#{endDate,jdbcType=VARCHAR} || '23:59:59', 'yyyy-mm-dd
+		hh24:mi:ss')
+		and a.companyid in
+		(select e.organ_id
+		from t_organ_company e
+		where e.status = '1'
+		start with e.organ_id =
+		#{organId,jdbcType=VARCHAR}
+		connect by e.parent_id = prior e.organ_id)
+		group by a.companyid, b.name
+
+	</select>
+	<select id="selectDDStatisticsByTime" parameterType="map"
+		resultType="map">
+		select cast('付费线索' as varchar2(12)) catalog,
+		b.name,
+		sum(1)
+		TOTNUM,
+		round(avg(nvl((select min(c.redate) - a.qdate
+		from lm_clientrace
+		c
+		where c.t_id = a.id),
+		0)),
+		2) YYAT,
+		0 DDAT,
+		round(avg(nvl((select
+		d.l_create_time - a.qdate
+		from link_erp_report_temp d
+		where d.client_id
+		= a.id),
+		0)),
+		2) JJAT,
+		0 TGAT,
+		round(avg(nvl((a.get_car_date-a.qdate),
+		0)),
+		2) TCAT,
+		0 TSAT
+		from lm_client a
+		left join t_organ_company b on
+		a.companyid = b.organ_id
+		where a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.companyid is not
+		null
+		and a.deposit_status = '2'
+		and a.sex = '1'
+		and a.deposit_status =
+		'2'
+		and a.qdate between to_date(#{startDate,jdbcType=VARCHAR} ||
+		'00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+		and
+		to_date(#{endDate,jdbcType=VARCHAR} || '23:59:59', 'yyyy-mm-dd
+		hh24:mi:ss')
+		and a.companyid in
+		(select e.organ_id
+		from t_organ_company e
+		where e.status = '1'
+		start with e.organ_id =
+		#{organId,jdbcType=VARCHAR}
+		connect by e.parent_id = prior e.organ_id)
+		group by a.companyid, b.name
+		union all
+		select cast('免费线索' as
+		varchar2(12)) catalog,
+		b.name,
+		sum(1) TOTNUM,
+		round(avg(nvl((select
+		min(c.redate) - a.qdate
+		from lm_clientrace c
+		where c.t_id = a.id),
+		0)),
+		2) YYAT,
+		0 DDAT,
+		round(avg(nvl((select d.l_create_time - a.qdate
+		from
+		link_erp_report_temp d
+		where d.client_id = a.id),
+		0)),
+		2) JJAT,
+		0 TGAT,
+		0
+		TCAT,
+		0 TSAT
+		from lm_client a
+		left join t_organ_company b on a.companyid
+		= b.organ_id
+		where a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.companyid is not null
+		and
+		a.deposit_status = '3'
+		and a.sex = '1'
+		and a.qdate between
+		to_date(#{startDate,jdbcType=VARCHAR} || '00:00:00', 'yyyy-mm-dd
+		hh24:mi:ss')
+		and
+		to_date(#{endDate,jdbcType=VARCHAR} || '23:59:59',
+		'yyyy-mm-dd hh24:mi:ss')
+		and a.companyid in
+		(select e.organ_id
+		from
+		t_organ_company e
+		where e.status = '1'
+		start with e.organ_id =
+		#{organId,jdbcType=VARCHAR}
+		connect by e.parent_id = prior e.organ_id)
+		group by a.companyid, b.name
+	</select>
+
+	<select id="selectServiceTrace" parameterType="com.jiezh.dao.leads.client.ClientVO"
+		resultType="map">
+		select aa.name, aa.time, aa.content
+		from (
+		select max((select c.real_name from t_user c where
+		c.user_id =
+		a.created_user_id)) NAME,
+		max(a.created_time) TIME,
+		wm_concat(decode(a.field,
+		'fromtype',
+		b.comments || ':由' ||
+		(select
+		d.value
+		from t_code_item d
+		where d.code_type = '1025'
+		and d.code_item_id
+		= a.field_before) || ' to ' ||
+		(select d.value
+		from t_code_item d
+		where
+		d.code_type = '1025'
+		and d.code_item_id = a.field_after),
+		'depositStatus',
+		b.comments || ':由' ||
+		(select d.name
+		from t_code_item d
+		where d.code_type = '1040'
+		and d.value = a.field_before) || ' to ' ||
+		(select d.name
+		from t_code_item d
+		where d.code_type = '1040'
+		and d.value
+		= a.field_after),
+		'bigPid',
+		b.comments || ':由' ||
+		(select e.title
+		from
+		lm_category e
+		where e.id = a.field_before) || ' to ' ||
+		(select e.title
+		from lm_category e
+		where e.id = a.field_after),
+		'smallPid',
+		b.comments ||
+		':由' ||
+		(select e.title
+		from lm_category e
+		where e.id = a.field_before)
+		|| ' to ' ||
+		(select e.title
+		from lm_category e
+		where e.id =
+		a.field_after),
+		'companyid',
+		b.comments || ':由' ||
+		(select f.name
+		from
+		t_organ_company f
+		where f.organ_id = a.field_before) || ' to ' ||
+		(select f.name
+		from t_organ_company f
+		where f.organ_id = a.field_after),
+		'sid',
+		b.comments || ':由' ||
+		(select g.real_name
+		from t_user g
+		where
+		g.user_id = a.field_before) || ' to ' ||
+		(select g.real_name
+		from t_user
+		g
+		where g.user_id = a.field_after),
+		'ifurgent',
+		b.comments || ':由' ||
+		(select d.name
+		from t_code_item d
+		where d.code_type = '1000'
+		and d.value
+		= a.field_before) || ' to ' ||
+		(select d.name
+		from t_code_item d
+		where
+		d.code_type = '1000'
+		and d.value = a.field_after),
+
+		b.comments || ':由' ||
+		nvl(a.field_before,
+		'空') ||
+		' to ' || nvl(a.field_after,
+		'空') || ' '))
+		CONTENT
+		from
+		lm_client_update
+		a, user_col_comments b
+		where
+		replace(b.column_name,'_','') =
+		upper(a.field)
+		and b.table_name =
+		'LM_CLIENT'
+		and a.client_id =
+		#{id,jdbcType=DECIMAL}
+		group by
+		a.update_index) aa
+		union all
+		select a.urge_person_name NAME,
+		a.urge_create_date TIME,
+		a.urge_person_name || '向' || a.urge_to_person_name || '进行第' ||
+		a.urge_num || '次催促操作' CONTENT
+		from lm_urge a
+		where a.urge_affair_id = #{id,jdbcType=DECIMAL}
+		order by time desc
+	</select>
+</mapper>

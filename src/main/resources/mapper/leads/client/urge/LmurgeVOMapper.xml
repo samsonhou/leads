@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.client.urge.LmurgeVODao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.urge.LmurgeVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="URGE_AFFAIR_ID" property="urgeAffairId" jdbcType="VARCHAR" />
+    <result column="URGE_AFFAIR_CONTENT" property="urgeAffairContent" jdbcType="VARCHAR" />
+    <result column="URGE_FIRST_PERSON_ID" property="urgeFirstPersonId" jdbcType="DECIMAL" />
+    <result column="URGE_FIRST_ORGAN_ID" property="urgeFirstOrganId" jdbcType="VARCHAR" />
+    <result column="URGE_FIRST_PERSON_NAME" property="urgeFirstPersonName" jdbcType="VARCHAR" />
+    <result column="URGE_PERSON_ID" property="urgePersonId" jdbcType="DECIMAL" />
+    <result column="URGE_ORGAN_ID" property="urgeOrganId" jdbcType="VARCHAR" />
+    <result column="URGE_PERSON_NAME" property="urgePersonName" jdbcType="VARCHAR" />
+    <result column="URGE_TO_PERSON_ID" property="urgeToPersonId" jdbcType="DECIMAL" />
+    <result column="URGE_TO_ORGAN_ID" property="urgeToOrganId" jdbcType="VARCHAR" />
+    <result column="URGE_TO_PERSON_NAME" property="urgeToPersonName" jdbcType="VARCHAR" />
+    <result column="URGE_UPDATE_DATE" property="urgeUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="URGE_NUM" property="urgeNum" jdbcType="DECIMAL" />
+    <result column="URGE_CREATE_DATE" property="urgeCreateDate" jdbcType="TIMESTAMP" />
+    <result column="URGE_END_DATE" property="urgeEndDate" jdbcType="TIMESTAMP" />
+    <result column="URGE_STATUS" property="urgeStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, URGE_AFFAIR_ID, URGE_AFFAIR_CONTENT, URGE_FIRST_PERSON_ID, URGE_FIRST_ORGAN_ID, 
+    URGE_FIRST_PERSON_NAME, URGE_PERSON_ID, URGE_ORGAN_ID, URGE_PERSON_NAME, URGE_TO_PERSON_ID, 
+    URGE_TO_ORGAN_ID, URGE_TO_PERSON_NAME, URGE_UPDATE_DATE, URGE_NUM, URGE_CREATE_DATE, 
+    URGE_END_DATE, URGE_STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LM_URGE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LM_URGE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.urge.LmurgeVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      select S_LM_URGE_ID.Nextval as id from dual  
+    </selectKey>
+    insert into LM_URGE (ID,URGE_AFFAIR_ID, URGE_AFFAIR_CONTENT, 
+      URGE_FIRST_PERSON_ID, URGE_FIRST_ORGAN_ID, URGE_FIRST_PERSON_NAME, 
+      URGE_PERSON_ID, URGE_ORGAN_ID, URGE_PERSON_NAME, 
+      URGE_TO_PERSON_ID, URGE_TO_ORGAN_ID, URGE_TO_PERSON_NAME, 
+      URGE_UPDATE_DATE, URGE_NUM, URGE_CREATE_DATE, 
+      URGE_END_DATE, URGE_STATUS)
+    values (#{id,jdbcType=DECIMAL},#{urgeAffairId,jdbcType=VARCHAR}, #{urgeAffairContent,jdbcType=VARCHAR}, 
+      #{urgeFirstPersonId,jdbcType=DECIMAL}, #{urgeFirstOrganId,jdbcType=VARCHAR}, #{urgeFirstPersonName,jdbcType=VARCHAR}, 
+      #{urgePersonId,jdbcType=DECIMAL}, #{urgeOrganId,jdbcType=VARCHAR}, #{urgePersonName,jdbcType=VARCHAR}, 
+      #{urgeToPersonId,jdbcType=DECIMAL}, #{urgeToOrganId,jdbcType=VARCHAR}, #{urgeToPersonName,jdbcType=VARCHAR}, 
+      #{urgeUpdateDate,jdbcType=TIMESTAMP}, #{urgeNum,jdbcType=DECIMAL}, #{urgeCreateDate,jdbcType=TIMESTAMP}, 
+      #{urgeEndDate,jdbcType=TIMESTAMP}, #{urgeStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.urge.LmurgeVO" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      select S_LM_URGE_ID.Nextval as id from dual 
+    </selectKey>
+    insert into LM_URGE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urgeAffairId != null" >
+        URGE_AFFAIR_ID,
+      </if>
+      <if test="urgeAffairContent != null" >
+        URGE_AFFAIR_CONTENT,
+      </if>
+      <if test="urgeFirstPersonId != null" >
+        URGE_FIRST_PERSON_ID,
+      </if>
+      <if test="urgeFirstOrganId != null" >
+        URGE_FIRST_ORGAN_ID,
+      </if>
+      <if test="urgeFirstPersonName != null" >
+        URGE_FIRST_PERSON_NAME,
+      </if>
+      <if test="urgePersonId != null" >
+        URGE_PERSON_ID,
+      </if>
+      <if test="urgeOrganId != null" >
+        URGE_ORGAN_ID,
+      </if>
+      <if test="urgePersonName != null" >
+        URGE_PERSON_NAME,
+      </if>
+      <if test="urgeToPersonId != null" >
+        URGE_TO_PERSON_ID,
+      </if>
+      <if test="urgeToOrganId != null" >
+        URGE_TO_ORGAN_ID,
+      </if>
+      <if test="urgeToPersonName != null" >
+        URGE_TO_PERSON_NAME,
+      </if>
+      <if test="urgeUpdateDate != null" >
+        URGE_UPDATE_DATE,
+      </if>
+      <if test="urgeNum != null" >
+        URGE_NUM,
+      </if>
+      <if test="urgeCreateDate != null" >
+        URGE_CREATE_DATE,
+      </if>
+      <if test="urgeEndDate != null" >
+        URGE_END_DATE,
+      </if>
+      <if test="urgeStatus != null" >
+        URGE_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="urgeAffairId != null" >
+        #{urgeAffairId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeAffairContent != null" >
+        #{urgeAffairContent,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeFirstPersonId != null" >
+        #{urgeFirstPersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeFirstOrganId != null" >
+        #{urgeFirstOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeFirstPersonName != null" >
+        #{urgeFirstPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgePersonId != null" >
+        #{urgePersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeOrganId != null" >
+        #{urgeOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgePersonName != null" >
+        #{urgePersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeToPersonId != null" >
+        #{urgeToPersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeToOrganId != null" >
+        #{urgeToOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeToPersonName != null" >
+        #{urgeToPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeUpdateDate != null" >
+        #{urgeUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeNum != null" >
+        #{urgeNum,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeCreateDate != null" >
+        #{urgeCreateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeEndDate != null" >
+        #{urgeEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeStatus != null" >
+        #{urgeStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.client.urge.LmurgeVO" >
+    update LM_URGE
+    <set >
+      <if test="urgeAffairId != null" >
+        URGE_AFFAIR_ID = #{urgeAffairId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeAffairContent != null" >
+        URGE_AFFAIR_CONTENT = #{urgeAffairContent,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeFirstPersonId != null" >
+        URGE_FIRST_PERSON_ID = #{urgeFirstPersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeFirstOrganId != null" >
+        URGE_FIRST_ORGAN_ID = #{urgeFirstOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeFirstPersonName != null" >
+        URGE_FIRST_PERSON_NAME = #{urgeFirstPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgePersonId != null" >
+        URGE_PERSON_ID = #{urgePersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeOrganId != null" >
+        URGE_ORGAN_ID = #{urgeOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgePersonName != null" >
+        URGE_PERSON_NAME = #{urgePersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeToPersonId != null" >
+        URGE_TO_PERSON_ID = #{urgeToPersonId,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeToOrganId != null" >
+        URGE_TO_ORGAN_ID = #{urgeToOrganId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeToPersonName != null" >
+        URGE_TO_PERSON_NAME = #{urgeToPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeUpdateDate != null" >
+        URGE_UPDATE_DATE = #{urgeUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeNum != null" >
+        URGE_NUM = #{urgeNum,jdbcType=DECIMAL},
+      </if>
+      <if test="urgeCreateDate != null" >
+        URGE_CREATE_DATE = #{urgeCreateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeEndDate != null" >
+        URGE_END_DATE = #{urgeEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeStatus != null" >
+        URGE_STATUS = #{urgeStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.urge.LmurgeVO" >
+    update LM_URGE
+    set URGE_AFFAIR_ID = #{urgeAffairId,jdbcType=VARCHAR},
+      URGE_AFFAIR_CONTENT = #{urgeAffairContent,jdbcType=VARCHAR},
+      URGE_FIRST_PERSON_ID = #{urgeFirstPersonId,jdbcType=DECIMAL},
+      URGE_FIRST_ORGAN_ID = #{urgeFirstOrganId,jdbcType=VARCHAR},
+      URGE_FIRST_PERSON_NAME = #{urgeFirstPersonName,jdbcType=VARCHAR},
+      URGE_PERSON_ID = #{urgePersonId,jdbcType=DECIMAL},
+      URGE_ORGAN_ID = #{urgeOrganId,jdbcType=VARCHAR},
+      URGE_PERSON_NAME = #{urgePersonName,jdbcType=VARCHAR},
+      URGE_TO_PERSON_ID = #{urgeToPersonId,jdbcType=DECIMAL},
+      URGE_TO_ORGAN_ID = #{urgeToOrganId,jdbcType=VARCHAR},
+      URGE_TO_PERSON_NAME = #{urgeToPersonName,jdbcType=VARCHAR},
+      URGE_UPDATE_DATE = #{urgeUpdateDate,jdbcType=TIMESTAMP},
+      URGE_NUM = #{urgeNum,jdbcType=DECIMAL},
+      URGE_CREATE_DATE = #{urgeCreateDate,jdbcType=TIMESTAMP},
+      URGE_END_DATE = #{urgeEndDate,jdbcType=TIMESTAMP},
+      URGE_STATUS = #{urgeStatus,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectByLmurge" parameterType="com.jiezh.dao.leads.client.urge.LmurgeVO"  resultMap="BaseResultMap" >
+   select 
+    <include refid="Base_Column_List" />
+   from LM_URGE
+   <where>
+   <if test="urgeAffairId != null and '' != urgeAffairId"> 
+     AND URGE_AFFAIR_ID = #{urgeAffairId}
+   </if>
+   <if test="urgePersonId != null and '' != urgePersonId"> 
+     AND URGE_PERSON_ID = #{urgePersonId}
+   </if>
+   <if test="urgeToPersonId != null and '' != urgeToPersonId"> 
+     AND URGE_TO_PERSON_ID = #{urgeToPersonId}
+   </if>
+   <if test="urgeStatus != null and '' != urgeStatus"> 
+     AND URGE_STATUS = #{urgeStatus}
+   </if>
+   </where>
+   order by ID
+  </select>
+  
+  
+   <select id="selectByLmurgeList"  resultType="map" parameterType="map" >
+   select 
+    a.ID, URGE_AFFAIR_ID, URGE_AFFAIR_CONTENT, URGE_FIRST_PERSON_ID, URGE_FIRST_ORGAN_ID, 
+    URGE_FIRST_PERSON_NAME, URGE_PERSON_ID, URGE_ORGAN_ID, URGE_PERSON_NAME, URGE_TO_PERSON_ID, 
+    URGE_TO_ORGAN_ID, URGE_TO_PERSON_NAME, URGE_UPDATE_DATE, URGE_NUM, URGE_CREATE_DATE, 
+    URGE_END_DATE, URGE_STATUS,b.tel,nvl((select title from LM_CATEGORY where id=b.big_pid),'') ||'-'||nvl((select title from LM_CATEGORY where id=b.small_pid),'') BUSINESS_TYPE
+    from LM_URGE a left join lm_client b on a.urge_affair_id = b.id 
+    
+   <where>
+   	a.urge_to_person_id = b.sid
+   <if test="urgeToPersonId != null and '' != urgeToPersonId"> 
+     AND URGE_TO_PERSON_ID = #{urgeToPersonId}
+   </if>
+   <if test="urgeStatus != null and '' != urgeStatus"> 
+     AND URGE_STATUS = #{urgeStatus}
+   </if>
+   <![CDATA[ 
+      and rownum<=30
+   ]]>
+   </where>
+   order by ID
+  </select>
+</mapper>

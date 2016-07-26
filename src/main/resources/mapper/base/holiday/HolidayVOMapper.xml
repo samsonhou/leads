@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.holiday.HolidayDao">
+	<!-- <resultMap  id="HolidayResultMap" type="com.jiezh.dao.base.holiday.HolidayVO">
+			<result column="ID" property="id" jdbcType="DECIMAL"/>
+			<result column="HOLIDAY" property="holiday" jdbcType="TIMESTAMP"/>
+			<result column="HOLIDAY_TYPE" property="holidayType" jdbcType="VARCHAR"/>
+			<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+			<result column="CREATE_USER" property="createUser" jdbcType="DECIMAL"/>
+			<result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP"/>
+			<result column="MODIFY_USER" property="modifyUser" jdbcType="DECIMAL"/>
+		</resultMap> -->
+	
+	<!-- 根据年份查询 -->
+	<select id="selectHolidayByYear" resultType="com.jiezh.dao.base.holiday.HolidayVO" parameterType="map">
+		<![CDATA[ 
+		select t.holiday holiday,
+		       t.holiday_type holidayType,
+		       (select a.real_name from t_user a where a.user_id = t.modify_user and rownum = 1) modifyUserName,
+		       t.modify_date modifyDate,
+		       t.id
+		  from t_holiday t
+		 where t.holiday <= to_date(#{endDate,jdbcType=VARCHAR},'yyyy-mm-dd')
+		   and t.holiday >= to_date(#{startDate,jdbcType=VARCHAR},'yyyy-mm-dd') 
+	  order by t.holiday
+	  ]]>
+	</select>
+	
+	<!--根据日期查询-->
+	<select id="selectIsExistByDate" parameterType="date" resultType="int">
+		select count(id) from t_holiday t where t.holiday = #{date,jdbcType=TIMESTAMP}
+	</select>
+	
+	<!-- 根据ID更新或插入 -->
+	<update id="updateHolidayById" parameterType="com.jiezh.dao.base.holiday.HolidayVO">
+		merge into t_holiday a
+		using (select #{id,jdbcType=DECIMAL} as id,#{holiday,jdbcType=TIMESTAMP} as holiday, #{holidayType,jdbcType=VARCHAR} as holidayType,#{modifyUser,jdbcType=DECIMAL} as modifyUser from dual) b
+		on (a.id = b.id)
+        when matched then
+		update 
+		   set a.holiday = b.holiday,
+		       a.holiday_type = b.holidayType,
+		       a.modify_user = b.modifyUser,
+		       a.modify_date = sysdate
+		when not matched then
+		insert 
+		values (s_holiday.nextval,b.holiday,b.holidayType,sysdate,b.modifyUser,sysdate,b.modifyUser)
+	</update>
+	<delete id="deleteHolidayById" parameterType="long">
+		delete from t_holiday t where t.id = #{selectId,jdbcType=DECIMAL}
+	</delete>
+	
+	<!-- 批量插入 -->
+	<insert id="batchInsert" parameterType="ArrayList">
+		insert into t_holiday(id,holiday,holiday_Type,create_date,create_user,modify_date,modify_user)  
+      	select s_holiday.nextval,a.holiday,a.holidayType,a.createDate,a.createUser,a.modifyDate,a.modifyUser from (
+		<foreach collection="list" item="obj" index="index" separator="union all"> 
+     
+       (select #{obj.holiday} as holiday,#{obj.holidayType} as holidayType,sysdate as createDate,#{obj.createUser} as createUser,sysdate as modifyDate,#{obj.modifyUser} as modifyUser from dual)  
+		</foreach> 
+    ) a
+	</insert>
+</mapper>

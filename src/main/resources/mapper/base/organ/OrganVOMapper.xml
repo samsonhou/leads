@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.organ.BaseOrganDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.organ.OrganVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORGAN_NAME" property="organName" jdbcType="VARCHAR" />
+    <result column="ORGAN_CODE" property="organCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORGAN_NAME, ORGAN_CODE, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_ORGAN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from T_ORGAN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.organ.OrganVO" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      select S_ORGAN_ID.Nextval as id from dual 
+    </selectKey>
+    insert into T_ORGAN (ID,ORGAN_NAME, ORGAN_CODE
+      )
+    values (#{id,jdbcType=DECIMAL},#{organName,jdbcType=VARCHAR}, #{organCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.organ.OrganVO" >
+     <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE" >
+      select S_ORGAN_ID.Nextval as id from dual 
+    </selectKey>
+    insert into T_ORGAN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     <if test="id != null" >
+        ID,
+      </if>
+      <if test="organName != null" >
+        ORGAN_NAME,
+      </if>
+      <if test="organCode != null" >
+        ORGAN_CODE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="organName != null" >
+        #{organName,jdbcType=VARCHAR},
+      </if>
+      <if test="organCode != null" >
+        #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.organ.OrganVO" >
+    update T_ORGAN
+    <set >
+      <if test="organName != null" >
+        ORGAN_NAME = #{organName,jdbcType=VARCHAR},
+      </if>
+      <if test="organCode != null" >
+        ORGAN_CODE = #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+   <select id="selectOrgan" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.organ.OrganVO" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_ORGAN
+    
+  </select>
+</mapper>

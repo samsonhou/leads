@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.coupon.partner.CouponPartnerVODao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PARTNER_CODE" property="partnerCode" jdbcType="VARCHAR" />
+		<result column="PARTNER_NAME" property="partnerName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="DECIMAL" />
+		<result column="CITY" property="city" jdbcType="DECIMAL" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="SERVICE" property="service" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="CREATED_USER_ID" property="createdUserId"
+			jdbcType="DECIMAL" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATED_USER_ID" property="updatedUserId"
+			jdbcType="DECIMAL" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, PARTNER_CODE partnerCode, PARTNER_NAME partnerName, PROVINCE, CITY, ADDRESS,
+		CONTACT, TEL,
+		SERVICE, CREATED_TIME createdTime,
+		CREATED_USER_ID createdUserId, UPDATED_TIME updatedTime,
+		UPDATED_USER_ID updatedUserid, REMARK
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from T_COUPON_PARTNER
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_COUPON_PARTNER
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			select
+			s_partner_id.nextval as id from dual
+		</selectKey>
+		insert into T_COUPON_PARTNER (ID, PARTNER_CODE, PARTNER_NAME,
+		PROVINCE, CITY, ADDRESS,
+		CONTACT, TEL, SERVICE, CREATED_USER_ID,
+		UPDATED_TIME,
+		UPDATED_USER_ID, REMARK)
+		select #{id,jdbcType=DECIMAL},
+		(select nvl(max(t.PARTNER_CODE)+1,'130001')
+		from t_coupon_partner t),
+		#{partnerName,jdbcType=VARCHAR},
+		#{province,jdbcType=DECIMAL},
+		#{city,jdbcType=DECIMAL},
+		#{address,jdbcType=VARCHAR},
+		#{contact,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR},
+		#{service,jdbcType=VARCHAR},
+		#{createdUserId,jdbcType=DECIMAL},
+		#{updatedTime,jdbcType=TIMESTAMP},
+		#{updatedUserId,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR}
+		from dual
+	</insert>
+	<insert id="insertSelective" parameterType="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		insert into T_COUPON_PARTNER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="partnerCode != null">
+				PARTNER_CODE,
+			</if>
+			<if test="partnerName != null">
+				PARTNER_NAME,
+			</if>
+			<if test="province != null">
+				PROVINCE,
+			</if>
+			<if test="city != null">
+				CITY,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="contact != null">
+				CONTACT,
+			</if>
+			<if test="tel != null">
+				TEL,
+			</if>
+			<if test="service != null">
+				SERVICE,
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME,
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID,
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME,
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="partnerCode != null">
+				#{partnerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="partnerName != null">
+				#{partnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=DECIMAL},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="contact != null">
+				#{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="service != null">
+				#{service,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				#{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				#{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				#{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		update T_COUPON_PARTNER
+		<set>
+			<if test="partnerCode != null">
+				PARTNER_CODE = #{partnerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="partnerName != null">
+				PARTNER_NAME = #{partnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				PROVINCE = #{province,jdbcType=DECIMAL},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="contact != null">
+				CONTACT = #{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				TEL = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="service != null">
+				SERVICE = #{service,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		update
+		T_COUPON_PARTNER
+		set PARTNER_CODE = #{partnerCode,jdbcType=VARCHAR},
+		PARTNER_NAME = #{partnerName,jdbcType=VARCHAR},
+		PROVINCE =
+		#{province,jdbcType=DECIMAL},
+		CITY = #{city,jdbcType=DECIMAL},
+		ADDRESS =
+		#{address,jdbcType=VARCHAR},
+		CONTACT = #{contact,jdbcType=VARCHAR},
+		TEL
+		= #{tel,jdbcType=VARCHAR},
+		SERVICE = #{service,jdbcType=VARCHAR},
+		CREATED_USER_ID =
+		#{createdUserId,jdbcType=DECIMAL},
+		UPDATED_TIME =
+		#{updatedTime,jdbcType=TIMESTAMP},
+		UPDATED_USER_ID =
+		#{updatedUserId,jdbcType=DECIMAL},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="selectByVO" parameterType="com.jiezh.dao.coupon.partner.CouponPartnerVO"
+		resultType="com.jiezh.dao.coupon.partner.CouponPartnerVO">
+		select
+		<include refid="Base_Column_List" />
+		,(select wm_concat(t.coupon_name) from t_coupon_type t where
+		t.partner_id = T_COUPON_PARTNER.id and t.status = '1') couponType
+		from
+		T_COUPON_PARTNER
+		<where>
+			<if test="partnerName != null">
+				and partner_name like
+				concat('%',concat(#{partnerName,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+		order by partner_code desc
+	</select>
+
+	<select id="selectCoupons" parameterType="map"
+		resultType="com.jiezh.dao.coupon.partner.CouponTypeVO">
+		select b.partner_name partnerName, a.coupon_name couponName, a.status,a.id
+		from t_coupon_type a, t_coupon_partner b
+		where a.partner_id = b.id
+		and a.status = '1'
+		and b.id = #{id,jdbcType=DECIMAL}
+	</select>
+</mapper>

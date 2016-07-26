@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezh.dao.weixin.main.MainDao">
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.weixin.main.MainVO">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="CORP_ID" jdbcType="VARCHAR" property="corpId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PROJECT_URL" jdbcType="VARCHAR" property="projectUrl" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, CORP_ID, NAME, PROJECT_URL, PROJECT_NAME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_WEIXIN_MAIN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from T_WEIXIN_MAIN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.weixin.main.MainVO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.math.BigDecimal">
+      select s_weixin_main_id.Nextval as id from dual 
+    </selectKey>
+    insert into T_WEIXIN_MAIN (CORP_ID, NAME, PROJECT_URL, 
+      PROJECT_NAME)
+    values (#{corpId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{projectUrl,jdbcType=VARCHAR}, 
+      #{projectName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.weixin.main.MainVO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.math.BigDecimal">
+      select s_weixin_main_id.Nextval as id from dual 
+    </selectKey>
+    insert into T_WEIXIN_MAIN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="corpId != null">
+        CORP_ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="projectUrl != null">
+        PROJECT_URL,
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="corpId != null">
+        #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectUrl != null">
+        #{projectUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.weixin.main.MainVO">
+    update T_WEIXIN_MAIN
+    <set>
+      <if test="corpId != null">
+        CORP_ID = #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectUrl != null">
+        PROJECT_URL = #{projectUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.weixin.main.MainVO">
+    update T_WEIXIN_MAIN
+    set CORP_ID = #{corpId,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PROJECT_URL = #{projectUrl,jdbcType=VARCHAR},
+      PROJECT_NAME = #{projectName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

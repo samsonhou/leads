@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezh.dao.leads.client.LmcategoryDao">
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.LmcategoryVO">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="PID" jdbcType="DECIMAL" property="pid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, TITLE, PID
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from LM_CATEGORY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.LmcategoryVO">
+    <selectKey keyProperty="id" order="BEFORE"  resultType="java.lang.Long">
+      select S_LM_CATEGORY_ID.Nextval as companyId from dual 
+    </selectKey>
+    insert into LM_CATEGORY (ID,TITLE, PID)
+    values (#{id,jdbcType=DECIMAL},#{title,jdbcType=VARCHAR}, #{pid,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.LmcategoryVO">
+    update LM_CATEGORY
+    set TITLE = #{title,jdbcType=VARCHAR},
+      PID = #{pid,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from LM_CATEGORY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+   <select id="selectByLmcategory" parameterType="com.jiezh.dao.leads.client.LmcategoryVO" resultMap="BaseResultMap">
+   	 select ID, TITLE, PID 
+	,(select count(*) from lm_category where PID=t.id  ) childrenCount
+	from lm_category t 
+    <where>
+    <if test="id != null and '' != id">  
+        AND  t.ID = #{id,jdbcType=DECIMAL}
+    </if>
+    <if test="pid != null">
+        AND  t.PID =#{pid,jdbcType=DECIMAL}
+    </if>
+    <if test="title != null and '' != title">   
+	    AND  t.TITLE = #{title,jdbcType=CHAR}
+	</if>
+    </where>
+  
+  </select>
+  
+</mapper>

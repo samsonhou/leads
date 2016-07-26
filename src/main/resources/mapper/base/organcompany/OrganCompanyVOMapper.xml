@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.organcompany.BaseOrganCompanyDao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
+    <id column="ORGAN_ID" property="organId" jdbcType="VARCHAR" />
+    <id column="ORGAN_CODE" property="organCode" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="ABBR_NAME" property="abbrName" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORGAN_ID, ORGAN_CODE, PARENT_ID, NAME, ABBR_NAME, ADDRESS, STATUS, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_ORGAN_COMPANY
+    where ORGAN_ID = #{organId,jdbcType=VARCHAR}
+      and ORGAN_CODE = #{organCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.HashMap" >
+    delete from T_ORGAN_COMPANY
+    where ORGAN_ID = #{organId,jdbcType=VARCHAR}
+      and ORGAN_CODE = #{organCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
+    insert into T_ORGAN_COMPANY (ORGAN_ID, ORGAN_CODE, PARENT_ID, NAME, ABBR_NAME, ADDRESS, STATUS,ORGAN_LEVEL)
+    values ((select nvl(max(To_number(organ_id))+1,'${parentId}01') from T_ORGAN_COMPANY)
+   , #{organCode,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{abbrName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR},#{organLevel,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
+    insert into T_ORGAN_COMPANY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="organId != null" >
+        ORGAN_ID,
+      </if>
+      <if test="organCode != null" >
+        ORGAN_CODE,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="abbrName != null" >
+        ABBR_NAME,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="organId != null" >
+        #{organId,jdbcType=VARCHAR},
+      </if>
+      <if test="organCode != null" >
+        #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="abbrName != null" >
+        #{abbrName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
+    update T_ORGAN_COMPANY
+    <set >
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="abbrName != null" >
+        ABBR_NAME = #{abbrName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ORGAN_ID = #{organId,jdbcType=VARCHAR}
+      and ORGAN_CODE = #{organCode,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectOrganCompany" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
+   select (case t_organ_company.parent_id when '2' then '销售一部' when '1' then '销售二部' end )  organName, 
+   ORGAN_ID, t_organ_company.ORGAN_CODE, PARENT_ID, 
+      NAME, ABBR_NAME, ADDRESS, 
+      t_organ_company.STATUS, t_organ_company.CREATE_DATE
+	  from t_organ_company
+	  <where>
+	  <if test="status != null and '' != status " >
+        AND STATUS = #{status,jdbcType=VARCHAR}
+      </if>
+	  <if test="organId != null and '' != organId " >
+	    AND parent_id not in ('0') START WITH organ_id =#{organId,jdbcType=VARCHAR}  CONNECT BY PRIOR organ_id = PARENT_ID
+      </if>
+      </where>
+        order by organ_id
+  </select>
+</mapper>

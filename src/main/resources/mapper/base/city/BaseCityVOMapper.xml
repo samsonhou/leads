@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.city.BaseCityDao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.base.city.BaseCityVO">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<id column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<id column="RANK_ID" property="rankId" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />
+		<result column="ABBR_NAME" property="abbrName" jdbcType="VARCHAR" />
+		<result column="RANK_PID" property="rankPid" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CITY_RANK" property="cityRank" jdbcType="VARCHAR" />
+		<result column="CITY_LEVEL" property="cityLevel" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, CITY_CODE, RANK_ID, CITY_NAME, ABBR_NAME, RANK_PID, STATUS,
+		CITY_RANK, CITY_LEVEL
+	</sql>
+
+
+	<select id="selecCityByParentId" resultMap="BaseResultMap"
+		parameterType="com.jiezh.dao.base.city.BaseCityVO">
+		select b.id,b.city_name
+		from t_base_city a, t_base_city b
+		where b.rank_pid = a.rank_id
+		and b.status = '1'
+		and a.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		FROM T_BASE_CITY
+		where RANK_ID=#{rankId}
+		and status='1' limit 1
+	</select>
+
+	<insert id="insert" parameterType="com.jiezh.dao.base.city.BaseCityVO">
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into t_base_city (CITY_CODE, RANK_ID, CITY_NAME,
+		ABBR_NAME, RANK_PID, STATUS,
+		CITY_RANK, CITY_LEVEL)
+		values (#{cityCode,jdbcType=VARCHAR}, #{rankId,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{abbrName,jdbcType=VARCHAR}, #{rankPid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+		#{cityRank,jdbcType=VARCHAR}, #{cityLevel,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.city.BaseCityVO">
+		update t_base_city
+		<set>
+			<if test="cityName != null">
+				CITY_NAME = #{cityName,jdbcType=VARCHAR},
+			</if>
+			<if test="abbrName != null">
+				ABBR_NAME = #{abbrName,jdbcType=VARCHAR},
+			</if>
+			<if test="rankPid != null">
+				RANK_PID = #{rankPid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="cityRank != null">
+				CITY_RANK = #{cityRank,jdbcType=VARCHAR},
+			</if>
+			<if test="cityLevel != null">
+				CITY_LEVEL = #{cityLevel,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+		and CITY_CODE = #{cityCode,jdbcType=VARCHAR}
+		and RANK_ID = #{rankId,jdbcType=VARCHAR}
+	</update>
+
+
+</mapper>

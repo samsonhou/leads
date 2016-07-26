@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.sms.SmsDao">
+	<sql id="SmsConfigVO_Column_List">
+		ID, USER_NAME userName, USER_PWD userPwd, URL, CREATED_TIME
+		createdTime,
+		CREATED_USER_ID createdUserId, UPDATED_TIME updatedTime,
+		UPDATED_USER_ID updatedUserId,SMS_NAME smsName
+	</sql>
+
+	<sql id="SmsTemplate_Column_List">
+		ID, CONTENT, TYPE,
+		PARAMS_NUM paramsNum, STATUS, REMARK,
+		CREATED_TIME createdTime, CREATED_USER_ID createdUserId, UPDATED_TIME
+		updatedTime,
+		UPDATED_USER_ID updatedUserId
+	</sql>
+	<select id="selectSmsConfigBySmsName" resultType="com.jiezh.dao.base.sms.SmsConfigVO"
+		parameterType="map">
+		select
+		<include refid="SmsConfigVO_Column_List" />
+		from sms_config t
+		where t.sms_name = #{smsName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectSmsTemplateByType" resultType="com.jiezh.dao.base.sms.SmsTemplateVO"
+		parameterType="map">
+		select
+		<include refid="SmsTemplate_Column_List" />
+		from sms_template t
+		where t.type = #{type,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertSmsSendInfo" parameterType="com.jiezh.dao.base.sms.SmsSendInfoVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select S_SMS_SEND_INFO.Nextval as id from dual
+		</selectKey>
+		insert into SMS_SEND_INFO (ID, SEND_USER_ID, RE_NAME,
+		RE_TEL,
+		STORE_ADDRESS, MSG,
+		STATUS, STATUS_DES,
+		CREATED_USER_ID, UPDATED_TIME,
+		UPDATED_USER_ID,CLIENT_ID,SMS_TYPE
+		)
+		values (#{id,jdbcType=DECIMAL},
+		#{sendUserId,jdbcType=DECIMAL},
+		#{reName,jdbcType=VARCHAR},
+		#{reTel,jdbcType=VARCHAR}, #{storeAddress,jdbcType=VARCHAR},
+		#{msg,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{statusDes,jdbcType=VARCHAR},
+		#{createdUserId,jdbcType=DECIMAL},
+		#{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL},
+		#{clientId,jdbcType=DECIMAL},#{smsType,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="selectClient" parameterType="map" resultType="map">
+		select
+		a.id ID,
+		a.client_name CLIENTNAME,
+		a.tel CLIENTTEL,
+		(select b.real_name from t_user b where b.user_id = a.sid) SALSEMAN,
+		(select c.name from t_organ_company c where c.organ_id = a.companyid) ORGAN,
+		decode((select min(d.status)
+		from sms_send_info d
+		where a.tel = d.re_tel),
+		'',
+		'未发送',
+		'0',
+		'已发送',
+		'发送失败') SENDSTATUS,
+		a.qdate QDATE
+		from lm_client a
+		where a.sex = '1'
+		<if test="sendStatus == 1">
+		and exists (select 1 from sms_send_info e where e.re_tel = a.tel and e.status='0')
+		</if>
+		<if test="sendStatus == 2">
+		and not exists (select 1 from sms_send_info e where e.re_tel = a.tel)
+		</if>
+		<if test="sendStatus == 3">
+		and exists (select 1 from sms_send_info s where s.re_tel = a.tel group by s.re_tel having min(s.status) >'0')
+		</if>
+		<if test="clientName != null and clientName != ''">
+		and a.client_name like CONCAT('%', CONCAT(#{clientName}, '%'))
+		</if>
+		<if test="clientTel != null and clientTel != ''">
+		and a.tel like CONCAT('%', CONCAT(#{clientTel}, '%'))
+		</if>
+		<if test="startDate != null and startDate != ''">
+		and a.qDate <![CDATA[ >= ]]> to_date(#{startDate,jdbcType=VARCHAR}||'00:00:00','yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="endDate != null and endDate != ''">
+		and a.qDate <![CDATA[ <= ]]> to_date(#{endDate,jdbcType=VARCHAR}||'23:59:59','yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		
+		and a.companyid in
+		(select f.organ_id
+		from t_organ_company f
+		where f.status = '1'
+		start with f.organ_id = #{organId,jdbcType=VARCHAR}
+		connect by f.parent_id = prior f.organ_id)
+		order by a.qdate desc
+	</select>
+
+</mapper>
