@@ -1306,7 +1306,10 @@
        nvl(avg(decode(aa.fromtype, 630, aa.total)), 0) m32,
        nvl(avg(decode(aa.fromtype, 631, aa.total)), 0) m33,
        nvl(avg(decode(aa.fromtype, 690, aa.total)), 0) m34,
-       nvl(avg(decode(aa.fromtype, 710, aa.total)), 0) m35
+       nvl(avg(decode(aa.fromtype, 710, aa.total)), 0) m35,
+       nvl(avg(decode(aa.fromtype, 730, aa.total)), 0) m36,
+       nvl(avg(decode(aa.fromtype, 750, aa.total)), 0) m37,
+       nvl(avg(decode(aa.fromtype, 751, aa.total)), 0) m38
        
   from (select lc.companyid,
                lc.small_pid,
@@ -2334,6 +2337,8 @@
 		when '合同审核中' then
 		1
 		when '签约中' then
+		1
+		when '交车完成' then
 		1
 		else
 		0

@@ -1,6 +1,5 @@
 package com.jiezh.content.leads.web;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -173,7 +172,7 @@ public class ClientController extends WebAction {
             clientVO.setRid(user.getUserId().intValue());
             clientVO.setCityid(user.getOrganCode());
             clientService.addClient(clientVO);
-        } else clientService.updateClient(clientVO, user);
+        } else clientService.updateClient(clientVO,user);
 
         try {
             // 发送短信
@@ -213,6 +212,7 @@ public class ClientController extends WebAction {
                         msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", clientVO.getTel());
                         map.put("mobile", tel);
                         map.put("msg", msg);
+//                        msgReturn = smsService.messageSend(tel, msg, "", "", "", "");
                         msgReturn = smsService.send("", map);
                         json = JSONObject.fromObject(msgReturn);
                         sendInfoVO.setMsg(msg);
@@ -232,58 +232,23 @@ public class ClientController extends WebAction {
                         map.put("msg", msg);
                         String msgReturn = smsService.send("", map);
                         JSONObject json = JSONObject.fromObject(msgReturn);
+                        //String msgReturn = smsService.messageSend(clientVO.getTel(), msg, "", "", "", "");
                         sendInfoVO.setMsg(msg);
                         sendInfoVO.setReTel(clientVO.getTel());
                         sendInfoVO.setReName(clientVO.getClientName());
                         sendInfoVO.setStoreAddress(address);
                         sendInfoVO.setStatusDes(msgReturn);
+//                        sendInfoVO.setStatus(msgReturn.substring(msgReturn.lastIndexOf("=") + 1));
                         sendInfoVO.setStatus(json.optString("respstatus"));
                         sendInfoVO.setSendUserId(user.getUserId());
-                        sendInfoVO.setClientId(clientVO.getId());
                         smsService.saveMsgInfo(sendInfoVO);
                         // message to salesman
                         params.put("type", "3");
                         smsTemplateVO = smsService.getMsgTemplate(params);
                         msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", clientVO.getTel());
-                        map.put("mobile", tel);
-                        map.put("msg", msg);
-                        // msgReturn = smsService.messageSend(tel, msg, "", "", "", "");
-                        msgReturn = smsService.send("", map);
-                        json = JSONObject.fromObject(msgReturn);
-                        sendInfoVO.setMsg(msg);
-                        sendInfoVO.setReTel(tel);
-                        sendInfoVO.setReName(result.get("NAME") == null ? "" : result.get("NAME").toString());
-                        sendInfoVO.setStatusDes(msgReturn);
-                        sendInfoVO.setStatus(json.optString("respstatus"));
-                        sendInfoVO.setSendUserId(user.getUserId());
-                        sendInfoVO.setClientId(clientVO.getId());
-                        smsService.saveMsgInfo(sendInfoVO);
-                    } else if (clientVO.getFromtype() == 550 && StringUtils.isNotBlank(address)) {
-                        // message to client
-                        params.put("type", "8");
-                        smsTemplateVO = smsService.getMsgTemplate(params);
-                        String msg =
-                            smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", tel).replace("var3", address);
                         map.put("mobile", clientVO.getTel());
                         map.put("msg", msg);
-                        String msgReturn = smsService.send("", map);
-                        JSONObject json = JSONObject.fromObject(msgReturn);
-                        sendInfoVO.setMsg(msg);
-                        sendInfoVO.setReTel(clientVO.getTel());
-                        sendInfoVO.setReName(clientVO.getClientName());
-                        sendInfoVO.setStoreAddress(address);
-                        sendInfoVO.setStatusDes(msgReturn);
-                        sendInfoVO.setStatus(json.optString("respstatus"));
-                        sendInfoVO.setSendUserId(user.getUserId());
-                        sendInfoVO.setClientId(clientVO.getId());
-                        smsService.saveMsgInfo(sendInfoVO);
-                        // message to salesman
-                        params.put("type", "10");
-                        smsTemplateVO = smsService.getMsgTemplate(params);
-                        msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName())
-                            .replace("var3", new SimpleDateFormat("HH:mm").format(new Date())).replace("var2", clientVO.getTel());
-                        map.put("mobile", tel);
-                        map.put("msg", msg);
+//                        msgReturn = smsService.messageSend(tel, msg, "", "", "", "");
                         msgReturn = smsService.send("", map);
                         json = JSONObject.fromObject(msgReturn);
                         sendInfoVO.setMsg(msg);
@@ -294,47 +259,13 @@ public class ClientController extends WebAction {
                         sendInfoVO.setSendUserId(user.getUserId());
                         sendInfoVO.setClientId(clientVO.getId());
                         smsService.saveMsgInfo(sendInfoVO);
-                    } else if (clientVO.getFromtype() == 550 && StringUtils.isBlank(address)) {
-                        // message to client
-                        params.put("type", "9");
-                        smsTemplateVO = smsService.getMsgTemplate(params);
-                        String msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", tel);
-                        map.put("mobile", clientVO.getTel());
-                        map.put("msg", msg);
-                        String msgReturn = smsService.send("", map);
-                        JSONObject json = JSONObject.fromObject(msgReturn);
-                        sendInfoVO.setMsg(msg);
-                        sendInfoVO.setReTel(clientVO.getTel());
-                        sendInfoVO.setReName(clientVO.getClientName());
-                        sendInfoVO.setStoreAddress(address);
-                        sendInfoVO.setStatusDes(msgReturn);
-                        sendInfoVO.setStatus(json.optString("respstatus"));
-                        sendInfoVO.setSendUserId(user.getUserId());
-                        sendInfoVO.setClientId(clientVO.getId());
-                        smsService.saveMsgInfo(sendInfoVO);
-                        // message to salesman
-                        params.put("type", "10");
-                        smsTemplateVO = smsService.getMsgTemplate(params);
-                        msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName())
-                            .replace("var3", new SimpleDateFormat("HH:mm").format(new Date())).replace("var2", clientVO.getTel());
-                        map.put("mobile", tel);
-                        map.put("msg", msg);
-                        msgReturn = smsService.send("", map);
-                        json = JSONObject.fromObject(msgReturn);
-                        sendInfoVO.setMsg(msg);
-                        sendInfoVO.setReTel(tel);
-                        sendInfoVO.setReName(result.get("NAME") == null ? "" : result.get("NAME").toString());
-                        sendInfoVO.setStatusDes(msgReturn);
-                        sendInfoVO.setStatus(json.optString("respstatus"));
-                        sendInfoVO.setSendUserId(user.getUserId());
-                        sendInfoVO.setClientId(clientVO.getId());
-                        smsService.saveMsgInfo(sendInfoVO);
-                    } else if (clientVO.getFromtype() != 391 && clientVO.getFromtype() != 550 && StringUtils.isNotBlank(address)) {
+                    } else if (clientVO.getFromtype() != 391 && StringUtils.isNotBlank(address)) {
                         // message to client
                         params.put("type", "4");
                         smsTemplateVO = smsService.getMsgTemplate(params);
                         String msg =
                             smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", tel).replace("var3", address);
+                        //String msgReturn = smsService.messageSend(clientVO.getTel(), msg, "", "", "", "");
                         map.put("mobile", clientVO.getTel());
                         map.put("msg", msg);
                         String msgReturn = smsService.send("", map);
@@ -344,16 +275,18 @@ public class ClientController extends WebAction {
                         sendInfoVO.setReName(clientVO.getClientName());
                         sendInfoVO.setStoreAddress(address);
                         sendInfoVO.setStatusDes(msgReturn);
+//                        sendInfoVO.setStatus(msgReturn.substring(msgReturn.lastIndexOf("=") + 1));
                         sendInfoVO.setStatus(msgReturn.substring(msgReturn.lastIndexOf("=") + 1));
                         sendInfoVO.setStatus(json.optString("respstatus"));
                         sendInfoVO.setSendUserId(user.getUserId());
                         sendInfoVO.setClientId(clientVO.getId());
                         smsService.saveMsgInfo(sendInfoVO);
-                    } else if (clientVO.getFromtype() != 391 && clientVO.getFromtype() != 550 && StringUtils.isBlank(address)) {
+                    } else if (clientVO.getFromtype() != 391 && StringUtils.isBlank(address)) {
                         // message to client
                         params.put("type", "5");
                         smsTemplateVO = smsService.getMsgTemplate(params);
                         String msg = smsTemplateVO.getContent().replace("var1", clientVO.getClientName()).replace("var2", tel);
+//                        String msgReturn = smsService.messageSend(clientVO.getTel(), msg, "", "", "", "");
                         map.put("mobile", clientVO.getTel());
                         map.put("msg", msg);
                         String msgReturn = smsService.send("", map);
@@ -362,6 +295,7 @@ public class ClientController extends WebAction {
                         sendInfoVO.setReTel(clientVO.getTel());
                         sendInfoVO.setReName(clientVO.getClientName());
                         sendInfoVO.setStatusDes(msgReturn);
+//                        sendInfoVO.setStatus(msgReturn.substring(msgReturn.lastIndexOf("=") + 1));
                         sendInfoVO.setStatus(json.optString("respstatus"));
                         sendInfoVO.setSendUserId(user.getUserId());
                         sendInfoVO.setClientId(clientVO.getId());
