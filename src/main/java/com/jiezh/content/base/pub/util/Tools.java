@@ -690,10 +690,13 @@ public class Tools {
 						json.append(value);
 						json.append(",");
 					} else {
-						json.append(name.substring(1, name.length() - 1));
-						json.append(":");
-						json.append(value.substring(1, value.length() - 1));
-						json.append(",");
+					    if(value != null && !value.equals("\"\"") ){
+					        json.append(name.substring(1, name.length() - 1));
+	                        json.append(":");
+	                        json.append(value.substring(1, value.length() - 1));
+	                        json.append(",");
+					    }
+						
 					}
 	
 				} catch (Exception e) {

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -66,9 +67,8 @@ public class ProductController extends WebAction {
         productVO.setId(Long.valueOf(id));
         productVO.setAbname(newName);
         productVO.setHasChild(hasChild);
-        productVO.setRoles(String.join(",", roles));
+        productVO.setRoles(StringUtils.join(roles,"\u002C"));
         productService.update(productVO);
-
         // 是否总公司管理员
         boolean ifCManager = false;
         AuthorUser user = getUser();
@@ -93,7 +93,7 @@ public class ProductController extends WebAction {
         productVO.setPid(Long.valueOf(pid));
         productVO.setAbname(newName);
         productVO.setHasChild(hasChild);
-        productVO.setRoles(String.join(",", roles));
+        productVO.setRoles(StringUtils.join(roles,"\u002C"));
         productService.insert(productVO);
 
         // 是否总公司管理员

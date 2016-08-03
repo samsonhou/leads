@@ -334,6 +334,15 @@
 						function saveQuestion(){
 							var q = encodeURI(encodeURI($("#question").val()));
 							var a = encodeURI(encodeURI($("#answer").val()));
+							if(q == ""){
+								layer.alert("请填写问题");
+								return;
+							}
+							if(a == ""){
+								layer.alert("请填写答案");
+								return;
+							}
+							
 							var url = "${contextPath}/leads/product/saveQuestion.do?question="+q+"&answer="+a+"&pid="+$("#nodeId").val();
 							if($("#updateFlag").val() == "Y"){
 								url = "${contextPath}/leads/product/modifyQuestion.do?question="+q+"&answer="+a+"&id="+$("#questionId").val()
