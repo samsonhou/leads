@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.client.QaDetailVODao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.client.QaDetailVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PID" property="pid" jdbcType="DECIMAL" />
+    <result column="QUESTION" property="question" jdbcType="VARCHAR" />
+    <result column="ANSWER" property="answer" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_USER_ID" property="updatedUserId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PID, QUESTION, ANSWER, FILE_NAME, FILE_PATH, STATUS, CREATED_TIME, CREATED_USER_ID, 
+    UPDATED_TIME, UPDATED_USER_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_QA_DETAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_QA_DETAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.client.QaDetailVO" >
+  <selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Long">
+  	select s_qa_detail.nextval as id from dual
+  </selectKey>
+  
+    insert into T_QA_DETAIL (ID, PID, QUESTION, 
+      ANSWER, FILE_NAME, FILE_PATH, 
+      STATUS, CREATED_TIME, CREATED_USER_ID, 
+      UPDATED_TIME, UPDATED_USER_ID)
+    values (#{id,jdbcType=DECIMAL}, #{pid,jdbcType=DECIMAL}, #{question,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=DECIMAL}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.QaDetailVO" >
+    insert into T_QA_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="pid != null" >
+        PID,
+      </if>
+      <if test="question != null" >
+        QUESTION,
+      </if>
+      <if test="answer != null" >
+        ANSWER,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID,
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME,
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=DECIMAL},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.client.QaDetailVO" >
+    update T_QA_DETAIL
+    <set >
+      <if test="pid != null" >
+        PID = #{pid,jdbcType=DECIMAL},
+      </if>
+      <if test="question != null" >
+        QUESTION = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        ANSWER = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.QaDetailVO" >
+    update T_QA_DETAIL
+    set PID = #{pid,jdbcType=DECIMAL},
+      QUESTION = #{question,jdbcType=VARCHAR},
+      ANSWER = #{answer,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="selectDetails" parameterType="com.jiezh.dao.leads.client.QaDetailVO" resultMap="BaseResultMap" >
+  	select
+  	<include refid="Base_Column_List"/>
+  	from T_QA_DETAIL t
+  	where t.pid = #{pid,jdbcType=DECIMAL}
+  	<if test="question != null and question != ''">
+  	and t.question like concat('%',concat(#{question,jdbcType=VARCHAR},'%'))
+  	</if>
+  	<if test="fileName == 'empty'">
+  	and t.question is not null
+  	</if>
+  	<if test="fileName != 'empty' or fileName == null">
+  	and t.file_name like concat('%',concat(#{fileName,jdbcType=VARCHAR},'%'))
+  	and t.question is null
+  	</if>
+  	and t.status = '1'
+  	order by t.id desc
+  </select>
+</mapper>

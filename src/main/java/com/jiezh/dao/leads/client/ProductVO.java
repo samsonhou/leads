@@ -2,7 +2,6 @@ package com.jiezh.dao.leads.client;
 
 import com.jiezh.content.base.pub.web.GeneralBean;
 
-
 public class ProductVO extends GeneralBean {
     private long id;
 
@@ -15,6 +14,10 @@ public class ProductVO extends GeneralBean {
     private String pdetail;
 
     private long pid;
+
+    private String hasChild;
+    
+    private String roles;
 
     public long getId() {
         return id;
@@ -63,4 +66,22 @@ public class ProductVO extends GeneralBean {
     public void setPid(long pid) {
         this.pid = pid;
     }
+
+    public String getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(String hasChild) {
+        this.hasChild = hasChild;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+    
+    
 }
