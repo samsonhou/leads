@@ -8,6 +8,7 @@
 <link href="${contextPath}/res/pub/css/style.min.css?v=3.0.0" rel="stylesheet">
 <link href="${contextPath}/res/pub/css/ziding.css?v=20160125" rel="stylesheet">
 <link href="${contextPath}/res/pub/css/validform.css" rel="stylesheet">
+<link href="${contextPath}/res/pub/css/magicsuggest-min.css" rel="stylesheet">
 <!-- Sweet Alert -->
 <link href="${contextPath}/res/pub/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <#include "/pub/tag.ftl"/>

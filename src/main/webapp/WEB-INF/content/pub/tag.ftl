@@ -21,7 +21,7 @@
 <#macro organ showLevel=""  defValue="" fieldId="" fieldName="" showAreaId='_organTag_'  props="">
 	${htmlUtil('organ','${showLevel}','${defValue}','${fieldId}','${fieldName}','${showAreaId}','${props}')}
 </#macro>
-
+<#macro queryselect codeType="" type="0" defValue="" whereCase="" paramName="" paramValue=""  >${htmlUtil('queryselect','${type}','${codeType}','${defValue}','${whereCase}','${paramName}','${paramValue}')}</#macro>
 <#-- token -->
 <#macro token >
 	<input type="hidden"  name="_token_"  value="${_token_!''}">

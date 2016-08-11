@@ -37,7 +37,10 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <select style='display:none;'  class='form-control fromtype'"></select>
-                                    <@select type='1' codeType="1022" defValue="${clientVO.fromtype}" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
+                                    <div class="fromtype">
+                                    <div id="magicsuggest_1022"></div>
+                                	<input type="hidden" id="fromtype" name="fromtype" value="" class="form-control">
+                                	</div>
                                     <input id="channel" name="channel" value="${clientVO.channel}" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
                                     <@select type='1' codeType="1046" defValue="${clientVO.fromtype}" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
                                 </div>
@@ -173,7 +176,41 @@
 	<script src="${contextPath}/res/pub/js/jquery.ztree.core-3.5.js" type="text/javascript"></script>
     <script src="${contextPath}/res/pub/js/jquery.ztree.excheck-3.5.js" type="text/javascript"></script>
 	<script type="text/javascript">
+	var myData_1022=<@queryselect type="1" codeType="1022" />
+ //读取下拉框的 值，健 
+ 		function getmagicSuggest_1022(){
+ 			ms1 = $('#magicsuggest_1022').magicSuggest({
+ 		        width: '80%',//宽度
+ 		        placeholder: '请选择',
+ 		        style:'float:left;width:100%;',
+ 		        allowFreeEntries: false,   //这个参数很重要，如果你不需要用户自已创建标签，则用这个
+ 		        data: myData_1022.data,
+ 		        selectionStacked: true ,
+ 		        maxSelectionRenderer: function(data){ return ""},
+ 		        noSuggestionText: '',
+ 		        maxSelection:1 //单选按照 0取值 
+ 		    });
+ 		    $(ms1).on('selectionchange', function(e, cb, s){
+ 		     var object =cb.getSelection()[0];  
+ 		    console.log(object);
+ 		    if(undefined==object){$("#fromtype").val("");}else{
+ 		     $("#fromtype").val(object.id);}
+ 		    });
+ 		    getStoredCallback_1022(ms1);
+ 		}
+ 		//获取查询条件回显
+ 	function getStoredCallback_1022(ms1){ 
+ 	  var bl = $('#fromtype').val();
+ 	  if(bl == ''||0==bl) return;
+ 	  var array = bl.split(","); 
+ 	  //设置延迟，否则取不到数据
+ 	  setTimeout(function (){
+     	  ms1.setValue(array);
+     	  }, 200);
+ 	}
+ 	
 	jQuery(document).ready(function() {
+		getmagicSuggest_1022();
 		$("#form1").Validform({tiptype : 1,
 		ignoreHidden : false,
 		dragonfly : false,
@@ -192,7 +229,7 @@
 							$(".fromtype").eq(i).show();
 						}
 					}else{
-						$(".fromtype").eq(i).attr("disabled","true");
+						$(".fromtype").eq(i).attr("disabled",true);
 					}
 				});
 		
@@ -201,13 +238,26 @@
 					if($(this).prop("selected")){
 						$(".fromtype").hide();
 						if(i!=0){
-							$(".fromtype").eq(i).attr("datatype","*").attr("nullmsg","请选择线索类型");
-							$(".fromtype").eq(i).removeAttr("disabled");
+							if(i==1){
+								$(".fromtype").eq(i).removeAttr("disabled");
+								$(".fromtype").eq(i).find("#fromtype").removeAttr("disabled");
+								$(".fromtype").eq(i).find("#fromtype").attr("datatype","*").attr("nullmsg","请选择线索类型");
+							}else{
+								$(".fromtype").eq(i).attr("datatype","*").attr("nullmsg","请选择线索类型");
+								$(".fromtype").eq(i).removeAttr("disabled");
+							}
+							
 							$(".fromtype").eq(i).show();
 						}
 					}else{
-						$(".fromtype").eq(i).removeAttr("datatype","*").removeAttr("nullmsg","请选择线索类型");
-						$(".fromtype").eq(i).attr("disabled","true");
+						if(i==1){
+							$(".fromtype").eq(i).find("#fromtype").attr("disabled",true);
+							$(".fromtype").eq(i).find("#fromtype").removeAttr("datatype").removeAttr("nullmsg");
+						}else{
+							$(".fromtype").eq(i).removeAttr("datatype").removeAttr("nullmsg");
+							$(".fromtype").eq(i).attr("disabled",true);
+						}
+						
 					}
 				});
 			});

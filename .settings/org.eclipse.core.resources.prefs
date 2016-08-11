@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//DB_SQL/DDL/link_erp_report_temp.sql=GBK
 encoding//src/main/java=UTF-8
 encoding//src/main/webapp/WEB-INF/content/base/login/index.ftl=UTF-8
 encoding//src/main/webapp/WEB-INF/content/base/login/main.ftl=UTF-8

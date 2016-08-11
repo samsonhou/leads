@@ -1087,9 +1087,11 @@ public class ClientServiceImp implements ClientService {
                 }else{
                     row.createCell(21).setCellValue("");
                 }
-                row.createCell(22).setCellValue(obj.get("CONTRACTNO")==null?"":obj.get("CONTRACTNO").toString());
-                row.createCell(23).setCellValue(obj.get("RDATE")==null?"":obj.get("RDATE").toString());
-                row.createCell(24).setCellValue(obj.get("RDETAIL")==null?"":obj.get("RDETAIL").toString());
+                
+                row.createCell(22).setCellValue(obj.get("ISCANCLE")==null?"":obj.get("ISCANCLE").toString());
+                row.createCell(23).setCellValue(obj.get("CONTRACTNO")==null?"":obj.get("CONTRACTNO").toString());
+                row.createCell(24).setCellValue(obj.get("RDATE")==null?"":obj.get("RDATE").toString());
+                row.createCell(25).setCellValue(obj.get("RDETAIL")==null?"":obj.get("RDETAIL").toString());
                 row.setRowStyle(contentStyle);
                 rowIndex++;
             }

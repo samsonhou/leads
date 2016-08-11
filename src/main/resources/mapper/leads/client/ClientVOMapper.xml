@@ -481,7 +481,16 @@
 		where a.t_id = lmc.id ) RDATE,
 		(select a.title from lm_clientrace a
 		where a.t_id = lmc.id and a.id = (select max(a.id) from lm_clientrace
-		a where a.t_id = lmc.id )) RDETAIL
+		a where a.t_id = lmc.id )) RDETAIL,
+		case
+         when (lmc.deposit_status = '2' and lmc.qdate + 30 <![CDATA[ < ]]> sysdate and
+              (lmc.credit_status is null or
+              lmc.credit_status in ('信审拒绝', '信审拒绝-终拒', '客户放弃-终拒', '客户放弃',
+               '门店拒绝', '门店拒绝-终拒', '门店放弃'))) then
+          '是'
+          else 
+          '否'
+       end ISCANCLE
 		from lm_client lmc, t_user b
 		<where>
 			lmc.rid = b.user_id and lmc.sex = '1'
@@ -1309,7 +1318,10 @@
        nvl(avg(decode(aa.fromtype, 710, aa.total)), 0) m35,
        nvl(avg(decode(aa.fromtype, 730, aa.total)), 0) m36,
        nvl(avg(decode(aa.fromtype, 750, aa.total)), 0) m37,
-       nvl(avg(decode(aa.fromtype, 751, aa.total)), 0) m38
+       nvl(avg(decode(aa.fromtype, 751, aa.total)), 0) m38,
+       nvl(avg(decode(aa.fromtype, 770, aa.total)), 0) m39,
+       nvl(avg(decode(aa.fromtype, 790, aa.total)), 0) m40,
+       nvl(avg(decode(aa.fromtype, 810, aa.total)), 0) m41
        
   from (select lc.companyid,
                lc.small_pid,

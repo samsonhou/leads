@@ -99,6 +99,9 @@
                                         <td>${detail.M36}</td>                                     
                                         <td>${detail.M37}</td>                                     
                                         <td>${detail.M38}</td>                                     
+                                        <td>${detail.M39}</td>                                     
+                                        <td>${detail.M40}</td>                                     
+                                        <td>${detail.M41}</td>                                     
                                     </tr>  
                                     </#list>
                               </tbody>

@@ -132,6 +132,63 @@ public class HtmlUtil implements TemplateMethodModel {
 					}
 					sb.append("</span>");
 				}
+				 // 模糊查询 下拉框数据
+                else if ("queryselect".equalsIgnoreCase(tag)) {
+                    String type = (String) list.get(1);
+                    String codeType = (String) list.get(2);
+                    String defValue = (String) list.get(3);
+                    if (defValue == null || "".equals(defValue)) {
+                        defValue = "";
+                    }
+
+                    sb.append("{data:[");
+                    // 标准
+                    if ("0".equals(type)) {
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("codeType", codeType);// codeType
+                        map.put("whereCase", (String) list.get(4));
+
+                        List<Map<String, String>> options = dao.getOptions(map);
+                        if (options != null && options.size() > 0) {
+                            int cont = 0;
+                            for (Map<String, String> option : options) {
+                                cont++;
+                                sb.append("{id:" + option.get("VALUE").toString() + ",name: \"" + option.get("NAME").toString() + "\"}");
+                                if (cont != options.size()) sb.append(",");
+
+                            }
+                        }
+                    }
+                    // 自定义
+                    else if ("1".equals(type)) {
+
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("codeType", codeType);// codeType
+
+                        // 1.找出自定义sql
+                        String sql = dao.getCustomSql(map);
+                        if (sql == null || "".equals(sql)) {
+                            return "";
+                        }
+                        Map<String, String> param = new HashMap<String, String>();
+                        param.put("sql", sql);
+                        splitStr((String) list.get(5), (String) list.get(6), param);
+                        List<Map<String, Object>> options = dao.getCustomOptions(param);
+                        if (options != null && options.size() > 0) {
+                            int cont = 0;
+                            for (Map<String, Object> option : options) {
+                                cont++;
+                                sb.append("{id:" + option.get("VALUE").toString() + ",name: \"" + option.get("NAME").toString() + "\"}");
+                                if (cont != options.size()) sb.append(",");
+
+                            }
+                        }
+
+                    }
+
+                    sb.append("]}");
+
+                }
 			}
 		} catch (Exception ex) {
 			System.out.println("============TemplateModelException=======begin======");

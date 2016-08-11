@@ -8,4 +8,5 @@
 <script src="${contextPath}/res/pub/js/public/public.js"></script>
 <script src="${contextPath}/res/pub/js/plugins/layer/layer.min.js"></script>
 <script src="${contextPath}/res/pub/js/demo/layer-demo.min.js"></script>
+<script src="${contextPath}/res/pub/js/magicsuggest.js?v=1.0.1"></script>
 <script src="${contextPath}/res/pub/js/Validform_v5.3.2_ncr_min.js" type="text/javascript"></script>

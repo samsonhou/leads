@@ -416,7 +416,9 @@
 							
 							$.each($("input[name='mroles']"),function(i,item){
 								if(String(treeNode.roles).indexOf($(item).val())>=0){
-									$(item).attr("checked","true");
+									$(item).prop("checked",true);
+								}else{
+									$(item).prop("checked",false);
 								}
 							});
 							
@@ -444,7 +446,7 @@
 									$("#pager1").html("");
 									$.each(response[0].list,function(i,item){
 										if(item.question != null){
-											$("#pbody").append("<p>问题："+item.question+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"editQuestion(\'"+item.question+"\',\'"+item.answer+"\',\'"+item.id+"\')\">编辑</a>"+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"deleteQuestion(\'"+item.id+"\')\">删除</a></p>");
+											$("#pbody").append("<p>问题："+item.question+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"editQuestion(\'"+item.question.replace(/\s+/g,"").replace(/\"/g, "&quot;")+"\',\'"+item.answer.replace(/\s+/g,"").replace(/\"/g, "&quot;")+"\',\'"+item.id+"\')\">编辑</a>"+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"deleteQuestion(\'"+item.id+"\')\">删除</a></p>");
 											$("#pbody").append("<p>回答："+item.answer+"</p>");
 											$("#pbody").append("<br/>")
 										}
