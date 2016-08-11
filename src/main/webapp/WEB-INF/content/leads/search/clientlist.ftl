@@ -238,7 +238,7 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         <td>${(client.LMTNUM>0)?string('是',(client.LMTNUM==0)?string('否',''))}</td>
                                         <td>${(client.IDD==1)?string('是',(client.IDD==0)?string('否',''))}</td>
                                         <td>${client.CREDIT_STATUS}</td>
-                                        <td>${(client.DEPOSITSTATUS==1)?string('无定金模式（普通来源）',(client.DEPOSITSTATUS==2)?string('已支付定金',(client.DEPOSITSTATUS==3)?string('端外预约','')))}</td>
+                                        <td>${(client.DEPOSITSTATUS==1)?string('无定金模式（普通来源）',(client.DEPOSITSTATUS==2)?string('已支付定金',(client.DEPOSITSTATUS==3)?string('端外预约',(client.DEPOSITSTATUS==4)?string('客户定金已退',''))))}</td>
                                         <td>${client.CONTRACTNO}</td>
                                         <td>${(client.RDATE?string('yyyy-MM-dd'))!''}</td>
                                         <td>${client.RDETAIL}</td>
