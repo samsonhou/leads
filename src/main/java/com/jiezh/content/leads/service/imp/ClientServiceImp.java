@@ -1084,6 +1084,8 @@ public class ClientServiceImp implements ClientService {
                     row.createCell(21).setCellValue("已支付定金");
                 }else if(depositStatus.equals("3")){
                     row.createCell(21).setCellValue("端外预约");
+                }else if(depositStatus.equals("4")){
+                    row.createCell(21).setCellValue("客户定金已退");
                 }else{
                     row.createCell(21).setCellValue("");
                 }
