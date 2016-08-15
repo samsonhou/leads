@@ -2366,6 +2366,7 @@
 		left join t_organ_company b on a.companyid = b.organ_id
 		where
 		a.fromtype = #{fromType,jdbcType=DECIMAL}
+		and a.sex = '1'
 		and a.companyid is not null
 		and a.qdate between
 		to_date(#{stime,jdbcType=VARCHAR}||' 00:00:00','yyyy-mm-dd

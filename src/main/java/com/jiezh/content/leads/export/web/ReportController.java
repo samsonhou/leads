@@ -104,12 +104,12 @@ public class ReportController extends WebAction {
     @RequestMapping("ddindex")
     public ModelAndView ddindex() throws Exception {
         ModelAndView mv = new ModelAndView("leads/report/ddclientlist");
-        
+
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String depositStatus = request.getParameter("depositStatus");
         String fromType = request.getParameter("fromType");
-        if(fromType == null){
+        if (fromType == null) {
             mv.addObject("detail", new ArrayList<>());
             return mv;
         }
@@ -123,7 +123,6 @@ public class ReportController extends WebAction {
         paras.put("fromType", fromType);
         paras.put("depositStatus", depositStatus);
         paras.put("organId", getUser().getOrganId());
-        
 
         List<Map<String, Object>> countList = clientService.getDDReport(paras);
         mv.addObject("detail", countList);
@@ -172,16 +171,50 @@ public class ReportController extends WebAction {
     @RequestMapping("excelList")
     @ResponseBody
     public void excelList() throws Exception {
-//        String fileName = "滴滴合作数据报表";
+        // String fileName = "滴滴合作数据报表";
 
         // 查询的计划列表
-        int currenPage = 1;
+        //int currenPage = 1;
 
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String depositStatus = request.getParameter("depositStatus");
         String fromType = request.getParameter("fromType");
-        String fileName = (fromType.equals("391")?"滴滴商城":"唯品会")+"数据报表";
+        String fileName = "";
+        switch (fromType) {
+            case "391":
+                fileName = "滴滴商城";
+                break;
+            case "550":
+                fileName = "唯品会";
+                break;
+            case "790":
+                fileName = "驾校一点通 ";
+                break;
+            case "730":
+                fileName = "天翼积分商城";
+                break;
+            case "750":
+                fileName = "兑吧";
+                break;
+            case "751":
+                fileName = "天翼视讯";
+                break;
+            case "690":
+                fileName = "脉脉";
+                break;
+            case "770":
+                fileName = "天翼流量800";
+                break;
+            case "14":
+                fileName = "汽车之家";
+                break;
+            case "810":
+                fileName = "微信路况";
+                break;
+        }
+        fileName += "数据报表";
+        // String fileName = (fromType.equals("391")?"滴滴商城":"唯品会")+"数据报表";
 
         if (stime == null || "".equals(stime)) stime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         if (etime == null || "".equals(etime)) etime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -254,12 +287,12 @@ public class ReportController extends WebAction {
             toClient.flush();
             toClient.close();
 
-            System.out.println("导出采购汇总报告是否成功：" + fileName + ".xls");
+            System.out.println("导出报告是否成功：" + fileName + ".xls");
         } else {
             // 设置response格式
             setResponeExcel(fileName);
         }
-       
+
     }
 
     @RequestMapping("excel/xlsx")
@@ -299,7 +332,7 @@ public class ReportController extends WebAction {
     public ModelAndView reportToClient() {
         OutputStream outputStream = null;
         try {
-            String status = request.getParameter("status");
+            //String status = request.getParameter("status");
             String stime = request.getParameter("stnextdate");
             String stime1 = request.getParameter("stnextdate1");
             String organId = request.getParameter("organId");
@@ -399,7 +432,42 @@ public class ReportController extends WebAction {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         String fromType = request.getParameter("fromType");
-        String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "销售排行";
+        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "销售排行";
+
+        String fileName = "";
+        switch (fromType) {
+            case "391":
+                fileName = "滴滴商城";
+                break;
+            case "550":
+                fileName = "唯品会";
+                break;
+            case "790":
+                fileName = "驾校一点通";
+                break;
+            case "730":
+                fileName = "天翼积分商城";
+                break;
+            case "750":
+                fileName = "兑吧";
+                break;
+            case "751":
+                fileName = "天翼视讯";
+                break;
+            case "690":
+                fileName = "脉脉";
+                break;
+            case "770":
+                fileName = "天翼流量800";
+                break;
+            case "14":
+                fileName = "汽车之家";
+                break;
+            case "810":
+                fileName = "微信路况";
+                break;
+        }
+        fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);
@@ -480,7 +548,42 @@ public class ReportController extends WebAction {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         String fromType = request.getParameter("fromType");
-        String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(统计率)";
+        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(统计率)";
+
+        String fileName = "";
+        switch (fromType) {
+            case "391":
+                fileName = "滴滴商城";
+                break;
+            case "550":
+                fileName = "唯品会";
+                break;
+            case "790":
+                fileName = "驾校一点通";
+                break;
+            case "730":
+                fileName = "天翼积分商城";
+                break;
+            case "750":
+                fileName = "兑吧";
+                break;
+            case "751":
+                fileName = "天翼视讯";
+                break;
+            case "690":
+                fileName = "脉脉";
+                break;
+            case "770":
+                fileName = "天翼流量800";
+                break;
+            case "14":
+                fileName = "汽车之家";
+                break;
+            case "810":
+                fileName = "微信路况";
+                break;
+        }
+        fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);
@@ -562,7 +665,41 @@ public class ReportController extends WebAction {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         String fromType = request.getParameter("fromType");
-        String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(节点平均时长)";
+        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(节点平均时长)";
+        String fileName = "";
+        switch (fromType) {
+            case "391":
+                fileName = "滴滴商城";
+                break;
+            case "550":
+                fileName = "唯品会";
+                break;
+            case "790":
+                fileName = "驾校一点通";
+                break;
+            case "730":
+                fileName = "天翼积分商城";
+                break;
+            case "750":
+                fileName = "兑吧";
+                break;
+            case "751":
+                fileName = "天翼视讯";
+                break;
+            case "690":
+                fileName = "脉脉";
+                break;
+            case "770":
+                fileName = "天翼流量800";
+                break;
+            case "14":
+                fileName = "汽车之家";
+                break;
+            case "810":
+                fileName = "微信路况";
+                break;
+        }
+        fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);
@@ -601,7 +738,7 @@ public class ReportController extends WebAction {
             toClient.flush();
             toClient.close();
 
-            logger.info("导出滴滴来源机构考核(节点平均时长)：" + fileName + ".xls");
+            logger.info("导出机构考核(节点平均时长)：" + fileName + ".xls");
 
         } else {
             setResponeExcel(fileName);
