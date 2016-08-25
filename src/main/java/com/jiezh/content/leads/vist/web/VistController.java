@@ -51,7 +51,6 @@ public class VistController extends WebAction{
 	public ModelAndView queryList() throws Exception{
 		ModelAndView mv=new ModelAndView("leads/vist/clientlist");
 		ClientVO clientVO=(ClientVO) getBean(ClientVO.class);
-		System.out.println(222);
 		int currenPage=1;
 		if(request.getParameter("currenPage")!=null || !"".equals(request.getParameter("currenPage"))){
 			currenPage=Integer.parseInt(request.getParameter("currenPage"));
@@ -61,7 +60,6 @@ public class VistController extends WebAction{
 		clientVO.setSid(user.getUserId().intValue());
 		clientVO.setSysOrganCode(user.getOrganCode());
 		mv.addObject("page", clientService.getVistList(currenPage,clientVO));
-		System.out.println(clientVO.getClientName());
 		mv.addObject("clientVO", clientVO);
 		return mv ;
 	}
