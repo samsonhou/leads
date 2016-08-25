@@ -12,7 +12,7 @@
             <div class="col-sm-7">
                 <div class="signin-info">
                     <div class="logopanel m-b">
-                        <h1>花生好车（捷众普惠）租车</span></h1>
+                        <h1>花生好车（捷众普惠）</span></h1>
                     </div>
                     <div class="m-b"></div>
                     <h4>欢迎使用 <strong>花生好车（捷众普惠）线索管理系统</strong></h4>

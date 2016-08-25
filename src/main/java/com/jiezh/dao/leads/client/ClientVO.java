@@ -84,17 +84,25 @@ public class ClientVO extends GeneralBean {
     // add by houjq for JZLM-91
     // 手机号1
     private String tel1;
-    
-    //车牌号
-    private String carno;
-    //线索来源大类
-    private String fromtypeBig;
-    //首次来电时间
-    private Date firstTimeComing;
-    //渠道名称
-    private String channel;
-    
 
+    // 车牌号
+    private String carno;
+    // 线索来源大类
+    private String fromtypeBig;
+    // 首次来电时间
+    private Date firstTimeComing;
+    // 渠道名称
+    private String channel;
+
+    // 滴滴订单号
+    private String orderNo;
+    // 是否结算
+    private String isCharged;
+    // 大定金支付情况
+    private String innDeposit;
+    //是否可回收
+    private String isRecycle;
+    
     public String getCarno() {
         return carno;
     }
@@ -468,7 +476,37 @@ public class ClientVO extends GeneralBean {
     public void setChannel(String channel) {
         this.channel = channel;
     }
-    
-    
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public String getIsCharged() {
+        return isCharged;
+    }
+
+    public void setIsCharged(String isCharged) {
+        this.isCharged = isCharged;
+    }
+
+    public String getInnDeposit() {
+        return innDeposit;
+    }
+
+    public void setInnDeposit(String innDeposit) {
+        this.innDeposit = innDeposit;
+    }
+
+    public String getIsRecycle() {
+        return isRecycle;
+    }
+
+    public void setIsRecycle(String isRecycle) {
+        this.isRecycle = isRecycle;
+    }
 
 }

@@ -117,36 +117,29 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                             	<div class="col-sm-4">
                             		<@select type='0' codeType="1036" defValue="${clientVO.product!''}" fieldId="product" fieldName="product"  props=" class='form-control' " />
                                 </div>
-                                <label class="col-sm-2 control-label">购车意愿</label>
+                                <label class="col-sm-2 control-label">是否可回收</label>
                             	<div class="col-sm-4">
-                            		<@select type='0' defValue="${clientVO.will!''}" codeType="1035"  fieldId="will" fieldName="will"  props=" class='form-control' " />
+                            		<@select type='0' defValue="${clientVO.isRecycle!''}" codeType="1000"  fieldId="isRecycle" fieldName="isRecycle"  props=" class='form-control' " />
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label">是否提交审核材料</label>
-                            	<div class="col-sm-4">
-                            		<@select type='0' defValue="${clientVO.isSubMaterial!''}" codeType="1038"  fieldId="isSubMaterial" fieldName="isSubMaterial"  props=" class='form-control' " />
-                                </div>
                                 <label class="col-sm-2 control-label">是否提车</label>
                             	<div class="col-sm-4">
                             		<@select type='0' defValue="${clientVO.isGetCar!''}" codeType="1037"  fieldId="isGetCar" fieldName="isGetCar"  props=" class='form-control' " />
                                 </div>
-                            </div>
-                            
-                            <div class="form-group">
-                            	<label class="col-sm-2 control-label">提车时间</label>
+                                <label class="col-sm-2 control-label">提车时间</label>
                             	<div class="col-sm-4">
                             		<input type="text" readonly name="getCarDate" id="getCarDate" value="${(clientVO.getCarDate?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
                                 </div>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">是否到店</label>
                             	<div class="col-sm-4">
                             		<@select type='0' defValue="${clientVO.idd!''}" codeType="1000"  fieldId="idd" fieldName="idd"  props=" class='form-control' " />
                                 </div>
-                            </div>
-                            
-                            <div class="form-group">
-                            	<label class="col-sm-2 control-label">定金支付情况</label>
+                                <label class="col-sm-2 control-label">小定金支付情况</label>
                             	<div class="col-sm-4">
                             		<@select type='0' defValue="${clientVO.depositStatus!''}" codeType="1040"  fieldId="depositStatus" fieldName="depositStatus"  props=" class='form-control' " />
                                 </div>
@@ -173,33 +166,48 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                     <tr>
                                     	<th style="text-align: center;width: 50px;">序号</th>
                                     	<th style="text-align: center;">操作</th>
-                                        <th style="text-align: center;">联系人</th>
+                                        <th style="text-align: center;">客户姓名</th>
                                         <th style="text-align: center;">业务类别</th>
                                         <th style="text-align: center;">手机</th>
-                                        <th style="text-align: center;">填写人</th>
-                                        <th style="text-align: center;">销售人员分公司</th>
-                                        <th style="text-align: center;">销售人员</th>
+                                        <th style="text-align: center;">客服专员</th>
+                                        <th style="text-align: center;">门店</th>
+                                        <th style="text-align: center;">客户经理</th>
                                         <th style="text-align: center;">来源</th>
-                                        <th style="text-align: center;">等级</th>
-                                        <th style="text-align: center;">放弃原因</th>
-                                        <th style="text-align: center;">电话具体原因</th>
-                                        <th style="text-align: center;">下次跟踪时间</th>
-                                        <th style="text-align: center;">填写时间</th>
-                                        <th style="text-align: center;">进件时间</th>
-                                        <th style="text-align: center;">成交时间</th>
+                                        <th style="text-align: center;">客服首次邀约时间</th>
+                                        <th style="text-align: center;">客服首次邀约详情</th>
+                                        <th style="text-align: center;">小定金支付情况</th>
+                                        <th style="text-align: center;">是否已结算</th>
+                                        <th style="text-align: center;">滴滴订单号</th>
+                                        <th style="text-align: center;">客服末次邀约时间</th>
+                                        
+                                        
+                                        <th style="text-align: center;">门店一次邀约时间</th>
+                                        <th style="text-align: center;">门店一次邀约详情</th>
+                                        <th style="text-align: center;">门店二次邀约时间</th>
+                                        <th style="text-align: center;">门店二次邀约详情</th>
+                                        <th style="text-align: center;">门店三次邀约时间</th>
+                                        <th style="text-align: center;">门店三次邀约详情</th>
+                                        <th style="text-align: center;">门店末次邀约时间</th>
+                                        <th style="text-align: center;">门店末次邀约详情</th>
+                                        <th style="text-align: center;">预判等级</th>
+                                        <th style="text-align: center;">预判C级原因</th>
+                                        <th style="text-align: center;">预判D级原因</th>
                                         <th style="text-align: center;">租赁产品</th>
-                                        <th style="text-align: center;">购车意向</th>
-                                        <th style="text-align: center;">是否提交审核材料</th>
+                                        <th style="text-align: center;">到店时间</th>
+                                        <th style="text-align: center;">大定金支付情况</th>
+                                        
+                                        <th style="text-align: center;">是否进件</th>
+                                        <th style="text-align: center;">进件时间</th>
+                                        <th style="text-align: center;">是否签约</th>
+                                        <th style="text-align: center;">签约时间</th>
                                         <th style="text-align: center;">是否提车</th>
                                         <th style="text-align: center;">提车时间</th>
                                         <th style="text-align: center;">是否邀约</th>
                                         <th style="text-align: center;">是否到店</th>
                                         <th style="text-align: center;">风控审核状态</th>
-                                        <th style="text-align: center;">定金支付情况</th>
-                                        <th style="text-align: center;">合同号</th>
-                                        <th style="text-align: center;">最新跟进时间</th>
-                                        <th style="text-align: center;">最新跟进详情</th>
-                                        <th style="text-align: center;">是否可退定金</th>
+                                        <th style="text-align: center;">花生合同号</th>
+                                        <th style="text-align: center;">是否可退小定金</th>
+                                        <th style="text-align: center;">是否可回收</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -214,6 +222,20 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         <td>${client.COMNAME}</td>
                                         <td>${client.SID}</td>
                                         <td>${client.FROMTYPE}</td>
+                                        <td>${client.QDATE}</td>
+                                        <td>${client.TITLE}</td>
+                                        <td>${(client.DEPOSITSTATUS==1)?string('无定金模式（普通来源）',(client.DEPOSITSTATUS==2)?string('已支付',(client.DEPOSITSTATUS==3)?string('未支付',(client.DEPOSITSTATUS==4)?string('已退回',''))))}</td>
+                                        <td>${client.ISCHARGED}</td>
+                                        <td>${client.ORDERNO}</td>
+                                        <td>${(client.ALLOTDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${(client.FDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${client.FDETAIL}</td>
+                                        <td>${(client.SDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${client.SDETAIL}</td>
+                                        <td>${(client.TDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${client.TDETAIL}</td>
+                                        <td>${(client.LDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${client.LDETAIL}</td>
                                         <td>${client.RANK}</td>
                                         <td>
                                         <#if client.RANK[0..0]=='C'> 
@@ -226,23 +248,22 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         </#if>
                                         </td>
                                         <td>${client.STATUS}</td>
-                                        <td>${client.NEXTDATE}</td>
-                                        <td>${client.QDATE}</td>
-                                        <td>${(client.INCOMEDATE?string('yyyy-MM-dd'))!''}</td>
-                                        <td>${(client.DEALDATE?string('yyyy-MM-dd'))!''}</td>
                                         <td>${client.PRODUCT}</td>
-                                        <td>${client.WILL}</td>
-                                        <td>${client.ISSUBMATERIAL}</td>
+                                       	<td>${(client.FIRSTTIMECOMING?string('yyyy-MM-dd'))!''}</td>
+                                       	<td>${client.INNDEPOSIT}</td>
+                                       	
+                                       	<td>${(client.ISINCOME=='1')?string('是','否')}</td>
+                                        <td>${(client.INCOMEDATE?string('yyyy-MM-dd'))!''}</td>
+                                        <td>${(client.ISDEAL=='1')?string('是','否')}</td>
+                                        <td>${(client.DEALDATE?string('yyyy-MM-dd'))!''}</td>
                                         <td>${client.ISGETCAR}</td>
                                         <td>${(client.GETCARDATE?string('yyyy-MM-dd'))!''}</td>
                                         <td>${(client.LMTNUM>0)?string('是',(client.LMTNUM==0)?string('否',''))}</td>
                                         <td>${(client.IDD==1)?string('是',(client.IDD==0)?string('否',''))}</td>
-                                        <td>${client.CREDIT_STATUS}</td>
-                                        <td>${(client.DEPOSITSTATUS==1)?string('无定金模式（普通来源）',(client.DEPOSITSTATUS==2)?string('已支付定金',(client.DEPOSITSTATUS==3)?string('端外预约',(client.DEPOSITSTATUS==4)?string('客户定金已退',''))))}</td>
+                                        <td>${client.CREDIT}-${client.CREDIT_STATUS}</td>
                                         <td>${client.CONTRACTNO}</td>
-                                        <td>${(client.RDATE?string('yyyy-MM-dd'))!''}</td>
-                                        <td>${client.RDETAIL}</td>
                                         <td>${client.ISCANCLE}</td>
+                                        <td>${client.ISRECYCLE}</td>
                                     </tr>  
                                     </#list>
                               </tbody>

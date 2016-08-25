@@ -90,60 +90,47 @@
                             </div>   
                             
                             <div class="form-group ">
-                         	    <label class="col-sm-2 control-label">定金支付情况</label>
+                         	    <label class="col-sm-2 control-label">小定金支付情况</label>
                                 <div class="col-sm-4">
                                     <input type="text" readonly value="${cMap.DEPOSITSTATUS!''}" class="form-control">
                                 </div>
+                         	    <label class="col-sm-2 control-label">是否已结算</label>
+                                <div class="col-sm-4">
+                                    <input type="text" readonly value="${cMap.ISCHARGED!''}" class="form-control">
+                                </div>
                             </div>   
                             
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">咨询详情</label>
-                                <div class="col-sm-10">
-                                   <input type="text" readonly value="${cMap.TITLE!''}" class="form-control">
-                                </div>                                
-                            </div>
-							
-							<!--
-                            <div class="form-group ">
-                         	    <label class="col-sm-2 control-label  required">是否到店</label>
-                                <div class="col-sm-4">
-                                <#if cMap.IDD = '1'>
-                                   <@select type='0' defValue="${cMap.IDD!''}" codeType="1000"  fieldId="idd" fieldName="idd"  props=" disabled='disabled' class='form-control' " />
-                                </#if>
-                                <#if cMap.IDD = '0'>
-                                   <@select type='0' defValue="${cMap.IDD!''}" codeType="1000"  fieldId="idd" fieldName="idd"  props=" class='form-control' " />
-                                </#if>
-                                <#if cMap.IDD = ''>
-                                   <@select type='0' defValue="${cMap.IDD!''}" codeType="1000"  fieldId="idd" fieldName="idd"  props=" class='form-control' " />
-                                </#if>
-                                </div>
-                                <label class="col-sm-2 control-label  required">是否通过风控</label>
-                                <div class="col-sm-4">
-                              <@select type='0' defValue="${cMap.IFK!''}" codeType="1000"  fieldId="ifk" fieldName="ifk"  props=" class='form-control' " />
-                                
-                                </div> 	                        
-                            </div> -->
                             
                             <div class="form-group">
                             	<label class="col-sm-2 control-label  required">是否通过风控</label>
                                 <div class="col-sm-4">
-                              		<@select type='0' defValue="${cMap.IFK!''}" codeType="1000"  fieldId="ifk" fieldName="ifk"  props=" class='form-control' " />
+									<input type="text" readonly value="${cMap.IFK!''}" class="form-control">
+                                </div>
+                            	<label class="col-sm-2 control-label  required">滴滴订单号</label>
+                                <div class="col-sm-4">
+									<input type="text" readonly value="${cMap.ORDERNO!''}" class="form-control">
                                 </div>
                             </div>
                             
+                            
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label  required">是否到店</label>
+                            	<label class="col-sm-2 control-label  required">进件时间</label>
                             	<div class="col-sm-4">
-                            	<!--
-                            		<@select type='0' defValue="${cMap.IDD!''}" codeType="1000"  fieldId="idd" fieldName="idd"  props=" class='form-control' " />
-								-->
-                            		<@select type='0' codeType="1000"  fieldId="idd" fieldName="idd"  props=" class='form-control' " />
+                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
                             	</div>
-                            	<div id="comingTime" style="display:none;">
-                            	<label class="col-sm-2 control-label  required">到店时间</label>
+                            	<label class="col-sm-2 control-label  required">提车时间</label>
                             	<div class="col-sm-4">
-                            		<input type="text" readonly name="firstTimeComing" id="firstTimeComing" maxlength="30"  placeholder="到店时间" class="form-control layer-date" />
+                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
                             	</div>
+                            </div>
+                            <div class="form-group" >
+                            	<label class="col-sm-2 control-label  required">花生合同号</label>
+                            	<div class="col-sm-4">
+                            	<input type="text" readonly  value="" class="form-control" >
+                            	</div>
+                            	<label class="col-sm-2 control-label  required">车牌号</label>
+                            	<div class="col-sm-4">
+                            	<input type="text" readonly value="${cMap.CARNO!''}"  placeholder="车牌号" class="form-control" >
                             	</div>
                             </div>
                             
@@ -152,31 +139,18 @@
                             	<div class="col-sm-4">
                             	<@select type='0' defValue="${cMap.PRODUCT!''}" codeType="1036"  fieldId="product" fieldName="product"  props=" class='form-control' " />
                             	</div>
-                            	<label class="col-sm-2 control-label  required">购车意向</label>
+                            	<label class="col-sm-2 control-label  required">到店时间</label>
                             	<div class="col-sm-4">
-                            	<@select type='0' defValue="${cMap.WILL!''}" codeType="1035"  fieldId="will" fieldName="will"  props=" class='form-control' " />
+                            		<input type="text" readonly name="firstTimeComing" id="firstTimeComing" maxlength="30" value="${(cMap.FIRSTTIMECOMING?string('yyyy-MM-dd'))!''}"  placeholder="到店时间" class="form-control layer-date" />
                             	</div>
                             </div> 
+                            
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label  required">是否提交审核资料</label>
+                            	<label class="col-sm-2 control-label  required">大定金支付情况</label>
                             	<div class="col-sm-4">
-                            	<@select type='0' defValue="${cMap.ISSUBMATERIAL!''}" codeType="1038"  fieldId="isSubMaterial" fieldName="isSubMaterial"  props=" class='form-control' " />
+                            	<@select type='0' defValue="${cMap.INNDEPOSIT!''}" codeType="1052"  fieldId="innDeposit" fieldName="innDeposit"  props=" class='form-control' " />
                             	</div>
-                            	<label class="col-sm-2 control-label  required">是否提车</label>
-                            	<div class="col-sm-4">
-                            	<@select type='0' defValue="${cMap.ISGETCAR!''}" codeType="1037"  fieldId="isGetCar" fieldName="isGetCar"  props=" class='form-control' onchange='showGetCarInfo(this);' " />
-                            	</div>
-                            </div>
-                            <div class="form-group" id="carInfo">
-                            	<label class="col-sm-2 control-label  required">提车时间</label>
-                            	<div class="col-sm-4">
-                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
-                            	</div>
-                            	<label class="col-sm-2 control-label  required">车牌号</label>
-                            	<div class="col-sm-4">
-                            	<input type="text" name="carno" id="carNo" value="${cMap.CARNO!''}"  placeholder="车牌号" class="form-control" >
-                            	</div>
-                            </div>
+                            </div> 
                               	
 		                 </div>
 		            </div>
@@ -253,7 +227,7 @@
                                 <input type="hidden" id="init_rank" name="init_rank"  value="${cMap.INIT_RANK!''}"> 
                                 <label class="col-sm-2 control-label">等级 <font color="#ff0000">*</font></label>
                                 <div class="col-sm-4 ">                                   
-                                    <@select type='0' codeType="1026" defValue="${cMap.RANKID!''}" fieldId="rank" fieldName="rank"  props=" class='form-control' onchange='changeRank(this);'" />                               
+                                    <@select type='1' codeType="1053" defValue="${cMap.RANKID!''}" fieldId="rank" fieldName="rank"  props=" class='form-control' onchange='changeRank(this);'" />                               
                                 </div>
                                 <div id="staid" class="col-sm-6">
                                      <input name="status" id = "status" value="1" <#if cMap.STATUSID = '1'> checked </#if> type="radio"> 无人接听

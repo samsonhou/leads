@@ -212,6 +212,15 @@ public class ReportController extends WebAction {
             case "810":
                 fileName = "微信路况";
                 break;
+            case "930":
+                fileName = "大象联动";
+                break;
+            case "931":
+                fileName = "触摸重庆";
+                break;
+            case "932":
+                fileName = "朔州那些事儿";
+                break;
         }
         fileName += "数据报表";
         // String fileName = (fromType.equals("391")?"滴滴商城":"唯品会")+"数据报表";
@@ -465,6 +474,14 @@ public class ReportController extends WebAction {
                 break;
             case "810":
                 fileName = "微信路况";
+            case "930":
+                fileName = "大象联动";
+                break;
+            case "931":
+                fileName = "触摸重庆";
+                break;
+            case "932":
+                fileName = "朔州那些事儿";
                 break;
         }
         fileName += "数据报表";
@@ -581,6 +598,14 @@ public class ReportController extends WebAction {
                 break;
             case "810":
                 fileName = "微信路况";
+            case "930":
+                fileName = "大象联动";
+                break;
+            case "931":
+                fileName = "触摸重庆";
+                break;
+            case "932":
+                fileName = "朔州那些事儿";
                 break;
         }
         fileName += "数据报表";
@@ -697,6 +722,14 @@ public class ReportController extends WebAction {
                 break;
             case "810":
                 fileName = "微信路况";
+            case "930":
+                fileName = "大象联动";
+                break;
+            case "931":
+                fileName = "触摸重庆";
+                break;
+            case "932":
+                fileName = "朔州那些事儿";
                 break;
         }
         fileName += "数据报表";

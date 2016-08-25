@@ -85,7 +85,7 @@
 		DDATE, NEXTDATE, RANK,
 		STATUS,QQ , WEIXIN ,
 		PHONE,ALLOTDATE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,FIRST_TIME_COMING,CHANNEL,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,
-		IDD,IFK,CONTRACTNO)
+		IDD,IFK,CONTRACTNO,ORDER_NO,IS_CHARGED,INN_DEPOSIT)
 		values
 		(#{id,jdbcType=DECIMAL},#{clientName,jdbcType=VARCHAR},
 		#{tel,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
@@ -104,7 +104,7 @@
 		#{phone,jdbcType=CHAR},#{allotdate,jdbcType=TIMESTAMP},
 		#{depositStatus,jdbcType=VARCHAR},#{tel1,jdbcType=VARCHAR},#{fromtypeBig,jdbcType=VARCHAR},#{firstTimeComing,jdbcType=TIMESTAMP},#{channel,jdbcType=VARCHAR},
 		#{product,jdbcType=VARCHAR},#{will,jdbcType=VARCHAR},#{isSubMaterial,jdbcType=VARCHAR},#{isGetCar,jdbcType=VARCHAR},#{getCarDate,jdbcType=TIMESTAMP},
-		#{carno,jdbcType=VARCHAR},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR},#{contractno,jdbcType=VARCHAR})
+		#{carno,jdbcType=VARCHAR},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR},#{contractno,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR},#{isCharged,jdbcType=VARCHAR},#{innDeposit,jdbcType=VARCHAR})
 	</insert>
 
 	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.ClientVO">
@@ -202,7 +202,7 @@
 			<if test="depositStatus != null">
 				DEPOSIT_STATUS = #{depositStatus,jdbcType=VARCHAR},
 			</if>
-			<if test="depositStatus != null">
+			<if test="tel1 != null">
 				TEL1 = #{tel1,jdbcType=VARCHAR},
 			</if>
 			<if test="carno != null">
@@ -210,6 +210,13 @@
 			</if>
 			<if test="firstTimeComing != null">
 				first_time_coming = nvl(LM_CLIENT.first_time_coming,#{firstTimeComing,jdbcType=TIMESTAMP}),
+				IDD ='1',
+			</if>
+			<if test="innDeposit != null">
+				inn_deposit = #{innDeposit,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
 			</if>
 
 			REASONCONT = #{reasonCont,jdbcType=VARCHAR}, ALLOTDATE = sysdate ,
@@ -273,7 +280,12 @@
 		where tci.code_type='1040' and tci.value = lmc.deposit_status)
 		DEPOSITSTATUS,
 		lmc.fromtype_big FROMTYPEBIG,
-		lmc.channel
+		lmc.channel,
+		lmc.order_no ORDERNO,
+		decode(lmc.is_charged,'1','是','0','否','') ISCHARGED,
+		lmc.first_time_coming FIRSTTIMECOMING,
+		lmc.inn_deposit INNDEPOSIT
+		
 		from
 		lm_client lmc
 		where lmc.ID = #{id,jdbcType=DECIMAL}
@@ -451,12 +463,7 @@
 		lmc.PHONE,
 		lmc.REASON,
 		lmc.REASONCONT REASONCONT,
-		(select ert.l_create_time from
-		link_erp_report_temp ert where ert.client_id =
-		lmc.id) INCOMEDATE,
-		(select er.l_create_time from link_erp_report er where er.client_id =
-		lmc.id)
-		DEALDATE,
+		
 		(select ci.name from t_code_item ci where ci.code_type
 		= '1036' and ci.value
 		= lmc.PRODUCT) PRODUCT,
@@ -478,19 +485,39 @@
 		lmc.DEPOSIT_STATUS DEPOSITSTATUS,
 		lmc.CONTRACTNO CONTRACTNO,
 		(select max(a.redate) from lm_clientrace a
-		where a.t_id = lmc.id ) RDATE,
+		where a.t_id = lmc.id ) LDATE,
 		(select a.title from lm_clientrace a
 		where a.t_id = lmc.id and a.id = (select max(a.id) from lm_clientrace
-		a where a.t_id = lmc.id )) RDETAIL,
+		a where a.t_id = lmc.id )) LDETAIL,
 		case
-         when (lmc.deposit_status = '2' and lmc.qdate + 30 <![CDATA[ < ]]> sysdate and
-              (lmc.credit_status is null or
-              lmc.credit_status in ('信审拒绝', '信审拒绝-终拒', '客户放弃-终拒', '客户放弃',
-               '门店拒绝', '门店拒绝-终拒', '门店放弃'))) then
+         when (lmc.deposit_status = '2' and lmc.credit = 'B') then
           '是'
           else 
           '否'
-       end ISCANCLE
+       end ISCANCLE,
+       lmc.allotdate ALLOTDATE,
+       (select lc.redate from lm_clientrace lc where lc.t_id = lmc.id and lc.times=1) FDATE,
+       (select lc.title from lm_clientrace lc where lc.t_id = lmc.id and lc.times=1) FDETAIL,
+       (select lc.redate from lm_clientrace lc where lc.t_id = lmc.id and lc.times=2) SDATE,
+       (select lc.title from lm_clientrace lc where lc.t_id = lmc.id and lc.times=2) SDETAIL,
+       (select lc.redate from lm_clientrace lc where lc.t_id = lmc.id and lc.times=3) TDATE,
+       (select lc.title from lm_clientrace lc where lc.t_id = lmc.id and lc.times=3) TDETAIL,
+       lmc.first_time_coming FIRSTTIMECOMING,
+       (select tci.name from t_code_item tci where tci.code_type='1052' and tci.value=lmc.inn_deposit) INNDEPOSIT,
+       decode(lmc.is_charged,'1','是','0','否','') ISCHARGED,
+       lmc.order_no ORDERNO,
+       lmc.credit,
+       case
+        when (lmc.rank='C' or ROUND(TO_NUMBER(sysdate - lmc.allotdate) * 24)>168) then
+        '是'
+        else
+        '否'
+        end ISRECYCLE,
+        lmc.is_income ISINCOME,
+        lmc.income_date INCOMEDATE,
+        lmc.is_deal ISDEAL,
+        lmc.deal_date DEALDATE
+        
 		from lm_client lmc, t_user b
 		<where>
 			lmc.rid = b.user_id and lmc.sex = '1'
@@ -523,10 +550,10 @@
 				AND lmc.sid = #{sid,jdbcType=DECIMAL}
 			</if>
 			<if test="email != null and '' != email">
-				AND to_char(lmc.QDATE, 'YYYY-MM-DD') >= #{email}
+				AND lmc.QDATE >= to_date(#{email}||'00:00:00','yyyy-mm-dd hh24:mi:ss')
 			</if>
 			<if test="title != null and '' != title">
-				AND <![CDATA[to_char(lmc.QDATE, 'YYYY-MM-DD') <= #{title}]]>
+				AND <![CDATA[lmc.QDATE <= to_date(#{title}||'23:59:59','yyyy-mm-dd hh24:mi:ss')]]>
 			</if>
 			<!-- add by cj加入来源条件 -->
 			<if test="fromtype != null and '' != fromtype">
@@ -535,40 +562,28 @@
 
 			<!-- add by houjiq 是否进件 -->
 			<if test="isIncome == 1">
-				AND exists (select 1 from link_erp_report_temp ert where
-				ert.client_id
-				= lmc.id)
+				AND lmc.is_income = '1'
 			</if>
 			<!-- add by houjiq 是否进件 -->
 			<if test="isIncome == 0">
-				AND not exists (select 1 from link_erp_report_temp ert
-				where
-				ert.client_id = lmc.id)
+				AND (lmc.is_income != '1' or lmc.is_income is null)
 			</if>
 			<!-- add by houjiq 是否成交 -->
 			<if test="isDeal == 1">
-				AND exists (select 1 from link_erp_report er where
-				er.client_id =
-				lmc.id)
+				AND lmc.is_deal = '1'
 			</if>
 			<!-- add by houjiq 是否成交 -->
 			<if test="isDeal == 0">
-				AND not exists (select 1 from link_erp_report er where
-				er.client_id =
-				lmc.id)
+				AND (lmc.is_deal != '1' or lmc.is_deal is null)
 			</if>
 			<if test="product != null">
 				And lmc.product = #{product,jdbcType=VARCHAR}
 			</if>
-			<if test="will != null">
-				And lmc.will = #{will,jdbcType=VARCHAR}
+			<if test="isGetCar == 1">
+				And lmc.is_get_car = '1'
 			</if>
-			<if test="isSubMaterial != null">
-				And lmc.is_sub_material =
-				#{isSubMaterial,jdbcType=VARCHAR}
-			</if>
-			<if test="isGetCar != null">
-				And lmc.is_get_car = #{isGetCar,jdbcType=VARCHAR}
+			<if test="isGetCar == 0">
+				And (lmc.is_get_car != '1' or lmc.is_get_car is null)
 			</if>
 			<if test="getCarDate != null">
 				And lmc.get_car_date = #{product,jdbcType=TIMESTAMP}
@@ -585,6 +600,12 @@
 			</if>
 			<if test="channel != null">
 				And lmc.channel = #{channel,jdbcType=VARCHAR}
+			</if>
+			<if test="isRecycle == 1">
+			   and (lmc.rank='C' or ROUND(TO_NUMBER(sysdate - lmc.allotdate) * 24)>168)
+			</if>
+			<if test="isRecycle == 0">
+			   and (lmc.rank !='C' and ROUND(TO_NUMBER(sysdate - lmc.allotdate) * 24)<![CDATA[<]]>168)
 			</if>
 		</where>
 		order by lmc.id desc
@@ -2345,8 +2366,7 @@
 		else
 		0
 		end) DDNUM,
-		sum(nvl((select 1 from
-		link_erp_report_temp d where d.client_id = a.id and rownum=1),0))
+		sum(case a.is_income when '1' then 1 else 0 end)
 		JJNUM,
 		sum(case a.credit_status
 		when '信审通过' then
@@ -2405,10 +2425,7 @@
 		orgid,
 		l.sid sid,
 		sum(decode(l.ifk, '1', 1, 0)) fk,
-		sum(nvl((select 1
-		from link_erp_report a
-		where a.client_id = l.id),
-		0)) cj
+		sum(decode(l.is_deal,'1',1,0)) cj
 		from lm_client l
 		where l.fromtype = #{fromType,jdbcType=DECIMAL}
 		and l.sex = '1'
@@ -2452,11 +2469,7 @@
 		0
 		end) / sum(1) * 100,
 		2) || '%' DDP,
-		round(sum(nvl((select
-		1
-		from link_erp_report_temp d
-		where d.client_id = a.id),
-		0)) / sum(1) *
+		round(sum(decode(a.is_income,'1',1,0)) / sum(1) *
 		100,
 		2) || '%' JJP,
 		round(sum(case a.credit_status

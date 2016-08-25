@@ -74,23 +74,22 @@
                                 <div class="col-sm-4">
                                    <input name="ifurgent" value="1"  type="radio"> 是   <input name="ifurgent" value="0" checked type="radio"> 否
                                 </div>
-                                <label class="col-sm-2 control-label  required">定金支付情况</label>
+                                <label class="col-sm-2 control-label  required">小定金支付情况</label>
                                 <div class="col-sm-4">
                                 <input type="hidden" value="${clientVO.depositStatus!''}" />
-                                   <@select type='0' codeType="1040" defValue="${clientVO.depositStatus!''}" fieldId="depositStatus" fieldName="depositStatus" props="datatype='*' nullmsg='请选择定金支付情况' class='form-control' " />
+                                   <@select type='0' codeType="1040" defValue="${clientVO.depositStatus!''}" fieldId="depositStatus" fieldName="depositStatus" props="datatype='*' nullmsg='请选择小定金支付情况' class='form-control' " />
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                            	<label class="col-sm-2 control-label  required">是否到店</label>
-                                <div class="col-sm-4">
-                                 <@select type='0' codeType="1000"  fieldId="idd" fieldName="idd"  props="class='form-control' " />
-                                </div>
-                                <div style="display:none;" id="comingTime">
                             	<label class="col-sm-2 control-label  required">到店时间</label>
                                 <div class="col-sm-4">
                                  	<input type="text" readonly name="firstTimeComing" id="firstTimeComing" maxlength="30"  placeholder="到店时间" class="form-control layer-date" />
                                 </div>
+                                <label class="col-sm-2 control-label  required">大定金支付情况</label>
+                                <div class="col-sm-4">
+                                <input type="hidden" value="${clientVO.depositStatus!''}" />
+                                   <@select type='0' codeType="1052" defValue="${clientVO.innDeposit!''}" fieldId="innDeposit" fieldName="innDeposit" props="datatype='*' nullmsg='请选择大定金支付情况' class='form-control' " />
                                 </div>
                             	
                             </div>
@@ -100,11 +99,11 @@
                                 <div class="col-sm-4 ">
                                     <input type="text" name="email" id="email" maxlength="50"  value="${clientVO.email!''}" class="form-control">
                                 </div>
-                                <label class="col-sm-2 control-label  required">是否通过风控</label>
+                                <label class="col-sm-2 control-label  required">是否已结算</label>
                                 <div class="col-sm-4">
-                              <@select type='0' codeType="1000"  fieldId="ifk" fieldName="ifk"  props=" class='form-control' " />
-                                
-                                </div> 	                        
+                                <input type="hidden" value="${clientVO.depositStatus!''}" />
+                                   <@select type='0' codeType="1000" defValue="${clientVO.isCharged!''}" fieldId="isCharged" fieldName="isCharged" props="class='form-control' " />
+                                </div>
                             </div> 
                             
                             <div class="form-group">
@@ -112,31 +111,11 @@
                             	<div class="col-sm-4">
                             	<@select type='0' codeType="1036"  fieldId="product" fieldName="product"  props=" class='form-control' " />
                             	</div>
-                            	<label class="col-sm-2 control-label  required">购车意向</label>
-                            	<div class="col-sm-4">
-                            	<@select type='0' codeType="1035"  fieldId="will" fieldName="will"  props=" class='form-control' " />
-                            	</div>
+                            	<label class="col-sm-2 control-label">滴滴订单号</label>
+                                <div class="col-sm-4 ">
+                                    <input type="text" name="orderNo" id="orderNo" maxlength="50"  value="${clientVO.orderNo!''}" class="form-control">
+                                </div>
                             </div> 
-                            <div class="form-group">
-                            	<label class="col-sm-2 control-label  required">是否提交审核资料</label>
-                            	<div class="col-sm-4">
-                            	<@select type='0' codeType="1038"  fieldId="isSubMaterial" fieldName="isSubMaterial"  props=" class='form-control' " />
-                            	</div>
-                            	<label class="col-sm-2 control-label  required">是否提车</label>
-                            	<div class="col-sm-4">
-                            	<@select type='0' codeType="1037"  fieldId="isGetCar" fieldName="isGetCar"  props=" class='form-control' " />
-                            	</div>
-                            </div>
-                            <div class="form-group" id="carInfo" style="display:none;">
-                            	<label class="col-sm-2 control-label  required">提车时间</label>
-                            	<div class="col-sm-4">
-                            	<input type="text" readonly name="getCarDate" id="getCarDate" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
-                            	</div>
-                            	<label class="col-sm-2 control-label  required">车牌号</label>
-                            	<div class="col-sm-4">
-                            	<input type="text" name="carno" id="carNo"  placeholder="车牌号" class="form-control" >
-                            	</div>
-                            </div>
                               	
 		                 </div>
 		            </div>
@@ -210,7 +189,7 @@
                                 <input type="hidden" id="init_rank" name="init_rank"> 
                                 <label class="col-sm-2 control-label">等级 <font color="#ff0000">*</font></label>
                                 <div class="col-sm-4 ">                                   
-                                    <@select type='0' codeType="1026" fieldId="rank" fieldName="rank"  props=" class='form-control' " />                               
+                                    <@select type='1' codeType="1053" fieldId="rank" fieldName="rank"  props=" class='form-control' " />                               
                                 </div>
                                 <div id="staid" class="col-sm-6" style="display:none;">
                                      <input name="status" id = "status" value="1"  type="radio"> 无人接听
@@ -270,12 +249,7 @@
     		max:"2099-06-16"
     	};
     	laydate(firsttime);
-		var getCarDate={
-    		elem:"#getCarDate",
-    		format:"YYYY-MM-DD",
-    		max:"2099-06-16"
-    	};
-    	laydate(getCarDate);
+		
 		var nextdate={
     		elem:"#nextdate",
     		format:"YYYY-MM-DD",
@@ -332,37 +306,10 @@
 				}else{
 					$("#staid").hide();
 				}
-				if(rank=="O") {
-					$("#cont").show();
-					$("#contractno").attr("datatype","*");
-					$("#isGetCar").val("1");
-					$("#carInfo").show();
-				}else{
-					$("#cont").hide();
-					$("#contractno").removeAttr("datatype")
-					if($("#isGetCar").val() == "1") $("#isGetCar").val("");
-					$("#carInfo").hide();
-				}
-			});
-			
-			$("#isGetCar").on("change",function(){
-				if($("#isGetCar").val()=="1"){
-					$("#carInfo").show();
-				}else{
-					$("#carInfo").hide();
-				}
-			});
-			
-			$("#idd").on("change",function(){
-				if($("#idd").val()=="1"){
-					$("#comingTime").show();
-					$("#firstTimeComing").attr("datatype","*");
-				}else{
-					$("#comingTime").hide();
-					$("#firstTimeComing").removeAttr("datatype");
-				}
 				
 			});
+			
+			
 			
 			var demo =$("#form1").Validform({tiptype : 1,
 				ignoreHidden : false,

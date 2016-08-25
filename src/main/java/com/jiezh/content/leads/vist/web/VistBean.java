@@ -93,6 +93,7 @@ public class VistBean {
 		clientVO.setCarno(request.getParameter("carno"));
 		if(StringUtils.isNotEmpty(request.getParameter("firstTimeComing")))
 		    clientVO.setFirstTimeComing(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("firstTimeComing")));
+		clientVO.setInnDeposit(request.getParameter("innDeposit"));
 		
 	}
 	/**
@@ -123,6 +124,7 @@ public class VistBean {
         if(StringUtils.isNotEmpty(request.getParameter("getCarDate")))
             clientTraceVO.setGetCarDate(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("getCarDate")));
         clientTraceVO.setCarno(request.getParameter("carno"));
+        clientTraceVO.setInnDeposit(request.getParameter("innDeposit"));
 	}
 	
 }

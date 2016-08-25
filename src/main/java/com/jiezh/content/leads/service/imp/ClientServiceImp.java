@@ -93,6 +93,15 @@ public class ClientServiceImp implements ClientService {
                 throw new Exception("手机号: " + recode.getTel() + " 已经存在，请勿重复录入！");
             }
         }
+        ClientUpdateVO clientUpdateVO = new ClientUpdateVO();
+
+        clientUpdateVO.setClientId(recode.getId());
+        clientUpdateVO.setField("title");
+        clientUpdateVO.setFieldBefore("");
+        clientUpdateVO.setFieldAfter(recode.getTitle());
+        clientUpdateVO.setUpdateIndex(UUID.randomUUID().toString());
+        clientUpdateVO.setCreatedUserId((long) recode.getRid());
+        clientUpdateDao.insert(clientUpdateVO);
         return id;
     }
 
@@ -166,19 +175,20 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
-    public int updateClient(ClientVO recode,AuthorUser user) throws Exception{
+    public int updateClient(ClientVO recode, AuthorUser user) throws Exception {
         ClientVO old = clientDao.selectByPrimaryKey(recode.getId());
         Class<?> cls = recode.getClass();
         String uuid = UUID.randomUUID().toString();
         Field[] fields = cls.getDeclaredFields();
-        for(Field field : fields){
+        for (Field field : fields) {
             PropertyDescriptor pd = new PropertyDescriptor(field.getName(), cls);
             Method getMethod = pd.getReadMethod();
-            Object oldField = getMethod.invoke(old) == null?"":getMethod.invoke(old);
-            Object newField = getMethod.invoke(recode) == null?"N":getMethod.invoke(recode);
-            if(!oldField.toString().equals(newField.toString())&&!newField.toString().equals("N")&&!field.getName().equals("rid")&&!field.getName().equals("allotdate")){
+            Object oldField = getMethod.invoke(old) == null ? "" : getMethod.invoke(old);
+            Object newField = getMethod.invoke(recode) == null ? "N" : getMethod.invoke(recode);
+            if (!oldField.toString().equals(newField.toString()) && !newField.toString().equals("N") && !field.getName().equals("rid")
+                && !field.getName().equals("allotdate")) {
                 ClientUpdateVO clientUpdateVO = new ClientUpdateVO();
-                
+
                 clientUpdateVO.setClientId(recode.getId());
                 clientUpdateVO.setField(field.getName());
                 clientUpdateVO.setFieldBefore(oldField.toString());
@@ -191,7 +201,7 @@ public class ClientServiceImp implements ClientService {
         if (recode.getSid() != 0) {
             recode.setDdate(new Date());
         }
-        
+
         return clientDao.updateByPrimaryKey(recode);
     }
 
@@ -1037,63 +1047,75 @@ public class ClientServiceImp implements ClientService {
             for (int rowi = 0; rowi < map.size(); rowi++) {
                 Map<String, Object> obj = (Map<String, Object>) map.get(rowi);
                 Row row = sheet.createRow(rowIndex);
-
-                row.createCell(0).setCellValue(obj.get("NAME") == null ? "" : obj.get("NAME") + "");
-                row.createCell(1).setCellValue(obj.get("BIG_PID") == null ? ""
+                
+                row.createCell(0).setCellValue(obj.get("ISCHARGED") == null ? "" : obj.get("ISCHARGED") + "");
+                row.createCell(1).setCellValue(obj.get("ORDERNO") == null ? "" : obj.get("ORDERNO") + "");
+                row.createCell(2).setCellValue(obj.get("NAME") == null ? "" : obj.get("NAME") + "");
+                row.createCell(3).setCellValue(obj.get("BIG_PID") == null ? ""
                     : obj.get("BIG_PID") + "" + " - " + obj.get("SMALL_PID") == null ? "" : obj.get("SMALL_PID") + "");
-                row.createCell(2).setCellValue(obj.get("TEL") == null ? "" : obj.get("TEL") + "");
-                row.createCell(3).setCellValue(obj.get("RID") == null ? "" : obj.get("RID") + "");
-                row.createCell(4).setCellValue(obj.get("COMNAME") == null ? "" : obj.get("COMNAME") + "");
-                row.createCell(5).setCellValue(obj.get("SID") == null ? "" : obj.get("SID") + "");
-                row.createCell(6).setCellValue(obj.get("FROMTYPE") == null ? "" : obj.get("FROMTYPE") + "");
-                row.createCell(7).setCellValue(obj.get("RANK") == null ? "" : obj.get("RANK") + "");
+                row.createCell(4).setCellValue(obj.get("TEL") == null ? "" : obj.get("TEL") + "");
+                row.createCell(5).setCellValue(obj.get("RID") == null ? "" : obj.get("RID") + "");
+                row.createCell(6).setCellValue(obj.get("COMNAME") == null ? "" : obj.get("COMNAME") + "");
+                row.createCell(7).setCellValue(obj.get("SID") == null ? "" : obj.get("SID") + "");
+                row.createCell(8).setCellValue(obj.get("FROMTYPE") == null ? "" : obj.get("FROMTYPE") + "");
+                row.createCell(9).setCellValue(obj.get("PRODUCT") == null ? "" : obj.get("PRODUCT") + "");
+                String depositStatus = obj.get("DEPOSITSTATUS") == null ? "" : obj.get("DEPOSITSTATUS").toString();
+                if (depositStatus.equals("1")) {
+                    row.createCell(10).setCellValue("无定金模式（普通来源）");
+                } else if (depositStatus.equals("2")) {
+                    row.createCell(10).setCellValue("已支付");
+                } else if (depositStatus.equals("3")) {
+                    row.createCell(10).setCellValue("未支付");
+                } else if (depositStatus.equals("4")) {
+                    row.createCell(10).setCellValue("已退回");
+                } else {
+                    row.createCell(10).setCellValue("");
+                }
+                row.createCell(11).setCellValue(obj.get("CREDIT_STATUS") == null ? "" : obj.get("CREDIT") + "-" + obj.get("CREDIT_STATUS"));
+                row.createCell(12).setCellValue(obj.get("ISCANCLE") == null ? "" : obj.get("ISCANCLE").toString());
+                row.createCell(13).setCellValue(obj.get("QDATE") == null ? "" : obj.get("QDATE") + "");
+                row.createCell(14).setCellValue(obj.get("TITLE") == null ? "" : obj.get("TITLE") + "");
+                row.createCell(15).setCellValue(obj.get("ALLOTDATE") == null ? "" : obj.get("ALLOTDATE") + "");
+                
+                row.createCell(16).setCellValue(obj.get("FDATE") == null ? "" : obj.get("FDATE") + "");
+                row.createCell(17).setCellValue(obj.get("FDETAIL") == null ? "" : obj.get("FDETAIL") + "");
+                row.createCell(18).setCellValue(obj.get("SDATE") == null ? "" : obj.get("SDATE") + "");
+                row.createCell(19).setCellValue(obj.get("SDETAIL") == null ? "" : obj.get("SDETAIL") + "");
+                row.createCell(20).setCellValue(obj.get("TDATE") == null ? "" : obj.get("TDATE") + "");
+                row.createCell(21).setCellValue(obj.get("TDETAIL") == null ? "" : obj.get("TDETAIL") + "");
+                row.createCell(22).setCellValue(obj.get("LDATE") == null ? "" : obj.get("LDATE") + "");
+                row.createCell(23).setCellValue(obj.get("LDETAIL") == null ? "" : obj.get("LDETAIL") + "");
+                row.createCell(24).setCellValue(obj.get("RANK") == null ? "" : obj.get("RANK") + "");
                 if ((obj.get("RANK") == null ? "" : obj.get("RANK") + "").startsWith("C")) {
                     String reason = obj.get("REASON") == null ? "" : obj.get("REASON") + "";
                     if (reason.equals("1")) {
-                        row.createCell(8).setCellValue("A 车型不匹配");
+                        row.createCell(25).setCellValue("A 车型不匹配");
                     } else if (reason.equals("2")) {
-                        row.createCell(8).setCellValue("B 金融方案不满意");
+                        row.createCell(25).setCellValue("B 金融方案不满意");
                     } else if (reason.equals("3")) {
-                        row.createCell(8).setCellValue("C 风控原因  (审核未通过)");
+                        row.createCell(25).setCellValue("C 风控原因  (审核未通过)");
                     } else if (reason.equals("4")) {
-                        row.createCell(8).setCellValue(obj.get("REASONCONT") == null ? "" : "D (" + obj.get("REASONCONT") + ")");
+                        row.createCell(25).setCellValue(obj.get("REASONCONT") == null ? "" : "D (" + obj.get("REASONCONT") + ")");
                     } else {
-                        row.createCell(8).setCellValue("");
+                        row.createCell(25).setCellValue("");
                     }
 
                 } else {
-                    row.createCell(8).setCellValue("");
+                    row.createCell(25).setCellValue("");
                 }
-                row.createCell(9).setCellValue(obj.get("STATUS") == null ? "" : obj.get("STATUS") + "");
-                row.createCell(10).setCellValue(obj.get("QDATE") == null ? "" : obj.get("QDATE") + "");
-                row.createCell(11).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
-                row.createCell(12).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
-                row.createCell(13).setCellValue(obj.get("PRODUCT") == null ? "" : obj.get("PRODUCT") + "");
-                row.createCell(14).setCellValue(obj.get("WILL") == null ? "" : obj.get("WILL") + "");
-                row.createCell(15).setCellValue(obj.get("ISSUBMATERIAL") == null ? "" : obj.get("ISSUBMATERIAL") + "");
-                row.createCell(16).setCellValue(obj.get("ISGETCAR") == null ? "" : obj.get("ISGETCAR") + "");
-                row.createCell(17).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
-                // add by houjq for JZLM-76
-                row.createCell(18).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
-                row.createCell(19).setCellValue(obj.get("IDD") == null ? "" : obj.get("IDD").equals("1") ? "是" : "否");
-                row.createCell(20).setCellValue(obj.get("CREDIT_STATUS") == null ? "" : "" + obj.get("CREDIT_STATUS"));
-                String depositStatus = obj.get("DEPOSITSTATUS") == null ?"":obj.get("DEPOSITSTATUS").toString();
-                if(depositStatus.equals("1")){
-                    row.createCell(21).setCellValue("无定金模式（普通来源）");
-                }else if(depositStatus.equals("2")){
-                    row.createCell(21).setCellValue("已支付定金");
-                }else if(depositStatus.equals("3")){
-                    row.createCell(21).setCellValue("端外预约");
-                }else if(depositStatus.equals("4")){
-                    row.createCell(21).setCellValue("客户定金已退");
-                }else{
-                    row.createCell(21).setCellValue("");
-                }
+                row.createCell(26).setCellValue(obj.get("FIRSTTIMECOMING") == null ? "" : obj.get("FIRSTTIMECOMING") + "");
+                row.createCell(27).setCellValue(obj.get("IDD") == null ? "" : obj.get("IDD").equals("1") ? "是" : "否");
+                row.createCell(28).setCellValue(obj.get("INNDEPOSIT") == null ? "" : obj.get("INNDEPOSIT") + "");
+                row.createCell(29).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
+                row.createCell(30).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
+                row.createCell(31).setCellValue(obj.get("ISINCOME") == null ? "" : obj.get("ISINCOME").toString().equals("1") ? "是" : "否");
+                row.createCell(32).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
+                row.createCell(33).setCellValue(obj.get("ISDEAL") == null ? "" : obj.get("ISDEAL").toString().equals("1") ? "是" : "否");
+                row.createCell(34).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
+                row.createCell(35).setCellValue(obj.get("ISGETCAR") == null ? "" : obj.get("ISGETCAR") + "");
+                row.createCell(36).setCellValue(obj.get("CONTRACTNO") == null ? "" : obj.get("CONTRACTNO").toString());
+                row.createCell(37).setCellValue(obj.get("ISRECYCLE") == null ? "" : obj.get("ISRECYCLE").toString());
                 
-                row.createCell(22).setCellValue(obj.get("ISCANCLE")==null?"":obj.get("ISCANCLE").toString());
-                row.createCell(23).setCellValue(obj.get("CONTRACTNO")==null?"":obj.get("CONTRACTNO").toString());
-                row.createCell(24).setCellValue(obj.get("RDATE")==null?"":obj.get("RDATE").toString());
-                row.createCell(25).setCellValue(obj.get("RDETAIL")==null?"":obj.get("RDETAIL").toString());
                 row.setRowStyle(contentStyle);
                 rowIndex++;
             }
@@ -2090,15 +2112,16 @@ public class ClientServiceImp implements ClientService {
 
         return rList;
     }
-    
+
     /**
      * 滴滴销售排行
      */
     @Override
     public List<Map<String, Object>> getDDRank(Map<String, Object> paras) {
-        
+
         return clientDao.selectDDRank(paras);
     }
+
     /**
      * 滴滴来源考评
      */
@@ -2106,7 +2129,7 @@ public class ClientServiceImp implements ClientService {
     public List<Map<String, Object>> getDDStatistics(Map<String, Object> paras) {
         return clientDao.selectDDStatistics(paras);
     }
-    
+
     /**
      * 滴滴来源考评（平均时间）
      */
@@ -2129,9 +2152,9 @@ public class ClientServiceImp implements ClientService {
         clientDao.insert(clientVo);
         clientTraceVo.settId(clientVo.getId());
         clientTraceVo.setRedate(new Date());
+        clientTraceVo.setuId(user.getRealName());
         clientTraceDao.insert(clientTraceVo);
         return null;
     }
-    
-    
+
 }

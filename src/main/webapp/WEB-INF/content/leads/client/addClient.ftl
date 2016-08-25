@@ -19,7 +19,7 @@
 		                 <div class="ibox-content" style="padding:0 0 0 0">
 		                 
 		                 <div class="form-group ">
-                                <label class="col-sm-2 control-label">姓名 <font color="#ff0000">*</font></label>
+                                <label class="col-sm-2 control-label">客户姓名 <font color="#ff0000">*</font></label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="clientName" id="clientName" datatype="*" maxlength="10" nullmsg="请输入客户姓名" value="${clientVO.clientName!''}" class="form-control">
                                 </div>
@@ -39,7 +39,7 @@
                                     <select style='display:none;'  class='form-control fromtype'"></select>
                                     <div class="fromtype">
                                     <div id="magicsuggest_1022"></div>
-                                	<input type="hidden" id="fromtype" name="fromtype" value="" class="form-control">
+                                	<input type="hidden" id="fromtype" name="fromtype" value="${clientVO.fromtype}" class="form-control">
                                 	</div>
                                     <input id="channel" name="channel" value="${clientVO.channel}" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
                                     <@select type='1' codeType="1046" defValue="${clientVO.fromtype}" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
@@ -75,7 +75,7 @@
                                 <div class="col-sm-4">
                                    <input name="ifurgent" value="1" <#if clientVO.ifurgent = '1'> checked </#if>  type="radio"> 是   <input name="ifurgent" value="0" <#if clientVO.ifurgent = '0'> checked </#if> type="radio"> 否
                                 </div>
-                                <label class="col-sm-2 control-label  required">定金支付情况</label>
+                                <label class="col-sm-2 control-label  required">小定金支付情况</label>
                                 <div class="col-sm-4">
                                 <input type="hidden" value="${clientVO.depositStatus!''}" />
                                    <@select type='0' codeType="1040" defValue="${clientVO.depositStatus!''}" fieldId="depositStatus" fieldName="depositStatus" props="datatype='*' nullmsg='请选择定金支付情况' class='form-control' " />
@@ -86,6 +86,18 @@
                             <label class="col-sm-2 control-label">邮箱</label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="email" id="email" maxlength="50"  value="${clientVO.email!''}" class="form-control">
+                                </div>
+                            <label class="col-sm-2 control-label">滴滴订单号</label>
+                                <div class="col-sm-4 ">
+                                    <input type="text" name="orderNo" id="orderNo" maxlength="50"  value="${clientVO.orderNo!''}" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                            <label class="col-sm-2 control-label">是否已结算</label>
+                                <div class="col-sm-4 ">
+                                   <@select type='0' codeType="1000" defValue="${clientVO.isCharged!''}" fieldId="isCharged" fieldName="isCharged" props="class='form-control' " />
+
                                 </div>
                             </div>
                             
@@ -138,10 +150,10 @@
 		                 <div class="ibox-content" style="padding:0 0 0 0">
 		                 
                              <div class="form-group">
-                                <label class="col-sm-2 control-label">业务员</label>
+                                <label class="col-sm-2 control-label">客户经理</label>
                                 <div class="col-sm-1"><input type="text" id= "filName"  size="6" onblur="setOpen();" placeholder="定位公司" class="form-control"></div> 
                                 <div class="col-sm-3">
-                                   <input id="sidName" name ="sidName" type="text" value="${dealPerson!''}" datatype="*" nullmsg="请选择销售人员" class='form-control' readonly  placeholder="请选择业务员"  onclick="showMenu();" />
+                                   <input id="sidName" name ="sidName" type="text" value="${dealPerson!''}" datatype="*" nullmsg="请选择客户经理" class='form-control' readonly  placeholder="请选择客户经理"  onclick="showMenu();" />
                                    <input id="sid" name ="sid" type="hidden"  value="${clientVO.sid!''}" />                                
                                    <input id="companyid" name ="companyid" type="hidden"  value="${clientVO.companyid!''}"  />
                                    
