@@ -104,6 +104,9 @@
                                         <td>${detail.M41}</td>                                     
                                         <td>${detail.M42}</td>                                     
                                         <td>${detail.M43}</td>                                     
+                                        <td>${detail.M44}</td>                                     
+                                        <td>${detail.M45}</td>                                     
+                                        <td>${detail.M46}</td>                                     
                                     </tr>  
                                     </#list>
                               </tbody>

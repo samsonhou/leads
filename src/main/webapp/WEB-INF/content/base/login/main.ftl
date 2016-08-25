@@ -7,7 +7,7 @@
     </script>
     <![endif]-->
     <#include "/pub/header_res.ftl"/>
-    <title>捷翊线索管理平台</title>
+    <title>花生好车（捷众普惠）线索管理平台</title>
 	<style>
 	.zhezhao{ width:100%; height:100%; display:none;overflow-x:hidden; overflow-y:visible; position:absolute; z-index:10001; left:0; top:0; ;background:rgba(0,0,0,0.5); text-align:center}
 	::-webkit-scrollbar{width:0;}
@@ -38,7 +38,7 @@
                                 <li><a onclick="javascript:hideLayer();" class="J_menuItem" href="${contextPath}/Password.do">修改密码</a></li>
                             </ul>
                         </div>
-                        <div class="logo-element">捷翊</div>
+                        <div class="logo-element">花生好车（捷众普惠）</div>
                     </li>
                     
                     <#list groupList as groupBean >
@@ -91,7 +91,7 @@
                 <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${contextPath}/indexPage.do" frameborder="0" data-id="${contextPath}/indexPage.do" seamless></iframe>
             </div>
             <div class="footer">
-                <div class="pull-right"><a href="javascript:void(0);">&copy; 2015-${(.now?date)?string('yyyy')} 捷翊汽车租赁 </a></div>
+                <div class="pull-right"><a href="javascript:void(0);">&copy; 2015-${(.now?date)?string('yyyy')} 花生好车（捷众普惠）汽车租赁 </a></div>
 				<div class="pull-left"><a href="javascript:void(0);"><span id="leftMsg">&nbsp;</span></a></div>
             </div>
         </div>

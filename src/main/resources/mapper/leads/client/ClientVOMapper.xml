@@ -1323,7 +1323,10 @@
        nvl(avg(decode(aa.fromtype, 790, aa.total)), 0) m40,
        nvl(avg(decode(aa.fromtype, 810, aa.total)), 0) m41,
        nvl(avg(decode(aa.fromtype, 870, aa.total)), 0) m42,
-       nvl(avg(decode(aa.fromtype, 910, aa.total)), 0) m43
+       nvl(avg(decode(aa.fromtype, 910, aa.total)), 0) m43,
+       nvl(avg(decode(aa.fromtype, 930, aa.total)), 0) m44,
+       nvl(avg(decode(aa.fromtype, 931, aa.total)), 0) m45,
+       nvl(avg(decode(aa.fromtype, 932, aa.total)), 0) m46
        
   from (select lc.companyid,
                lc.small_pid,

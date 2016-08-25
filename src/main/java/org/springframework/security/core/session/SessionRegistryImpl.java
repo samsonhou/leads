@@ -126,7 +126,7 @@ public class SessionRegistryImpl implements SessionRegistry, ApplicationListener
         }
 
         sessionsUsedByPrincipal.add(sessionId);
-        System.out.println("registerNewSession>>>>::"+sessionId);
+        logger.debug("registerNewSession>>>>::"+sessionId);
         //添加日记
         if(principal!=null){
         	AuthorUser user=(AuthorUser) principal;

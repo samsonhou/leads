@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<#include "/pub/header_res.ftl"/>
-	<title>捷翊线索管理平台</title>
+	<title>花生好车（捷众普惠）线索管理平台</title>
 	<link href="${contextPath}/res/pub/css/login.min.css" rel="stylesheet">
 
 </head>
@@ -12,10 +12,10 @@
             <div class="col-sm-7">
                 <div class="signin-info">
                     <div class="logopanel m-b">
-                        <h1>捷翊租车</span></h1>
+                        <h1>花生好车（捷众普惠）租车</span></h1>
                     </div>
                     <div class="m-b"></div>
-                    <h4>欢迎使用 <strong>捷翊线索管理系统</strong></h4>
+                    <h4>欢迎使用 <strong>花生好车（捷众普惠）线索管理系统</strong></h4>
                     <ul class="m-b">
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> 线索管理</li>
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> 信息追踪</li>
@@ -37,7 +37,7 @@
         </div>
         <div class="signup-footer">
             <div class="pull-left">
-                &copy; 2015-${(.now?date)?string('yyyy')} 捷翊汽车租赁
+                &copy; 2015-${(.now?date)?string('yyyy')} 花生好车（捷众普惠）汽车租赁
             </div>
         </div>
     </div>
