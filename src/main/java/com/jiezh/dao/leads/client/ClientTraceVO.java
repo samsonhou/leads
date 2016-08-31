@@ -45,6 +45,17 @@ public class ClientTraceVO extends GeneralBean {
     private String innDeposit;
     private Integer times;
 
+    // 礼品
+    private String gift;
+
+    public String getGift() {
+        return gift;
+    }
+
+    public void setGift(String gift) {
+        this.gift = gift;
+    }
+
     public String getuId() {
         return uId;
     }

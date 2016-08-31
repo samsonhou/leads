@@ -221,7 +221,7 @@
 
 			REASONCONT = #{reasonCont,jdbcType=VARCHAR}, ALLOTDATE = sysdate ,
 			IFK = #{ifk,jdbcType=CHAR},INIT_RANK=#{init_rank,jdbcType=VARCHAR},
-			GET_CAR_DATE = #{getCarDate,jdbcType=VARCHAR}
+			GET_CAR_DATE = #{getCarDate,jdbcType=VARCHAR},gift = #{gift,jdbcType=VARCHAR},
 		</set>
 		where ID = #{id,jdbcType=DECIMAL}
 	</update>
@@ -284,7 +284,8 @@
 		lmc.order_no ORDERNO,
 		decode(lmc.is_charged,'1','是','0','否','') ISCHARGED,
 		lmc.first_time_coming FIRSTTIMECOMING,
-		lmc.inn_deposit INNDEPOSIT
+		lmc.inn_deposit INNDEPOSIT,
+		lmc.gift GIFT
 		
 		from
 		lm_client lmc
@@ -516,7 +517,8 @@
         lmc.is_income ISINCOME,
         lmc.income_date INCOMEDATE,
         lmc.is_deal ISDEAL,
-        lmc.deal_date DEALDATE
+        lmc.deal_date DEALDATE,
+        lmc.gift GIFT
         
 		from lm_client lmc, t_user b
 		<where>
@@ -607,6 +609,13 @@
 			<if test="isRecycle == 0">
 			   and (lmc.rank !='C' and ROUND(TO_NUMBER(sysdate - lmc.allotdate) * 24)<![CDATA[<]]>168)
 			</if>
+			<if test="gifts != null">
+				 <foreach collection="gifts" index="index" item="gift" open="and ("
+				    separator="or" close=")">
+				   instr(lmc.gift,#{gift,jdbcType=VARCHAR})>0
+				  </foreach>
+			</if>
+			
 		</where>
 		order by lmc.id desc
 	</select>
@@ -2794,5 +2803,43 @@
 		from lm_urge a
 		where a.urge_affair_id = #{id,jdbcType=DECIMAL}
 		order by time desc
+	</select>
+	
+	<select id="selectGiftReport" parameterType="map" resultType="map">
+		select t.name ORGNAME,
+       sum(case
+             when instr(l.gift, '1') > 0 then
+              1
+             else
+              0
+           end) SHOPGIFT,
+       sum(case
+             when instr(l.gift, '2') > 0 then
+              1
+             else
+              0
+           end) ORDERGIFT,
+       sum(case
+             when instr(l.gift, '3') > 0 then
+              1
+             else
+              0
+           end) CARGIFT
+	  from lm_client l, t_organ_company t
+	 where l.companyid = t.organ_id
+	   and l.gift is not null
+	   <if test="organId != null">
+	   	and l.companyid in (select toc.organ_id from t_organ_company toc where toc.status='1' 
+	   						start with toc.organ_id =#{organId,jdbcType=VARCHAR} connect by prior toc.organ_id = toc.parent_id) 
+	   </if>
+	   <if test="startDate != null">
+	   	and l.qdate >= to_date(#{startDate,jdbcType=VARCHAR} || '00:00:00', 'yyyy-mm-dd
+		hh24:mi:ss')
+	   </if>
+	   <if test="endDate != null">
+	   	and l.qdate <![CDATA[<=]]>  to_date(#{endDate,jdbcType=VARCHAR} || '23:59:59', 'yyyy-mm-dd
+		hh24:mi:ss')
+	   </if>
+	 group by t.name
 	</select>
 </mapper>

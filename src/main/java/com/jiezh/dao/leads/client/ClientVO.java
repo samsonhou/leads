@@ -2,6 +2,7 @@ package com.jiezh.dao.leads.client;
 
 import com.jiezh.content.base.pub.web.GeneralBean;
 import java.util.Date;
+import java.util.List;
 
 public class ClientVO extends GeneralBean {
     private long id;
@@ -100,9 +101,13 @@ public class ClientVO extends GeneralBean {
     private String isCharged;
     // 大定金支付情况
     private String innDeposit;
-    //是否可回收
+    // 是否可回收
     private String isRecycle;
+    // 礼品
+    private String gift;
     
+    private List gifts;
+
     public String getCarno() {
         return carno;
     }
@@ -508,5 +513,23 @@ public class ClientVO extends GeneralBean {
     public void setIsRecycle(String isRecycle) {
         this.isRecycle = isRecycle;
     }
+
+    public String getGift() {
+        return gift;
+    }
+
+    public void setGift(String gift) {
+        this.gift = gift;
+    }
+
+    public List getGifts() {
+        return gifts;
+    }
+
+    public void setGifts(List gifts) {
+        this.gifts = gifts;
+    }
+    
+    
 
 }

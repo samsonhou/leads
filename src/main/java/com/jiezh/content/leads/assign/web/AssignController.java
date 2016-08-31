@@ -139,6 +139,7 @@ public class AssignController extends WebAction{
 		mv.addObject("serviceTrace", clientService.getServiceTrace(clientVO));
 		
 		mv.addObject("fromwhere", "viewonly");
+		
 		return mv;
 	}
 }

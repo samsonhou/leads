@@ -144,6 +144,16 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                             		<@select type='0' defValue="${clientVO.depositStatus!''}" codeType="1040"  fieldId="depositStatus" fieldName="depositStatus"  props=" class='form-control' " />
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">礼品发放</label>
+                            	<div class="col-sm-4 ">
+                                   <input type="checkbox" name="gift" ${(gifts?index_of("1") != -1)?string("checked","")} value="1">到店礼&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <input type="checkbox" name="gift" value="2" ${(gifts?index_of("2") != -1)?string("checked","")}>订车礼&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <input value="3" name="gift" type="checkbox"${(gifts?index_of("3") != -1)?string("checked","")}>交车礼
+                                </div>
+                               
+                            </div>
                                   
                            <div class="form-group ">
                                 <div class="col-sm-4 col-sm-offset-8">
@@ -208,6 +218,7 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         <th style="text-align: center;">花生合同号</th>
                                         <th style="text-align: center;">是否可退小定金</th>
                                         <th style="text-align: center;">是否可回收</th>
+                                        <th style="text-align: center;">礼品发放</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -264,6 +275,11 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         <td>${client.CONTRACTNO}</td>
                                         <td>${client.ISCANCLE}</td>
                                         <td>${client.ISRECYCLE}</td>
+                                        <td>
+										<#if client.GIFT?index_of("1") != -1>到店礼,</#if>
+										<#if client.GIFT?index_of("2") != -1>订车礼,</#if>
+										<#if client.GIFT?index_of("3") != -1>交车礼</#if>
+										</td>
                                     </tr>  
                                     </#list>
                               </tbody>

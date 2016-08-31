@@ -58,6 +58,8 @@ import com.jiezh.content.leads.search.web.ExcelUtil;
 import com.jiezh.content.leads.service.ClientService;
 import com.jiezh.content.leads.vist.web.VistBean;
 import com.jiezh.dao.base.user.UserVO;
+import com.jiezh.dao.leads.activity.ActivityConfigVO;
+import com.jiezh.dao.leads.activity.ActivityConfigVODao;
 import com.jiezh.dao.leads.client.ClientDao;
 import com.jiezh.dao.leads.client.ClientTraceDao;
 import com.jiezh.dao.leads.client.ClientTraceVO;
@@ -78,6 +80,8 @@ public class ClientServiceImp implements ClientService {
     LmurgeVODao lmurgeVODao;
     @Autowired
     ClientUpdateDao clientUpdateDao;
+    @Autowired
+    ActivityConfigVODao activityConfigVODao;
     final static ReentrantLock lock = new ReentrantLock();
 
     public int addClient(ClientVO recode) throws Exception {
@@ -1047,7 +1051,7 @@ public class ClientServiceImp implements ClientService {
             for (int rowi = 0; rowi < map.size(); rowi++) {
                 Map<String, Object> obj = (Map<String, Object>) map.get(rowi);
                 Row row = sheet.createRow(rowIndex);
-                
+
                 row.createCell(0).setCellValue(obj.get("ISCHARGED") == null ? "" : obj.get("ISCHARGED") + "");
                 row.createCell(1).setCellValue(obj.get("ORDERNO") == null ? "" : obj.get("ORDERNO") + "");
                 row.createCell(2).setCellValue(obj.get("NAME") == null ? "" : obj.get("NAME") + "");
@@ -1076,7 +1080,7 @@ public class ClientServiceImp implements ClientService {
                 row.createCell(13).setCellValue(obj.get("QDATE") == null ? "" : obj.get("QDATE") + "");
                 row.createCell(14).setCellValue(obj.get("TITLE") == null ? "" : obj.get("TITLE") + "");
                 row.createCell(15).setCellValue(obj.get("ALLOTDATE") == null ? "" : obj.get("ALLOTDATE") + "");
-                
+
                 row.createCell(16).setCellValue(obj.get("FDATE") == null ? "" : obj.get("FDATE") + "");
                 row.createCell(17).setCellValue(obj.get("FDETAIL") == null ? "" : obj.get("FDETAIL") + "");
                 row.createCell(18).setCellValue(obj.get("SDATE") == null ? "" : obj.get("SDATE") + "");
@@ -1103,19 +1107,37 @@ public class ClientServiceImp implements ClientService {
                 } else {
                     row.createCell(25).setCellValue("");
                 }
-                row.createCell(26).setCellValue(obj.get("FIRSTTIMECOMING") == null ? "" : obj.get("FIRSTTIMECOMING") + "");
-                row.createCell(27).setCellValue(obj.get("IDD") == null ? "" : obj.get("IDD").equals("1") ? "是" : "否");
-                row.createCell(28).setCellValue(obj.get("INNDEPOSIT") == null ? "" : obj.get("INNDEPOSIT") + "");
-                row.createCell(29).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
-                row.createCell(30).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
-                row.createCell(31).setCellValue(obj.get("ISINCOME") == null ? "" : obj.get("ISINCOME").toString().equals("1") ? "是" : "否");
-                row.createCell(32).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
-                row.createCell(33).setCellValue(obj.get("ISDEAL") == null ? "" : obj.get("ISDEAL").toString().equals("1") ? "是" : "否");
-                row.createCell(34).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
-                row.createCell(35).setCellValue(obj.get("ISGETCAR") == null ? "" : obj.get("ISGETCAR") + "");
-                row.createCell(36).setCellValue(obj.get("CONTRACTNO") == null ? "" : obj.get("CONTRACTNO").toString());
-                row.createCell(37).setCellValue(obj.get("ISRECYCLE") == null ? "" : obj.get("ISRECYCLE").toString());
-                
+
+                row.createCell(26).setCellValue(obj.get("STATUS") == null ? "" : obj.get("STATUS") + "");
+                row.createCell(27).setCellValue(obj.get("FIRSTTIMECOMING") == null ? "" : obj.get("FIRSTTIMECOMING") + "");
+                row.createCell(28).setCellValue(obj.get("IDD") == null ? "否" : obj.get("IDD").equals("1") ? "是" : "否");
+                row.createCell(29).setCellValue(obj.get("INNDEPOSIT") == null ? "" : obj.get("INNDEPOSIT") + "");
+                row.createCell(30).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
+                row.createCell(31).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
+                row.createCell(32).setCellValue(obj.get("ISINCOME") == null ? "否" : obj.get("ISINCOME").toString().equals("1") ? "是" : "否");
+                row.createCell(33).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
+                row.createCell(34).setCellValue(obj.get("ISDEAL") == null ? "否" : obj.get("ISDEAL").toString().equals("1") ? "是" : "否");
+                row.createCell(35).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
+                row.createCell(36).setCellValue(obj.get("ISGETCAR") == null ? "未提车" : obj.get("ISGETCAR") + "");
+                row.createCell(37).setCellValue(obj.get("CONTRACTNO") == null ? "" : obj.get("CONTRACTNO").toString());
+                row.createCell(38).setCellValue(obj.get("ISRECYCLE") == null ? "" : obj.get("ISRECYCLE").toString());
+
+                String gift = obj.get("GIFT") == null ? null : obj.get("GIFT").toString();
+                String gifts = "";
+                if (gift != null) {
+                    if (gift.indexOf("1") > -1) {
+                        gifts += "到店礼";
+                    }
+                    if (gift.indexOf("2") > -1) {
+                        gifts += ",订车礼";
+                    }
+                    if (gift.indexOf("3") > -1) {
+                        gifts += ",交车礼";
+                    }
+                }
+                if (gifts.startsWith(",")) gifts = gifts.substring(1);
+                row.createCell(39).setCellValue(gifts);
+
                 row.setRowStyle(contentStyle);
                 rowIndex++;
             }
@@ -2155,6 +2177,11 @@ public class ClientServiceImp implements ClientService {
         clientTraceVo.setuId(user.getRealName());
         clientTraceDao.insert(clientTraceVo);
         return null;
+    }
+
+    @Override
+    public ActivityConfigVO getActivityConf(Long id) {
+        return activityConfigVODao.selectByPrimaryKey(id);
     }
 
 }

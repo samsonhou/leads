@@ -39,7 +39,7 @@ public class ExcelUtil {
     private static Font headFont; // 表头行字体
     private static CellStyle contentStyle; // 内容行样式
     private static Font contentFont; // 内容行字体
-    
+
     /**
      * @Description: 创建表头行
      */
@@ -50,13 +50,14 @@ public class ExcelUtil {
         // 列头名称
         for (int num = 0, len = setInfo.getColumnNames().get(sheetNum).length; num < len; num++) {
             int length = setInfo.getColumnNames().get(sheetNum)[num].getBytes().length;
-            sheets[sheetNum].setColumnWidth(num, (short)length*256);
+            sheets[sheetNum].setColumnWidth(num, (short) length * 256);
             HSSFCell headCell = headRow.createCell(num);
             headCell.setCellStyle(headStyle);
             headCell.setCellValue(setInfo.getColumnNames().get(sheetNum)[num]);
-            
+
         }
     }
+
     /**
      * @Description: 创建内容行的每一列(附加一列序号)
      */
@@ -70,11 +71,12 @@ public class ExcelUtil {
 
         return cells;
     }
+
     /**
      * @Description: 创建标题行(需合并单元格)
      */
     private static void createTableTitleRow1(ExcelExportData setInfo, HSSFSheet[] sheets, int sheetNum) {
-        CellRangeAddress titleRange = new CellRangeAddress(0, 0, 0, setInfo.getFieldNames().get(sheetNum).length-1);
+        CellRangeAddress titleRange = new CellRangeAddress(0, 0, 0, setInfo.getFieldNames().get(sheetNum).length - 1);
         sheets[sheetNum].addMergedRegion(titleRange);
         HSSFRow titleRow = sheets[sheetNum].createRow(0);
         titleRow.setHeight((short) 800);
@@ -82,9 +84,9 @@ public class ExcelUtil {
         titleCell.setCellStyle(titleStyle);
         titleCell.setCellValue(setInfo.getTitles()[sheetNum]);
     }
-    
+
     @SuppressWarnings("unchecked")
-    public static ByteArrayOutputStream export2Stream3(ExcelExportData setInfo) throws Exception{
+    public static ByteArrayOutputStream export2Stream3(ExcelExportData setInfo) throws Exception {
         init();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Set<Entry<String, List<?>>> set = setInfo.getDataMap().entrySet();
@@ -116,25 +118,27 @@ public class ExcelUtil {
             int sameRow = 0;
             Object sameFlag = ((Map<String, Object>) objs.get(0)).get(fieldNames[0]);
             for (Object obj : objs) {
-                
+
                 HSSFRow contentRow = sheets[sheetNum].createRow(rowNum);
                 contentRow.setHeight((short) 300);
                 HSSFCell[] cells = getCells1(contentRow, setInfo.getFieldNames().get(sheetNum).length);
-                int cellNum = 0; 
-                if(((Map<String, Object>) obj).get(fieldNames[0]).equals(sameFlag)){
-                    sameRow ++;
-                }else{
-                    sheets[sheetNum].addMergedRegion(new CellRangeAddress(rowNum-sameRow,rowNum-1, 0, 0));
+                int cellNum = 0;
+                if (((Map<String, Object>) obj).get(fieldNames[0]).equals(sameFlag)) {
+                    sameRow++;
+                } else {
+                    sheets[sheetNum].addMergedRegion(new CellRangeAddress(rowNum - sameRow, rowNum - 1, 0, 0));
                     sameFlag = ((Map<String, Object>) obj).get(fieldNames[0]);
                     sameRow = 1;
                 }
                 if (fieldNames != null) {
                     for (int num = 0; num < fieldNames.length; num++) {
-                        //sheets[sheetNum].setColumnWidth(cellNum, 13*256);
+                        // sheets[sheetNum].setColumnWidth(cellNum, 13*256);
                         Object value = ((Map<String, Object>) obj).get(fieldNames[num]);
-                        if(num == 0 || num == 1){
-                            int len = value.toString().getBytes().length;
-                            sheets[sheetNum].setColumnWidth(num, (short)len*256);;
+                        if (num == 0 || num == 1) {
+                            int title1Len = sheets[sheetNum].getColumnWidth(num);
+                            int len = value.toString().getBytes().length * 256;
+                            sheets[sheetNum].setColumnWidth(num, (short) title1Len > len ? title1Len : len);
+                            ;
                         }
                         cells[cellNum].setCellValue(value == null ? "" : value.toString());
                         cellNum++;
@@ -142,13 +146,13 @@ public class ExcelUtil {
                 }
                 rowNum++;
             }
-            if(sameRow >1){
-                sheets[sheetNum].addMergedRegion(new CellRangeAddress(rowNum-sameRow,rowNum-1, 0, 0));
+            if (sameRow > 1) {
+                sheets[sheetNum].addMergedRegion(new CellRangeAddress(rowNum - sameRow, rowNum - 1, 0, 0));
             }
             sheetNum++;
-           
+
         }
-        
+
         wb.write(outputStream);
         return outputStream;
     }
@@ -186,6 +190,7 @@ public class ExcelUtil {
     public static byte[] export2ByteArray1(ExcelExportData setInfo) throws Exception {
         return export2Stream1(setInfo).toByteArray();
     }
+
     /**
      * 导出到byte数组.给map的查询类型使用
      * 
@@ -314,16 +319,16 @@ public class ExcelUtil {
             String[] fieldNames = setInfo.getFieldNames().get(sheetNum);
 
             int rowNum = 3;
-            
+
             for (Object obj : objs) {
-                
+
                 HSSFRow contentRow = sheets[sheetNum].createRow(rowNum);
                 contentRow.setHeight((short) 300);
                 HSSFCell[] cells = getCells(contentRow, setInfo.getFieldNames().get(sheetNum).length);
                 int cellNum = 1; // 去掉一列序号，因此从1开始
                 if (fieldNames != null) {
                     for (int num = 0; num < fieldNames.length; num++) {
-                        sheets[sheetNum].setColumnWidth(cellNum, 13*256);
+                        sheets[sheetNum].setColumnWidth(cellNum, 13 * 256);
                         Object value = ((Map<String, Object>) obj).get(fieldNames[num]);
 
                         cells[cellNum].setCellValue(value == null ? "" : value.toString());
@@ -332,7 +337,7 @@ public class ExcelUtil {
                 }
                 rowNum++;
             }
-            //adjustColumnSize(sheets, sheetNum, fieldNames); // 自动调整列宽
+            // adjustColumnSize(sheets, sheetNum, fieldNames); // 自动调整列宽
             sheetNum++;
         }
         wb.write(outputStream);

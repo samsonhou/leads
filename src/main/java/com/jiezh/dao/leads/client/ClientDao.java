@@ -3,8 +3,6 @@ package com.jiezh.dao.leads.client;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
 import com.jiezh.dao.leads.client.ClientVO;
 
 public interface ClientDao {
@@ -160,6 +158,8 @@ public interface ClientDao {
     List<Map<String, Object>> selectDDStatisticsByTime(Map<String, Object> paras);
     
     List<Map<String, Object>> selectServiceTrace(ClientVO clientVO);
+    
+    List<Map<String, Object>> selectGiftReport(Map<String, Object> param);
     
     
     

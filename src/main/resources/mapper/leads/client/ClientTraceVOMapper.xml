@@ -25,11 +25,12 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
       select S_LM_CLIENTTRACE_ID.Nextval as id from dual 
     </selectKey>
-    insert into LM_CLIENTRACE (ID,TITLE, T_ID, REDATE,U_ID,RANK,REASON,SID,IDD,IFK,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,DD_TIME,INN_DEPOSIT,TIMES
+    insert into LM_CLIENTRACE (ID,TITLE, T_ID, REDATE,U_ID,RANK,REASON,SID,IDD,IFK,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,DD_TIME,INN_DEPOSIT,TIMES,gift
       )
     select #{id,jdbcType=DECIMAL},#{title,jdbcType=VARCHAR}, #{tId,jdbcType=DECIMAL}, #{redate,jdbcType=TIMESTAMP}, #{uId,jdbcType=VARCHAR}, #{rank,jdbcType=VARCHAR}
     		, #{reason,jdbcType=VARCHAR}, #{sid,jdbcType=DECIMAL},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR}, #{will,jdbcType=VARCHAR}, #{isSubMaterial,jdbcType=VARCHAR}
     		, #{isGetCar,jdbcType=VARCHAR}, #{getCarDate,jdbcType=TIMESTAMP}, #{carno,jdbcType=VARCHAR}, #{firstTimeComing,jdbcType=TIMESTAMP}, #{innDeposit,jdbcType=VARCHAR},(select decode(max(a.times),'',1,max(a.times)+1) from lm_clientrace a where a.t_id=#{tId,jdbcType=DECIMAL})
+    		,#{gift,jdbcType=VARCHAR}
       from dual 
   </insert>
   <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.ClientTraceVO" >

@@ -116,11 +116,11 @@
                             <div class="form-group">
                             	<label class="col-sm-2 control-label  required">进件时间</label>
                             	<div class="col-sm-4">
-                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
+                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30" class="form-control layer-date" >
                             	</div>
                             	<label class="col-sm-2 control-label  required">提车时间</label>
                             	<div class="col-sm-4">
-                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30"  placeholder="提车时间" class="form-control layer-date" >
+                            	<input type="text" readonly name="getCarDate" id="getCarDate" value="${(cMap.GETCARDATE?string('yyyy-MM-dd'))!''}" maxlength="30" class="form-control layer-date" >
                             	</div>
                             </div>
                             <div class="form-group" >
@@ -130,7 +130,7 @@
                             	</div>
                             	<label class="col-sm-2 control-label  required">车牌号</label>
                             	<div class="col-sm-4">
-                            	<input type="text" readonly value="${cMap.CARNO!''}"  placeholder="车牌号" class="form-control" >
+                            	<input type="text" readonly value="${cMap.CARNO!''}" class="form-control" >
                             	</div>
                             </div>
                             
@@ -150,6 +150,14 @@
                             	<div class="col-sm-4">
                             	<@select type='0' defValue="${cMap.INNDEPOSIT!''}" codeType="1052"  fieldId="innDeposit" fieldName="innDeposit"  props=" class='form-control' " />
                             	</div>
+                            	<#if flag =='Y'>
+                            	<label class="col-sm-2 control-label">${actConfig.activityName}</label>
+                                <div class="col-sm-4 ">
+                                   <input type="checkbox" name="gift" ${(cMap.GIFT?index_of("1") != -1)?string("checked onclick='return false'","")} value="1">到店礼&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <input type="checkbox" name="gift" value="2" ${(cMap.GIFT?index_of("2") != -1)?string("checked onclick='return false'","")}>订车礼&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <input value="3" name="gift" type="checkbox"${(cMap.GIFT?index_of("3") != -1)?string("checked onclick='return false'","")}>交车礼
+                                </div>
+                                </#if>
                             </div> 
                               	
 		                 </div>
@@ -531,14 +539,6 @@
     	};
     	laydate(end2);
     	
-    	var getCarDate={
-    		elem:"#getCarDate",
-    		format:"YYYY-MM-DD",
-    		max:"2099-06-16",
-    		istime:false,
-    		istoday:false
-    	};
-    	laydate(getCarDate);
     	
     	$("#rank").change("onchange", selectOnchange);
     	function selectOnchange(){
