@@ -125,16 +125,22 @@ body, html {
 						</div>
 					</div>
 					<div class="weui_cell weui_cell_select weui_select_after">
-						<div class="weui_cell_hd">通过风控</div>
+						<div class="weui_cell_hd">租赁产品</div>
 						<div class="weui_cell_bd weui_cell_primary">
-						    <@select type='0' defValue="${cMap.IFK!''}" codeType="1000"  fieldId="ifk" fieldName="ifk"  props=" class='weui_select' " /> 
+						<@select type='0' defValue="${cMap.PRODUCT!''}" codeType="1036"  fieldId="product" fieldName="product"  props=" class='weui_select' " />
+						</div>
+					</div>
+					<div class="weui_cell weui_cell_select weui_select_after">
+						<div class="weui_cell_hd">大定金支付情况</div>
+						<div class="weui_cell_bd weui_cell_primary">
+						<@select type='0' defValue="${cMap.INNDEPOSIT!''}" codeType="1052"  fieldId="innDeposit" fieldName="innDeposit"  props=" class='weui_select' " />
 						</div>
 					</div>
 					<div class="weui_cell weui_cell_select weui_select_after">
 		            <input type="hidden" name="rankbefore" id = "rankbefore" value="${cMap.RANKID}">
 						<div class="weui_cell_hd">线索等级</div>
 						<div class="weui_cell_bd weui_cell_primary">
-						    <@select type='0' codeType="1026" defValue="${cMap.RANKID!''}" fieldId="rank" fieldName="rank"  props=" class='weui_select' " /> 
+						    <@select type='1' codeType="1053" defValue="${cMap.RANKID!''}" fieldId="rank" fieldName="rank"  props=" class='weui_select' " /> 
 						</div>
 					</div>
 					<div id="staid" class="weui_cell weui_cell_select weui_select_after">
