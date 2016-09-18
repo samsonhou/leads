@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.jiezh.content.base.pub.web.GeneralBean;
 
-public class QaDetailVO extends GeneralBean{
+public class QaDetailVO extends GeneralBean {
     private Long id;
 
     private Long pid;
@@ -26,6 +26,10 @@ public class QaDetailVO extends GeneralBean{
     private Date updatedTime;
 
     private Long updatedUserId;
+
+    private String fileType;
+
+    private String fileNewName;
 
     public Long getId() {
         return id;
@@ -114,4 +118,21 @@ public class QaDetailVO extends GeneralBean{
     public void setUpdatedUserId(Long updatedUserId) {
         this.updatedUserId = updatedUserId;
     }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileNewName() {
+        return fileNewName;
+    }
+
+    public void setFileNewName(String fileNewName) {
+        this.fileNewName = fileNewName;
+    }
+
 }

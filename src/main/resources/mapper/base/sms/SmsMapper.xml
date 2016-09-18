@@ -104,5 +104,36 @@
 		connect by f.parent_id = prior f.organ_id)
 		order by a.qdate desc
 	</select>
+	
+	
+	<select id="querySendMsgList" parameterType="map" resultType="map">
+		SELECT C.ID AS ID, C.CLIENT_NAME AS CLIENTNAME, C.TEL AS CLIENTTEL, S.MSG, 
+				(SELECT NAME FROM T_ORGAN_COMPANY WHERE ORGAN_ID = C.COMPANYID) AS ORGAN,
+		       DECODE(S.STATUS,'','未发送','0','已发送','发送失败') SENDSTATUS, C.QDATE AS QDATE
+		FROM LM_CLIENT C 
+		     LEFT JOIN SMS_SEND_INFO S ON C.ID = S.CLIENT_ID
+		WHERE C.SEX = '1' 
+			<if test="sendStatus == 1">
+			AND S.STATUS='0' 
+			</if>
+			<if test="sendStatus == 2">
+			AND (S.STATUS IS NULL OR S.STATUS='') 
+			</if>
+			<if test="sendStatus == 3">
+			AND S.STATUS>'0' 
+			</if>
+			<if test="clientName != null and clientName != ''">
+			AND C.CLIENT_NAME LIKE CONCAT('%', CONCAT(#{clientName}, '%'))
+			</if>
+			<if test="clientTel != null and clientTel != ''">
+			AND C.TEL LIKE CONCAT('%', CONCAT(#{clientTel}, '%'))
+			</if>
+			AND C.COMPANYID IN (
+	        	SELECT F.ORGAN_ID FROM T_ORGAN_COMPANY F WHERE F.STATUS = '1'
+	        	START WITH F.ORGAN_ID = 1
+	        	CONNECT BY F.PARENT_ID = PRIOR F.ORGAN_ID
+	      	) 
+	      	ORDER BY C.QDATE DESC
+	</select>
 
 </mapper>

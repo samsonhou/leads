@@ -39,7 +39,7 @@ public class BusinesstypeController extends WebAction {
 	public ModelAndView queryList() throws Exception{
 		ModelAndView mv=new ModelAndView("leads/businesstype/list");
 		int currenPage=1;
-		if(request.getParameter("currenPage")!=null&&!"".equals(request.getParameter("currenPage"))){
+		if(request.getParameter("currenPage")!=null && !"".equals(request.getParameter("currenPage"))){
 			currenPage=Integer.parseInt(request.getParameter("currenPage"));
 		}
 		LmcategoryVO lmcategoryVO =new LmcategoryVO();

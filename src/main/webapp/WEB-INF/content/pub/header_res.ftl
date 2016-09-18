@@ -14,4 +14,5 @@
 <#include "/pub/tag.ftl"/>
 <script type="text/javascript">
 	BASE_PATH="${contextPath}";
+	IMG_PATH = "${imgPath}"
 </script>

@@ -87,7 +87,7 @@
                                 <div class="col-sm-4 ">
                                     <input type="text" name="email" id="email" maxlength="50"  value="${clientVO.email!''}" class="form-control">
                                 </div>
-                            <label class="col-sm-2 control-label">滴滴订单号</label>
+                            <label class="col-sm-2 control-label">外部订单号</label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="orderNo" id="orderNo" maxlength="50"  value="${clientVO.orderNo!''}" class="form-control">
                                 </div>
@@ -200,7 +200,8 @@
  		        selectionStacked: true ,
  		        maxSelectionRenderer: function(data){ return ""},
  		        noSuggestionText: '',
- 		        maxSelection:1 //单选按照 0取值 
+ 		        maxSelection:1 //单选按照 0取值
+ 		        
  		    });
  		    $(ms1).on('selectionchange', function(e, cb, s){
  		     var object =cb.getSelection()[0];  
@@ -230,7 +231,16 @@
 		showAllError : true,
 		postonce : true,
 		ajaxPost : false,
-		datatype:{mOe:/^$|^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/}});
+		datatype:{mOe:/^$|^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/},
+		beforeSubmit:function(cur){
+			if($('#fromtypeBig').val() == '1' && $('input[id="fromtype"]').val()=='0'){
+				layer.alert("请选择来源！");
+				return false;
+			}else{
+			    return true;
+			}
+		}
+		});
 	});
 		
 		$("#fromtypeBig option").each(function(i,o){
@@ -275,81 +285,7 @@
 			});
 		
 
-		function save(){
-			if(formValidate()){
-				form1.action="${contextPath}/leads/client/saveClient.do";
-				form1.submit();
-			}
-		}
-		function  formValidate(){
-	    	var saveform = jQuery('#form1');
-	        var lv= saveform.find('#clientName').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"名称不能为空!"});
-	           return false;
-	        }        
-	        var lv= saveform.find('#tel').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"请输入11位手机!"});
-	           return false;
-	        }
-	        var tel = saveform.find('#tel').val();
-            if(lv!=0 && isNaN(tel)){
-                swal({title:"",text:"手机请输入数字！"});
-                return false;
-            }
-            
-            
-            var phone = saveform.find('#phone').val();
-            var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
-            var regTel1 = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
-            var regTel2 = /^(\d{7,8})(-(\d{3,}))?$/;
-            if(phone.length > 0 && (!regTel1.test(phone) && !regTel2.test(phone))){
-                swal({title:"",text:"座机电话输入不正确！"});
-                return false;
-            }
-            
-            var email = saveform.find('#email').val();
-	        var re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-            if(email.length > 0 && !re.test(email)){
-                swal({title:"",text:"请输入正确的邮箱！"});
-                return false;
-            }
-            
-            var personid = saveform.find('#personid').val();
-	        var re =  /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-            if(personid.length > 0 && !re.test(personid)){
-                swal({title:"",text:"身份证输入不合法！"});
-                return false;
-            }
-            
-            var lv= saveform.find('#fromtype').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"请选择来源!"});
-	           return false;
-	        }
-	        var lv= saveform.find('#bigPid').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"请选择业务大类!"});
-	           return false;
-	        }
-	        var lv= saveform.find('#smallPid').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"请选择业务小类!"});
-	           return false;
-	        }
-	        var lv= saveform.find('#title').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"咨询详情不能为空!"});
-	           return false;
-	        }    
-	        var lv= saveform.find('#depositStatus').val().length;
-	        if(lv==0){
-	        	swal({title:"",text:"请选择定金支付情况!"});
-	           return false;
-	        }    
-	      	return  true ;  
-	      }
+		
 		jQuery("#bigPid").on("change", function(){
 			jQuery.ajax({
 				type:"post",

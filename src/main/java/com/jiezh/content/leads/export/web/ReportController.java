@@ -27,6 +27,7 @@ import com.jiezh.content.base.pub.util.ExcelUtil;
 import com.jiezh.content.base.pub.util.ExcelUtil.ExcelExportData;
 import com.jiezh.content.base.pub.web.WebAction;
 import com.jiezh.content.leads.service.ClientService;
+import com.jiezh.dao.base.codetype.CodeItemVO;
 
 /**
  * 报表相关
@@ -179,49 +180,13 @@ public class ReportController extends WebAction {
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String depositStatus = request.getParameter("depositStatus");
-        String fromType = request.getParameter("fromType");
+        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
         String fileName = "";
-        switch (fromType) {
-            case "391":
-                fileName = "滴滴商城";
-                break;
-            case "550":
-                fileName = "唯品会";
-                break;
-            case "790":
-                fileName = "驾校一点通 ";
-                break;
-            case "730":
-                fileName = "天翼积分商城";
-                break;
-            case "750":
-                fileName = "兑吧";
-                break;
-            case "751":
-                fileName = "天翼视讯";
-                break;
-            case "690":
-                fileName = "脉脉";
-                break;
-            case "770":
-                fileName = "天翼流量800";
-                break;
-            case "14":
-                fileName = "汽车之家";
-                break;
-            case "810":
-                fileName = "微信路况";
-                break;
-            case "930":
-                fileName = "大象联动";
-                break;
-            case "931":
-                fileName = "触摸重庆";
-                break;
-            case "932":
-                fileName = "朔州那些事儿";
-                break;
+        if(StringUtils.isNotBlank(fromType)){
+            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
+            fileName = codeItemVO.getName();
         }
+
         fileName += "数据报表";
         // String fileName = (fromType.equals("391")?"滴滴商城":"唯品会")+"数据报表";
 
@@ -440,50 +405,13 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType");
-        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "销售排行";
-
+        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
         String fileName = "";
-        switch (fromType) {
-            case "391":
-                fileName = "滴滴商城";
-                break;
-            case "550":
-                fileName = "唯品会";
-                break;
-            case "790":
-                fileName = "驾校一点通";
-                break;
-            case "730":
-                fileName = "天翼积分商城";
-                break;
-            case "750":
-                fileName = "兑吧";
-                break;
-            case "751":
-                fileName = "天翼视讯";
-                break;
-            case "690":
-                fileName = "脉脉";
-                break;
-            case "770":
-                fileName = "天翼流量800";
-                break;
-            case "14":
-                fileName = "汽车之家";
-                break;
-            case "810":
-                fileName = "微信路况";
-            case "930":
-                fileName = "大象联动";
-                break;
-            case "931":
-                fileName = "触摸重庆";
-                break;
-            case "932":
-                fileName = "朔州那些事儿";
-                break;
+        if(StringUtils.isNotBlank(fromType)){
+            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
+            fileName = codeItemVO.getName();
         }
+
         fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
@@ -564,50 +492,13 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType");
-        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(统计率)";
-
+        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
         String fileName = "";
-        switch (fromType) {
-            case "391":
-                fileName = "滴滴商城";
-                break;
-            case "550":
-                fileName = "唯品会";
-                break;
-            case "790":
-                fileName = "驾校一点通";
-                break;
-            case "730":
-                fileName = "天翼积分商城";
-                break;
-            case "750":
-                fileName = "兑吧";
-                break;
-            case "751":
-                fileName = "天翼视讯";
-                break;
-            case "690":
-                fileName = "脉脉";
-                break;
-            case "770":
-                fileName = "天翼流量800";
-                break;
-            case "14":
-                fileName = "汽车之家";
-                break;
-            case "810":
-                fileName = "微信路况";
-            case "930":
-                fileName = "大象联动";
-                break;
-            case "931":
-                fileName = "触摸重庆";
-                break;
-            case "932":
-                fileName = "朔州那些事儿";
-                break;
+        if(StringUtils.isNotBlank(fromType)){
+            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
+            fileName = codeItemVO.getName();
         }
+
         fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
@@ -689,49 +580,13 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType");
-        // String fileName = (fromType.equals("391") ? "滴滴商城" : "唯品会") + "机构考核(节点平均时长)";
+        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
         String fileName = "";
-        switch (fromType) {
-            case "391":
-                fileName = "滴滴商城";
-                break;
-            case "550":
-                fileName = "唯品会";
-                break;
-            case "790":
-                fileName = "驾校一点通";
-                break;
-            case "730":
-                fileName = "天翼积分商城";
-                break;
-            case "750":
-                fileName = "兑吧";
-                break;
-            case "751":
-                fileName = "天翼视讯";
-                break;
-            case "690":
-                fileName = "脉脉";
-                break;
-            case "770":
-                fileName = "天翼流量800";
-                break;
-            case "14":
-                fileName = "汽车之家";
-                break;
-            case "810":
-                fileName = "微信路况";
-            case "930":
-                fileName = "大象联动";
-                break;
-            case "931":
-                fileName = "触摸重庆";
-                break;
-            case "932":
-                fileName = "朔州那些事儿";
-                break;
+        if(StringUtils.isNotBlank(fromType)){
+            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
+            fileName = codeItemVO.getName();
         }
+
         fileName += "数据报表";
 
         Map<String, Object> paras = new HashMap<>();

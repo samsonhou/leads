@@ -51,7 +51,7 @@ public class ProductController extends WebAction {
         if (user.getOrganId().equals("00")) {
             if (this.checkRole("1").equals("1")) ifCManager = true;
         }
-        if (!ifCManager) mv = new ModelAndView("leads/product/productinfo1"); 
+        if (!ifCManager) mv = new ModelAndView("leads/product/productinfo1");
         return mv;
     }
 
@@ -67,7 +67,7 @@ public class ProductController extends WebAction {
         productVO.setId(Long.valueOf(id));
         productVO.setAbname(newName);
         productVO.setHasChild(hasChild);
-        productVO.setRoles(StringUtils.join(roles,"\u002C"));
+        productVO.setRoles(StringUtils.join(roles, "\u002C"));
         productService.update(productVO);
         // 是否总公司管理员
         boolean ifCManager = false;
@@ -93,7 +93,7 @@ public class ProductController extends WebAction {
         productVO.setPid(Long.valueOf(pid));
         productVO.setAbname(newName);
         productVO.setHasChild(hasChild);
-        productVO.setRoles(StringUtils.join(roles,"\u002C"));
+        productVO.setRoles(StringUtils.join(roles, "\u002C"));
         productService.insert(productVO);
 
         // 是否总公司管理员
@@ -199,14 +199,19 @@ public class ProductController extends WebAction {
         if (request.getParameter("pagenum") != null && !"".equals(request.getParameter("pagenum"))) {
             currenPage = Integer.parseInt(request.getParameter("pagenum"));
         }
-        List<PageInfo<QaDetailVO>> list = new ArrayList<PageInfo<QaDetailVO>>();
+        List list = new ArrayList<PageInfo<QaDetailVO>>();
         condition.setFileName("empty");
         PageInfo<QaDetailVO> question = productService.getDetails(condition, currenPage);
         list.add(question);
         condition.setFileName(keyword);
+        condition.setFileType("2");
         condition.setQuestion(null);
         PageInfo<QaDetailVO> files = productService.getDetails(condition, currenPage);
         list.add(files);
+        //pic list
+        condition.setFileType("1");
+        List<QaDetailVO> picFiles = productService.getDetailsList(condition);
+        list.add(picFiles);
         return list;
     }
 
@@ -220,8 +225,9 @@ public class ProductController extends WebAction {
     public ModelAndView importFile(@RequestParam(value = "file") MultipartFile file) throws Exception {
         ModelAndView mv = new ModelAndView("leads/product/productinfo");
         String pid = request.getParameter("filePid");
+        String fileType = request.getParameter("fileType");
         AuthorUser user = this.getUser();
-        productService.processImport(file, user, Integer.valueOf(pid));
+        productService.processImport(file, user, Integer.valueOf(pid), fileType);
         mv.addObject("message", "已保存成功!");
         return mv;
     }
@@ -236,8 +242,7 @@ public class ProductController extends WebAction {
         fis.read(buffer);
         fis.close();
         response.reset();
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + new String(fileName.getBytes(), "iso-8859-1"));
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "iso-8859-1"));
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(buffer);
         outputStream.close();
@@ -257,9 +262,9 @@ public class ProductController extends WebAction {
         detailVO.setUpdatedUserId(user.getUserId());
         int flag = productService.modifyFile(detailVO);
         Map<String, Object> map = new HashMap<String, Object>();
-        if(flag > 0){
+        if (flag > 0) {
             map.put("msg", "Y");
-        }else{
+        } else {
             map.put("msg", "N");
         }
         return map;

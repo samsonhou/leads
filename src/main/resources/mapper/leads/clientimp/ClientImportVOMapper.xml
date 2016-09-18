@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.clientimp.ClientImportVODao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.clientimp.ClientImportVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CLIENT_NAME" property="clientName" jdbcType="VARCHAR" />
+    <result column="TEL" property="tel" jdbcType="VARCHAR" />
+    <result column="STATION_NO" property="stationNo" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="FROM_TYPE_BIG" property="fromTypeBig" jdbcType="VARCHAR" />
+    <result column="FROM_TYPE" property="fromType" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_USER_ID" property="updatedUserId" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="FROM_TYPE_DESC" property="fromTypeDesc" jdbcType="VARCHAR" />
+    <result column="CREATED_USER_NAME" property="createdUserName" jdbcType="VARCHAR" />
+    <result column="CHANNEL" property="channel" jdbcType="VARCHAR" />
+    <result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CLIENT_NAME, TEL, STATION_NO, CITY, FROM_TYPE_BIG, FROM_TYPE, STATUS, CREATED_TIME, 
+    CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, REMARK, CHANNEL,ID_NO
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LM_CLIENT_IMPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LM_CLIENT_IMPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
+  	<selectKey keyProperty="id" order="BEFORE" resultType="long">
+  		select s_client_import.nextval as id from dual
+  	</selectKey>
+    insert into LM_CLIENT_IMPORT (ID, CLIENT_NAME, TEL, 
+      STATION_NO, CITY, FROM_TYPE_BIG, 
+      FROM_TYPE, STATUS, CREATED_TIME, 
+      CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, 
+      REMARK, CHANNEL,ID_NO)
+    values (#{id,jdbcType=DECIMAL}, #{clientName,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{stationNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{fromTypeBig,jdbcType=VARCHAR}, 
+      #{fromType,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=DECIMAL}, #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
+    insert into LM_CLIENT_IMPORT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="clientName != null" >
+        CLIENT_NAME,
+      </if>
+      <if test="tel != null" >
+        TEL,
+      </if>
+      <if test="stationNo != null" >
+        STATION_NO,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="fromTypeBig != null" >
+        FROM_TYPE_BIG,
+      </if>
+      <if test="fromType != null" >
+        FROM_TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID,
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME,
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="channel != null" >
+        CHANNEL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="clientName != null" >
+        #{clientName,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="stationNo != null" >
+        #{stationNo,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="fromTypeBig != null" >
+        #{fromTypeBig,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        #{fromType,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
+    update LM_CLIENT_IMPORT
+    <set >
+      <if test="clientName != null" >
+        CLIENT_NAME = #{clientName,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="stationNo != null" >
+        STATION_NO = #{stationNo,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="fromTypeBig != null" >
+        FROM_TYPE_BIG = #{fromTypeBig,jdbcType=VARCHAR},
+      </if>
+      <if test="fromType != null" >
+        FROM_TYPE = #{fromType,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        CHANNEL = #{channel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
+    update LM_CLIENT_IMPORT
+    set CLIENT_NAME = #{clientName,jdbcType=VARCHAR},
+      TEL = #{tel,jdbcType=VARCHAR},
+      STATION_NO = #{stationNo,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      FROM_TYPE_BIG = #{fromTypeBig,jdbcType=VARCHAR},
+      FROM_TYPE = #{fromType,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CHANNEL = #{channel,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="selectByTel" parameterType="string" resultType="int">
+		select count(id) from lm_client_import where tel =
+		#{tel,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByVo" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO"
+		resultMap="BaseResultMap">
+		select 
+		(select a.name  from t_code_item a where a.code_item_id = t.from_type) FROM_TYPE_DESC,
+		<include refid="Base_Column_List" />
+		from lm_client_import t
+		<where>
+			t.status = '0'
+			<if test="clientName != null">
+				and t.client_name = #{clientName,jdbcType=VARCHAR}
+			</if>
+			<if test="tel != null">
+				and t.tel = #{tel,jdbcType=VARCHAR}
+			</if>
+			<if test="fromTypeBig != null">
+				and t.from_type_big = #{fromTypeBig,jdbcType=VARCHAR}
+			</if>
+			<if test="fromType != null">
+				and t.from_type = #{fromType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByMap" parameterType="map"
+		resultType="map">
+		select t.id ID, t.client_name NAME, t.from_type_big FROMTYPEBIG,t.from_type FROMTYPE
+		
+		from lm_client_import t
+		<where>
+			<if test="ids != null">
+				and t.id in
+				<foreach collection="ids" open="(" close=")" item="obj"
+					separator=",">
+					#{obj,jdbcType=DECIMAL}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 批量插入导入线索信息 -->
+	<insert id="insertByList" parameterType="java.util.ArrayList">		
+		INSERT INTO LM_CLIENT_IMPORT(
+			ID, CLIENT_NAME, TEL, STATION_NO, 
+			CITY, FROM_TYPE_BIG, FROM_TYPE, STATUS, 
+			CREATED_TIME, CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, 
+			REMARK, CHANNEL
+		) 
+		SELECT S_CLIENT_IMPORT.NEXTVAL, T.CLIENT_NAME,
+			T.TEL, T.STATION_NO, T.CITY, T.FROM_TYPE_BIG,
+			T.FROM_TYPE, T.STATUS, T.CREATED_TIME, T.CREATED_USER_ID,
+			T.UPDATED_TIME, T.UPDATED_USER_ID, T.REMARK, T.CHANNEL
+			 FROM (
+		<foreach collection="list" item="item" index="index" separator="union all" >  
+	        (SELECT 
+	        	#{item.clientName:VARCHAR} AS CLIENT_NAME,
+	        	#{item.tel:VARCHAR} AS TEL,
+	        	#{item.stationNo:VARCHAR} AS STATION_NO,
+	        	#{item.city:VARCHAR} AS CITY,
+	        	#{item.fromTypeBig:VARCHAR} AS FROM_TYPE_BIG,
+	        	#{item.fromType:DECIMAL} AS FROM_TYPE,
+	        	#{item.status:VARCHAR} AS STATUS,
+	        	#{item.createdTime:TIMESTAMP} AS CREATED_TIME,
+	        	#{item.createdUserId:DECIMAL} AS CREATED_USER_ID,
+	        	#{item.updatedTime:TIMESTAMP} AS UPDATED_TIME,
+	        	#{item.updatedUserId:DECIMAL} AS UPDATED_USER_ID,
+	        	#{item.remark:VARCHAR} AS REMARK,
+	        	#{item.channel:VARCHAR} AS CHANNEL
+	        FROM DUAL)  
+	    </foreach> 
+	    ) T
+	</insert>
+	
+	
+	<select id="queryCodeByLabel" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT ${column} FROM T_CODE_ITEM WHERE CODE_TYPE=#{type} AND NAME=#{label} AND STATUS='1'
+	</select>
+	
+	
+	<select id="queryClientIsExistByTel" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(ID) AS NUM FROM (
+			SELECT A.ID FROM LM_CLIENT_IMPORT A WHERE A.TEL=#{tel:VARCHAR} 
+			UNION ALL 
+			SELECT B.ID FROM LM_CLIENT B WHERE B.TEL=#{tel:VARCHAR}
+		) T 
+	</select>
+</mapper>

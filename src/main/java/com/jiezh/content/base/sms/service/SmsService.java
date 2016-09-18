@@ -55,6 +55,11 @@ public interface SmsService {
     public String send(String url, Map<String, String> map) throws Exception;
 
     public PageInfo<Map<String, Object>> queryClient(int currentPage, Map<String, Object> params);
-    
+
     public String processMsg(String id, AuthorUser user);
+
+    // 自定义短信内容发送
+    public int send(Map<String, String> paraMap, AuthorUser user) throws Exception;
+
+    public PageInfo<Map<String, Object>> querySendMsgList(int currentPage, Map<String, Object> params) throws Exception;
 }

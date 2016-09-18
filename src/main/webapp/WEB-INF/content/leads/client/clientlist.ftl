@@ -49,6 +49,13 @@
                             </div>
                             
                              <div class="form-group">
+                                <label class="col-sm-2 control-label">是否未分配</label>
+                                <div class="col-sm-4">
+                                    <@select type='0' codeType="1000" defValue="${clientVO.isAssign!''}" fieldId="isAssign" fieldName="isAssign"  props=" class='form-control' " />
+                                </div>
+                            </div>
+                            
+                             <div class="form-group">
 	                            <div class="col-sm-4 col-sm-offset-8">
 	                                   <input type="button" onclick="search();" value="查 询" class="btn btn-primary btn-sm zd-btn-pd1">
 	                                   &nbsp; &nbsp; 
@@ -69,11 +76,11 @@
                                     <tr>
                                     	<th style="text-align: center;width: 50px;">序号</th>
                                     	<th style="text-align: center;">操作</th>
-                                        <th style="text-align: center;">联系人</th>
+                                        <th style="text-align: center;">客户姓名</th>
                                         <th style="text-align: center;">业务类别</th>
                                         <th style="text-align: center;">手机</th>
-                                        <th style="text-align: center;">填写人</th>
-                                        <th style="text-align: center;">销售人员</th>
+                                        <th style="text-align: center;">客服</th>
+                                        <th style="text-align: center;">客户经理</th>
                                         <th style="text-align: center;">来源</th>
                                         <th style="text-align: center;">等级</th>
                                         <th style="text-align: center;">电话具体原因</th>

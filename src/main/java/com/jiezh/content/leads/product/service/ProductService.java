@@ -43,7 +43,9 @@ public interface ProductService {
 
     public int changeQuestion(QaDetailVO record);
 
-    public String processImport(MultipartFile file, AuthorUser user, int pid) throws Exception;
+    public String processImport(MultipartFile file, AuthorUser user, int pid, String fileType) throws Exception;
 
     public int modifyFile(QaDetailVO record);
+    
+    public List<QaDetailVO> getDetailsList(QaDetailVO condition);
 }

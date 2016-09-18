@@ -13,7 +13,7 @@
 
 <#-- 分页 标签 -->
 <#macro pages url="" pageCount="0" currentPage="1" >
-	<input type="hidden" id="currenPage" name="currenPage" value="1">
+	<input type="hidden" id="currenPage" name="currenPage" value="${currentPage}">
 	<div id="pagination" class="text-center" url="${url}" pageCount="${pageCount}" currentPage="${currentPage}" ></div>
 </#macro>
 

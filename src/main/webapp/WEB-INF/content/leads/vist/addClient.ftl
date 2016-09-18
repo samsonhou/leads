@@ -111,7 +111,7 @@
                             	<div class="col-sm-4">
                             	<@select type='0' codeType="1036"  fieldId="product" fieldName="product"  props=" class='form-control' " />
                             	</div>
-                            	<label class="col-sm-2 control-label">滴滴订单号</label>
+                            	<label class="col-sm-2 control-label">外部订单号</label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="orderNo" id="orderNo" maxlength="50"  value="${clientVO.orderNo!''}" class="form-control">
                                 </div>

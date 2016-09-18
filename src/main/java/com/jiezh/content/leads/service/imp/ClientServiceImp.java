@@ -57,6 +57,8 @@ import com.jiezh.content.leads.exchange.QueueTools;
 import com.jiezh.content.leads.search.web.ExcelUtil;
 import com.jiezh.content.leads.service.ClientService;
 import com.jiezh.content.leads.vist.web.VistBean;
+import com.jiezh.dao.base.codetype.BaseCodeItemVODao;
+import com.jiezh.dao.base.codetype.CodeItemVO;
 import com.jiezh.dao.base.user.UserVO;
 import com.jiezh.dao.leads.activity.ActivityConfigVO;
 import com.jiezh.dao.leads.activity.ActivityConfigVODao;
@@ -82,6 +84,8 @@ public class ClientServiceImp implements ClientService {
     ClientUpdateDao clientUpdateDao;
     @Autowired
     ActivityConfigVODao activityConfigVODao;
+    @Autowired
+    BaseCodeItemVODao baseCodeItemVODao;
     final static ReentrantLock lock = new ReentrantLock();
 
     public int addClient(ClientVO recode) throws Exception {
@@ -152,8 +156,11 @@ public class ClientServiceImp implements ClientService {
         // listR = clientDao.queryOrgPerson(param);
 
         // 如果是从forAssign页面进来。把是管理员的查询出来。。 1-25
-        if ("forAssign".equals(from)) listR = clientDao.queryOrgPersonManager(param);
-        else listR = clientDao.queryOrgPerson(param);
+        if ("forAssign".equals(from)){
+            listR = clientDao.queryOrgPersonManager(param);
+        }else if("server".equals(from)){
+            listR = clientDao.queryOrgCustomerService(param);
+        }else listR = clientDao.queryOrgPerson(param);
         for (Map<String, Object> obj : listR) {
             node = new Node();
             node.setId(obj.get("ID").toString());
@@ -2182,6 +2189,11 @@ public class ClientServiceImp implements ClientService {
     @Override
     public ActivityConfigVO getActivityConf(Long id) {
         return activityConfigVODao.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public CodeItemVO findOneCodeType(long codeItemId) {
+        return baseCodeItemVODao.selectByPrimaryKey(codeItemId);
     }
 
 }

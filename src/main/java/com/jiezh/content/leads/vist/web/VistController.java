@@ -53,7 +53,7 @@ public class VistController extends WebAction {
         ModelAndView mv = new ModelAndView("leads/vist/clientlist");
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
         int currenPage = 1;
-        if (request.getParameter("currenPage") != null || !"".equals(request.getParameter("currenPage"))) {
+        if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
 
@@ -175,7 +175,8 @@ public class VistController extends WebAction {
         ActivityConfigVO activityConfigVO = clientService.getActivityConf(Long.valueOf(1));
         mv.addObject("actConfig", activityConfigVO);
         AuthorUser user = getUser();
-        if (activityConfigVO.getOrgans().indexOf(user.getOrganId()) > -1 && new Date().getTime() <= activityConfigVO.getEndDate().getTime()) {
+        if (user.getOrganId().equals("00")
+            || (activityConfigVO.getOrgans().indexOf(user.getOrganId()) > -1 && new Date().getTime() <= activityConfigVO.getEndDate().getTime())) {
             mv.addObject("flag", "Y");
         }
 

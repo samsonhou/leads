@@ -314,8 +314,7 @@
 		b.real_name RID,
 		nvl((select
 		real_name||'-'||name real_name from t_user a, t_organ_company b where
-		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
-		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		a.organ_id = b.organ_id and a.user_id = lmc.sid),'') SID,
 		to_char(DDATE, 'YYYY-MM-DD') DDATE,
 		to_char(NEXTDATE, 'YYYY-MM-DD')
 		NEXTDATE,
@@ -338,8 +337,6 @@
 			lmc.rid = b.user_id and lmc.sex = '1'
 			and b.user_id =#{rid}
 			and
-			b.organ_code =#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
-			and
 			exists (select role_id from t_user_role where user_id =#{rid} )
 			<if test="clientName != null and '' != clientName">
 				AND lmc.CLIENT_NAME like '%${clientName}%'
@@ -361,6 +358,9 @@
 			</if>
 			<if test="ifurgent != null and '' != ifurgent">
 				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
+			</if>
+			<if test="isAssign == 1">
+				And lmc.sid = 0
 			</if>
 		</where>
 		order by lmc.id desc
@@ -387,8 +387,7 @@
 		b.real_name RID,
 		nvl((select
 		real_name||'-'||name real_name from t_user a, t_organ_company b where
-		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
-		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		a.organ_id = b.organ_id and a.user_id = lmc.sid),'') SID,
 		to_char(DDATE, 'YYYY-MM-DD') DDATE,
 		to_char(NEXTDATE, 'YYYY-MM-DD')
 		NEXTDATE,
@@ -409,8 +408,7 @@
 		from lm_client lmc, t_user b
 		<where>
 			lmc.rid = b.user_id and lmc.sex = '1'
-			and b.organ_code
-			=#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
+			
 			<if test="tel != null and '' != tel">
 				AND lmc.tel like '%${tel}%'
 			</if>
@@ -938,8 +936,9 @@
 		s on t.rid=s.user_id
 		where rid = #{userid} and 
      <![CDATA[
-     to_char(t.QDATE, 'YYYY-MM-DD') >=#{stime} AND to_char(t.QDATE, 'YYYY-MM-DD') <=#{etime}
+      t.QDATE >=to_date(#{stime}||' 00:00:00','yyyy-mm-dd hh24:mi:ss') AND t.QDATE <= to_date(#{etime}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
      ]]>
+        and t.companyid not in('67')
 		group by real_name
 	</select>
 
@@ -1357,7 +1356,8 @@
        nvl(avg(decode(aa.fromtype, 930, aa.total)), 0) m44,
        nvl(avg(decode(aa.fromtype, 931, aa.total)), 0) m45,
        nvl(avg(decode(aa.fromtype, 932, aa.total)), 0) m46,
-       nvl(avg(decode(aa.fromtype, 970, aa.total)), 0) m47
+       nvl(avg(decode(aa.fromtype, 970, aa.total)), 0) m47,
+       nvl(avg(decode(aa.fromtype, 1010, aa.total)), 0) m48
        
   from (select lc.companyid,
                lc.small_pid,
@@ -1417,9 +1417,10 @@
 		where a.user_id = b.user_id
 		and b.ROLE_ID = 3
 		) and 
-     <![CDATA[
-     to_char(t.QDATE, 'YYYY-MM-DD') >=#{stime} AND to_char(t.QDATE, 'YYYY-MM-DD') <=#{etime}
-     ]]>
+     	<![CDATA[
+    	t.QDATE >= to_date(#{stime}||' 00:00:00','yyyy-mm-dd hh24:mi:ss') AND t.QDATE <= to_date(#{etime}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
+     	]]>
+     	and t.companyid not in('67')
 		group by real_name
 	</select>
 
@@ -2842,5 +2843,81 @@
 		hh24:mi:ss')
 	   </if>
 	 group by t.name
+	</select>
+	<select id="queryOrgCustomerService" parameterType="map" resultType="map">
+	select t.organ_id ID, t.name NAME, t.parent_id PID, 'nocheck' CHE
+		  from (select * from t_organ_company where status = '1') t
+		 where t.status = '1'
+		 start with t.organ_id = #{organId,jdbcType=VARCHAR}
+		connect by prior t.organ_id = t.parent_id
+		union all
+		SELECT decode(b.role_id,
+		              1,
+		              'A*' || to_char(u.user_id),
+		              decode((select max(lg.last_request)
+		                       from t_user_login lg
+		                      where lg.user_id = u.user_id
+		                        and lg.expired = '0'
+		                        and lg.last_request between sysdate - 0.5 / 24 and
+		                            sysdate),
+		                     null,
+		                     'C*' || to_char(u.user_id),
+		                     'B*' || to_char(u.user_id))) ID,
+		       decode(b.role_id,
+		              '3',
+		              decode((select max(lg.last_request)
+		                       from t_user_login lg
+		                      where lg.user_id = u.user_id
+		                        and lg.expired = '0'
+		                        and lg.last_request between sysdate - 0.5 / 24 and
+		                            sysdate),
+		                     null,
+		                     u.real_name || '/' ||
+		                     (select count(1)
+		                        from LM_ALLCATION_ITEM t
+		                      
+		                       where (t.allocation_time between
+		                             trunc(sysdate, 'mm') + 1 / (24 * 60 * 60) and
+		                             last_day(trunc(sysdate)) + 1 -
+		                             1 / (24 * 60 * 60))
+		                         and t.user_id = u.user_id) || '/' ||
+		                     (select count(1)
+		                        from LM_ALLCATION_ITEM t
+		                       where (t.allocation_time between
+		                             trunc(sysdate) + 1 / (24 * 60 * 60) and
+		                             trunc(sysdate + 1) - 1 / (24 * 60 * 60))
+		                         and t.user_id = u.user_id),
+		                     
+		                     '在线：' || u.real_name || '/' ||
+		                     (select count(1)
+		                        from LM_ALLCATION_ITEM t
+		                       where (t.allocation_time between
+		                             trunc(sysdate, 'mm') + 1 / (24 * 60 * 60) and
+		                             last_day(trunc(sysdate)) + 1 -
+		                             1 / (24 * 60 * 60))
+		                         and t.user_id = u.user_id) || '/' ||
+		                     (select count(1)
+		                        from LM_ALLCATION_ITEM t
+		                       where (t.allocation_time between
+		                             trunc(sysdate) + 1 / (24 * 60 * 60) and
+		                             trunc(sysdate + 1) - 1 / (24 * 60 * 60))
+		                         and t.user_id = u.user_id))) NAME,
+		       u.organ_id PID,
+		       'check' CHE
+		  FROM t_user u, t_user_role b
+		 where u.user_id = b.user_id
+		   and b.role_id in (3)
+		   and u.status = '1'
+		   and not exists (select 1
+		          from t_user_lock l
+		         where l.user_id = u.user_id
+		           and l.lock_status = '1')
+		   and exists (select q.name
+		          from (select * from t_organ_company where status = '1') q
+		         where q.organ_id = u.organ_id
+		         start with q.organ_id = #{organId,jdbcType=VARCHAR}
+		        connect by prior q.organ_id = q.parent_id)
+		 order by ID
+	
 	</select>
 </mapper>

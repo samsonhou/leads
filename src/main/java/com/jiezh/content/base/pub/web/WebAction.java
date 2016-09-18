@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.jiezh.content.base.pub.Log;
 import com.jiezh.content.base.pub.author.AuthorUser;
 import com.jiezh.content.base.pub.util.BeanUtil;
+import com.jiezh.content.base.pub.util.PropertiesUtil;
 
 // ServletRequestUtils
 // WebRequest
@@ -27,6 +28,10 @@ public abstract class WebAction {
         this.response = response;
         this.session = request.getSession();
         request.setAttribute("contextPath", request.getContextPath());
+        // 图片下载预览路径
+        request.setAttribute("imgPath", PropertiesUtil.getUPLOAD("img_path"));
+//        request.setAttribute("imgPath", "http://localhost:8080/test/");
+
         // log.info("init WebAction...");
     }
 

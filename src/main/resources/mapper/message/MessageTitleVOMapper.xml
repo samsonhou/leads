@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.message.MessageTitleVODao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.message.MessageTitleVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="MSG_TITLE" property="msgTitle" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE" property="msgType" jdbcType="VARCHAR" />
+    <result column="MSG_STATUS" property="msgStatus" jdbcType="VARCHAR" />
+    <result column="MSG_USER_ID" property="msgUserId" jdbcType="DECIMAL" />
+    <result column="MSG_USER_NAME" property="msgUserName" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_USER_ID" property="updatedUserId" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MSG_TITLE, MSG_TYPE, MSG_STATUS, MSG_USER_ID, CREATED_TIME, CREATED_USER_ID, 
+    UPDATED_TIME, UPDATED_USER_ID, REMARK,MSG_USER_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_MESSAGE_TITLE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_MESSAGE_TITLE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.message.MessageTitleVO" >
+  	<selectKey keyProperty="id" order="BEFORE" resultType="long">
+  		select s_message_id.nextval as id from dual
+  	</selectKey>
+    insert into T_MESSAGE_TITLE (ID, MSG_TITLE, MSG_TYPE, 
+      MSG_STATUS, MSG_USER_ID, CREATED_TIME, 
+      CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID,
+      REMARK,MSG_USER_NAME)
+    values (#{id,jdbcType=DECIMAL}, #{msgTitle,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, 
+      #{msgStatus,jdbcType=VARCHAR}, #{msgUserId,jdbcType=DECIMAL}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=DECIMAL}, #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR},#{msgUserName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.message.MessageTitleVO" >
+    insert into T_MESSAGE_TITLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="msgTitle != null" >
+        MSG_TITLE,
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE,
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS,
+      </if>
+      <if test="msgUserId != null" >
+        MSG_USER_ID,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID,
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME,
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="msgTitle != null" >
+        #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="msgStatus != null" >
+        #{msgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUserId != null" >
+        #{msgUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.message.MessageTitleVO" >
+    update T_MESSAGE_TITLE
+    <set >
+      <if test="msgTitle != null" >
+        MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS = #{msgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUserId != null" >
+        MSG_USER_ID = #{msgUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.message.MessageTitleVO" >
+    update T_MESSAGE_TITLE
+    set MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+      MSG_STATUS = #{msgStatus,jdbcType=VARCHAR},
+      MSG_USER_ID = #{msgUserId,jdbcType=DECIMAL},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="selectListByVo" parameterType="com.jiezh.dao.message.MessageTitleVO" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from T_MESSAGE_TITLE t
+    <where>
+    	<if test="msgTitle != null">
+    		and t.msg_title like '%'||#{msgTitle,jdbcType=VARCHAR}||'%'
+    	</if>
+    </where>
+  </select>
+</mapper>

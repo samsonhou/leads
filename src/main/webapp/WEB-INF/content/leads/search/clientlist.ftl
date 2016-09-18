@@ -187,7 +187,7 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
                                         <th style="text-align: center;">客服首次邀约详情</th>
                                         <th style="text-align: center;">小定金支付情况</th>
                                         <th style="text-align: center;">是否已结算</th>
-                                        <th style="text-align: center;">滴滴订单号</th>
+                                        <th style="text-align: center;">外部订单号</th>
                                         <th style="text-align: center;">客服末次邀约时间</th>
                                         
                                         

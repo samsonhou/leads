@@ -31,7 +31,7 @@
     values ((select nvl(max(To_number(organ_id))+1,'${parentId}01') from T_ORGAN_COMPANY)
    , #{organCode,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{abbrName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR},#{organLevel,jdbcType=VARCHAR})
+      #{status,jdbcType=VARCHAR},(select organ_level+1 from t_organ_company where organ_id = #{parentId,jdbcType=VARCHAR}))
   </insert>
   <insert id="insertSelective" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
     insert into T_ORGAN_COMPANY
@@ -116,8 +116,9 @@
   </update>
   
   <select id="selectOrganCompany" resultMap="BaseResultMap" parameterType="com.jiezh.dao.base.organcompany.OrganCompanyVO" >
-   select (case t_organ_company.parent_id when '2' then '销售一部' when '1' then '销售二部' end )  organName, 
-   ORGAN_ID, t_organ_company.ORGAN_CODE, PARENT_ID, 
+   select (select t.name from t_organ_company t where t.status = '1' and t.organ_level = '2' start with t.organ_id = t_organ_company.organ_id
+           connect by prior t.parent_id = t.organ_id)  organName, 
+      ORGAN_ID, t_organ_company.ORGAN_CODE, PARENT_ID, 
       NAME, ABBR_NAME, ADDRESS, 
       t_organ_company.STATUS, t_organ_company.CREATE_DATE
 	  from t_organ_company

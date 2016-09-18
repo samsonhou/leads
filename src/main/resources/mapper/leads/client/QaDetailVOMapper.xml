@@ -9,6 +9,8 @@
     <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
     <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+    <result column="FILE_NEW_NAME" property="fileNewName" jdbcType="VARCHAR" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
     <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -16,7 +18,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     ID, PID, QUESTION, ANSWER, FILE_NAME, FILE_PATH, STATUS, CREATED_TIME, CREATED_USER_ID, 
-    UPDATED_TIME, UPDATED_USER_ID
+    UPDATED_TIME, UPDATED_USER_ID,FILE_TYPE,FILE_NEW_NAME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -36,11 +38,11 @@
     insert into T_QA_DETAIL (ID, PID, QUESTION, 
       ANSWER, FILE_NAME, FILE_PATH, 
       STATUS, CREATED_TIME, CREATED_USER_ID, 
-      UPDATED_TIME, UPDATED_USER_ID)
+      UPDATED_TIME, UPDATED_USER_ID,FILE_TYPE,FILE_NEW_NAME)
     values (#{id,jdbcType=DECIMAL}, #{pid,jdbcType=DECIMAL}, #{question,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=DECIMAL}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL})
+      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL},#{fileType,jdbcType=VARCHAR},#{fileNewName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jiezh.dao.leads.client.QaDetailVO" >
     insert into T_QA_DETAIL
@@ -180,6 +182,9 @@
   	<if test="fileName != 'empty' or fileName == null">
   	and t.file_name like concat('%',concat(#{fileName,jdbcType=VARCHAR},'%'))
   	and t.question is null
+  	</if>
+  	<if test="fileType != null">
+  	and t.file_type = #{fileType,jdbcType=VARCHAR}
   	</if>
   	and t.status = '1'
   	order by t.id desc

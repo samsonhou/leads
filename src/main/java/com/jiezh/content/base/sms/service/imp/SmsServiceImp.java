@@ -146,10 +146,43 @@ public class SmsServiceImp implements SmsService {
         return EntityUtils.toString(entity, StandardCharsets.UTF_8);
     }
 
+    public int send(Map<String, String> paraMap, AuthorUser user) throws Exception {
+        try {
+            String msg = send("", paraMap);
+            JSONObject json = JSONObject.fromObject(msg);
+            SmsSendInfoVO sendInfoVO = new SmsSendInfoVO();
+            ClientVO clientVO = clientDao.selectByPrimaryKey(Long.valueOf(paraMap.get("id")));
+            sendInfoVO.setCreatedUserId(user.getUserId());
+            sendInfoVO.setMsg(paraMap.get("msg"));
+            sendInfoVO.setReTel(clientVO.getTel());
+            sendInfoVO.setReName(clientVO.getClientName());
+            sendInfoVO.setStatusDes(msg);
+            sendInfoVO.setStatus(json.optString("respstatus"));
+            sendInfoVO.setSendUserId(user.getUserId());
+            sendInfoVO.setClientId(clientVO.getId());
+            sendInfoVO.setSmsType("100");
+            saveMsgInfo(sendInfoVO);
+            return json.getInt("respstatus");
+        } catch (Exception e) {
+            logger.error("发送短信方法错误！", e);
+            throw new Exception("发送短信时出现错误！");
+        }
+
+    }
+
     @Override
     public PageInfo<Map<String, Object>> queryClient(int currentPage, Map<String, Object> params) {
         PageHelper.startPage(currentPage, Env.PAGE_SIZE);
         Page<Map<String, Object>> page = (Page<Map<String, Object>>) smsDao.selectClient(params);
+        if (page == null) {
+            page = new Page<Map<String, Object>>();
+        }
+        return new PageInfo<Map<String, Object>>(page);
+    }
+
+    public PageInfo<Map<String, Object>> querySendMsgList(int currentPage, Map<String, Object> params) {
+        PageHelper.startPage(currentPage, Env.PAGE_SIZE);
+        Page<Map<String, Object>> page = (Page<Map<String, Object>>) smsDao.querySendMsgList(params);
         if (page == null) {
             page = new Page<Map<String, Object>>();
         }

@@ -67,7 +67,7 @@
 									<tr>
                                         <td style="text-align: center;">${organCompany_index+1}</td>
                                         <!--td style="text-align: center;"><code>${organCompany.organName}</code></td-->
-                                        <td style="text-align: left;">${organCompany.organName} ${organCompany.name}</td>
+                                        <td style="text-align: left;">${organCompany.organName} - ${organCompany.name}</td>
                                         <td style="text-align: left;">${organCompany.abbrName}</td>
                                         <td style="text-align: center;">${organCompany.address}</td>
                                         <td style="text-align: center;">${(organCompany.status=="1")?string('是','否')}</td>

@@ -64,7 +64,7 @@ public class SearchController extends WebAction {
 
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
         int currenPage = 1;
-        if (request.getParameter("currenPage") != null || !"".equals(request.getParameter("currenPage"))) {
+        if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
         AuthorUser user = getUser();
@@ -87,7 +87,7 @@ public class SearchController extends WebAction {
         mv.addObject("stnextdate", stime);
         mv.addObject("nextdate", etime);
 
-        if (request.getParameter("currenPage") != null || !"".equals(request.getParameter("currenPage"))) {
+        if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
         // 是否管理员 管理员查询它所在机构下所有的
@@ -142,7 +142,7 @@ public class SearchController extends WebAction {
 
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
         int currenPage = 1;
-        if (request.getParameter("currenPage") != null || !"".equals(request.getParameter("currenPage"))) {
+        if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
         AuthorUser user = getUser();

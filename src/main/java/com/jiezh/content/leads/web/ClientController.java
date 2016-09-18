@@ -62,7 +62,7 @@ public class ClientController extends WebAction {
 
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
         int currenPage = 1;
-        if (request.getParameter("currenPage") != null || !"".equals(request.getParameter("currenPage"))) {
+        if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
         AuthorUser user = getUser();

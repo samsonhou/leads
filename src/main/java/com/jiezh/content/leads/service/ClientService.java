@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiezh.content.base.pub.author.AuthorUser;
 import com.jiezh.content.leads.vist.web.VistBean;
+import com.jiezh.dao.base.codetype.CodeItemVO;
 import com.jiezh.dao.leads.activity.ActivityConfigVO;
 import com.jiezh.dao.leads.client.ClientTraceVO;
 import com.jiezh.dao.leads.client.ClientVO;
@@ -157,4 +158,6 @@ public interface ClientService {
     public String processClientAndTrace(AuthorUser user,ClientVO clientVo, ClientTraceVO clientTraceVo);
     
     public ActivityConfigVO getActivityConf(Long id);
+    
+    public CodeItemVO findOneCodeType(long codeItemId);
 }

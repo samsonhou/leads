@@ -44,7 +44,7 @@ public class LmurgeController extends WebAction {
 	LmurgeVO lmurgeVO=new LmurgeVO();
 	lmurgeVO=(LmurgeVO) this.getBean(lmurgeVO.getClass());
 	int currenPage=1;
-	if(request.getParameter("currenPage")!=null&&!"".equals(request.getParameter("currenPage"))){
+	if(request.getParameter("currenPage")!=null && !"".equals(request.getParameter("currenPage"))){
 		currenPage=Integer.parseInt(request.getParameter("currenPage"));
 	}
 	

@@ -2,11 +2,12 @@
 <html lang="en">
 	<head>
 		<#include "/pub/message.ftl"/>
-			<#include "/pub/header_res.ftl"/>
+		<#include "/pub/header_res.ftl"/>
+		<#include "/pub/header_image_viewer.ftl"/>
 				<link href="${contextPath}/res/pub/css/Pager.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/plugins/iCheck/custom.css" rel="stylesheet">
-
+				
 				<style>
 					div.content_wrap {width: 600px;height:380px;}
 					div.content_wrap div.left{float: left;width: 250px;}
@@ -68,9 +69,10 @@
 															<input type="text" name="keyword" id="keyword" class="form-control" placeholder="关键词">
 														</div>
 														<div class="col-sm-4">
-															<input type="button" class="btn btn-primary btn-sm zd-btn-pd1" onclick="getQaDetail(1);" value="搜索">&nbsp;&nbsp;&nbsp;&nbsp;
-															<input type="button" class="btn btn-primary btn-sm" onclick="addq();" value="创建Q&A">&nbsp;&nbsp;&nbsp;&nbsp;
-															<input type="button" class="btn btn-primary btn-sm" onclick="showImport();" value="上传文件">
+															<input type="button" class="btn btn-primary btn-sm zd-btn-pd1" onclick="getQaDetail(1);" value="搜索">&nbsp;&nbsp;
+															<input type="button" class="btn btn-primary btn-sm" onclick="addq();" value="创建Q&A">&nbsp;&nbsp;
+															<input type="button" class="btn btn-primary btn-sm" onclick="showImport();" value="上传文件">&nbsp;&nbsp;
+															<input type="button" class="btn btn-primary btn-sm" onclick="showImportPic();" value="上传图片">
 														</div>
 													</div>
 
@@ -92,6 +94,16 @@
 															<div id="pager1" align="center"></div>
 														</div>
 													</div>
+													<div class="panel panel-default" style="margin-top:15px;">
+														<div class="panel-heading">
+															<h4>图片</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row" id="picbody"></div>
+															<div id="pager2" align="center"></div>
+														</div>
+													</div>
+												
 
 
 
@@ -280,12 +292,13 @@
 							</div>
 							<form name='importform' id='importform'  class="form-search" method="post" enctype="multipart/form-data">
 								<input type="hidden" id="filePid" name="filePid" />
+								<input type="hidden" id="fileType" name="fileType" />
 								<div class="modal-body" style="height:150px;">
 									<!--高度根据表单高度相应调整-->
 									<div class="ibox-content ">
 
 										<div class="form-group ziding-ibox-modal">
-											<label class="col-sm-2 control-label">文件</label>
+											<label class="col-sm-2 control-label" id="lableName">文件</label>
 											<div class="col-sm-10 ">
 												<input type="file" readonly name="file" id="file" class="form-control layer-date">
 											</div>
@@ -301,9 +314,11 @@
 					</div>
 				</div>
 				<#include "/pub/footer_res_detail.ftl"/>
+				
 					<script src="${contextPath}/res/pub/js/jquery.ztree.core-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.ztree.excheck-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.pager.js" type="text/javascript"></script>
+					<script src="${contextPath}/res/pub/css/plugins/imageview/dist/viewer.js" type="text/javascript"></script>
 					<script type="text/javascript">
 						var subForm=$("#saveform1").Validform({
 							showAllError:true
@@ -391,7 +406,18 @@
 
 						function showImport(){
 							var mymodal = $("#importModal");
+							mymodal.find(".modal-title").html("文件上传");
+							mymodal.find("#lableName").html("文件");
 							mymodal.find("#filePid").val($("#nodeId").val());
+							mymodal.find("#fileType").val("2");
+							mymodal.modal('show');
+						}
+						function showImportPic(){
+							var mymodal = $("#importModal");
+							mymodal.find(".modal-title").html("图片上传");
+							mymodal.find("#lableName").html("图片");
+							mymodal.find("#filePid").val($("#nodeId").val());
+							mymodal.find("#fileType").val("1");
 							mymodal.modal('show');
 						}
 
@@ -435,15 +461,19 @@
 						}
 
 						function getQaDetail(pagenum){
-							$.ajax({
+							 
+							 $.ajax({
 								type: "POST",
 								url: "${contextPath}/leads/product/queryDetails.do?pagenum="+pagenum+"&pid="+$("#nodeId").val()+"&keyword="+encodeURI(encodeURI($("#keyword").val())),
 								data: "",
 								success: function(response){
 									$("#pbody").html("");
 									$("#fbody").html("");
+									$("#picbody").html("");
 									$("#pager").html("");
 									$("#pager1").html("");
+									$("#pager2").html("");
+									
 									$.each(response[0].list,function(i,item){
 										if(item.question != null){
 											$("#pbody").append("<p>问题："+item.question+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"editQuestion(\'"+item.question.replace(/\s+/g,"").replace(/\"/g, "&quot;")+"\',\'"+item.answer.replace(/\s+/g,"").replace(/\"/g, "&quot;")+"\',\'"+item.id+"\')\">编辑</a>"+"&nbsp;&nbsp;&nbsp;&nbsp;<a onclick=\"deleteQuestion(\'"+item.id+"\')\">删除</a></p>");
@@ -458,13 +488,23 @@
 										$("#fbody").append("<p>"+item.fileName+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"#\" onclick=\"changeFile(\'"+item.id+"\')\">删除</a></p>")
 										$("#pager1").pager({ pagenumber: response[1].pageNum, pagecount: response[1].pages, buttonClickCallback: pageClick1 });
 									});
-
-
-
-
-
+									
+									/*
+									$.each(response[2],function(i,item){
+										$("#picbody").append("<img class='showimg' src='${contextPath}/res/pub/css/plugins/imageview/chakan.png' data-original='${imgPath}"+item.fileNewName+"'/>&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"#\" onclick=\"changeFile(\'"+item.id+"\')\">删除</a></p>")
+										$("#pager2").pager({ pagenumber: response[2].pageNum, pagecount: response[2].pages, buttonClickCallback: pageClick2 });
+									});*/
+	
+									
+									$.each(response[2],function(i,item){
+										$("#picbody").append("<div class='col-sm-6 col-md-2'><img class='thumbnail' style='height:100px;' src='${imgPath}"+item.fileNewName+"'/><a href=\"#\" onclick=\"changeFile(\'"+item.id+"\')\">删除</a></div>")
+									});
+									
+									var viewer = new Viewer(document.getElementById('picbody'), {navbar:false});	
 								}
 							});
+							
+							
 						}
 
 
@@ -505,6 +545,22 @@
 
 								}
 							});
+						}
+						function pageClick2(pagenum){
+							$.ajax({
+								type: "POST",
+								url: "${contextPath}/leads/product/queryDetails.do?pagenum="+pagenum+"&pid="+$("#nodeId").val()+"&keyword="+encodeURI(encodeURI($("#keyword").val())),
+								data: "",
+								success: function(response){
+									$("#picbody").html("");
+									$("#pager2").html("");
+									$.each(response[2].list,function(i,item){
+										$("#picbody").append("<img class='showimg' src='${contextPath}/res/pub/css/plugins/imageview/chakan.png' data-original='${imgPath}"+item.fileNewName+"'/>&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"#\" onclick=\"changeFile(\'"+item.id+"\')\">删除</a></p>")
+										$("#pager2").pager({ pagenumber: response[2].pageNum, pagecount: response[2].pages, buttonClickCallback: pageClick2 });
+									});
+								}
+							});
+							var viewer = new Viewer(document.getElementById('picbody'), {url:'data-original',navbar:false});
 						}
 
 						function changeFile(fileId){
@@ -575,7 +631,43 @@
 								jQuery('#messageModal').modal('show');
 							}
 						});
+						
+						function initialImgView() {
+						'use strict';
+					
+						var console = window.console || {
+								log : function() {
+								}
+							};
+						var $images = $('#picbody');
+						// var $toggles = $('.docs-toggles');
+						// var $buttons = $('.docs-buttons');
+						var handler = function(e) {
+							console.log(e.type);
+						};
+						var options = {
+							// inline: true,
+							url : 'data-original',
+							build : handler,
+							built : handler,
+							show : handler,
+							shown : handler,
+							hide : handler,
+							hidden : handler,
+							navbar : false,
+							title : false
+						};
+						$images.on({
+							'build.viewer' : handler,
+							'built.viewer' : handler,
+							'show.viewer' : handler,
+							'shown.viewer' : handler,
+							'hide.viewer' : handler,
+							'hidden.viewer' : handler
+						}).viewer(options);
+						}
 
 					</script>
+					
 				</body>
 			</html>

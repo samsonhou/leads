@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.mileage.dao.MileageDao">
+
+	<!-- 保存客户基本信息 -->
+	<insert id="insertCustomerInfo" parameterType="com.jiezh.dao.leads.mileage.vo.CustomerVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT S_MILEAGE_CUSTOMER.NEXTVAL AS id FROM DUAL
+		</selectKey>
+		INSERT INTO T_MILEAGE_CUSTOMER(
+			ID, SUBSIDIARY, STORE, 
+			CUSTOMERNAME, TEL, INVESTIGATOR, 
+			INVESTIGATORSEX, INVESTIGATIONDATE, CONNECTSTATUS
+		) VALUES (
+			#{id:DECIMAL},#{subsidiary:VARCHAR},#{store:VARCHAR},
+			#{customername:VARCHAR},#{tel:VARCHAR},#{investigator:VARCHAR},
+			#{investigatorsex:CHAR},#{investigationdate:TIMESTAMP},#{connectstatus:VARCHAR}
+		)
+	</insert>
+	
+	<!-- 更新客户基本信息 -->
+	<update id="updateCustomerInfo" parameterType="com.jiezh.dao.leads.mileage.vo.CustomerVO">
+		UPDATE T_MILEAGE_CUSTOMER 
+			SET SUBSIDIARY = #{subsidiary:VARCHAR},
+				STORE = #{store:VARCHAR},
+				CUSTOMERNAME = #{customername:VARCHAR}, 
+				INVESTIGATOR = #{investigator:VARCHAR}, 
+				INVESTIGATORSEX = #{investigatorsex:CHAR}, 
+				INVESTIGATIONDATE = #{investigationdate:TIMESTAMP}, 
+				CONNECTSTATUS = #{connectstatus:VARCHAR}
+		WHERE ID = #{id:DECIMAL}
+	</update>
+	
+	
+	<!-- 保存客户租用车辆信息 -->
+	<insert id="insertCarRentelInfo" parameterType="com.jiezh.dao.leads.mileage.vo.CarRentelVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT S_MILEAGE_CAR.NEXTVAL AS id FROM DUAL
+		</selectKey>
+		INSERT INTO T_MILEAGE_CAR(
+			ID,CUSTOMERID,CUSTOMERTEL,
+			CARVIN,BRANDTYPE,DELIVERDATE
+		) VALUES (
+			#{id:DECIMAL},#{customerid:DECIMAL},#{customertel:VARCHAR},
+			#{carvin:VARCHAR},#{brandtype:VARCHAR},#{deliverdate:TIMESTAMP}
+		)
+	</insert>
+	
+	<!-- 更新客户租用车辆信息 -->
+	<update id="updateCarRentelInfo" parameterType="com.jiezh.dao.leads.mileage.vo.CarRentelVO">		
+		UPDATE T_MILEAGE_CAR 
+			SET CARVIN = #{carvin:VARCHAR},
+				BRANDTYPE = #{brandtype:VARCHAR},
+				DELIVERDATE = #{deliverdate:TIMESTAMP}
+		WHERE CUSTOMERID = #{customerid:DECIMAL}
+	</update>
+	
+	
+	<!-- 插入行驶里程信息 -->
+	<insert id="insertMileageInfo" parameterType="com.jiezh.dao.leads.mileage.vo.MileageVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT S_MILEAGE_CUSTOMER_MILEAGE.NEXTVAL AS id FROM DUAL
+		</selectKey>		
+		INSERT INTO T_MILEAGE_CUSTOMER_MILEAGE(
+			ID, CARID, MILEAGE, LASTMILEAGE, ISREMIND, REMINDTIMES 
+		) VALUES (
+			#{id:DECIMAL},#{carid:DECIMAL},#{mileage:DECIMAL},
+			#{lastmileage:DECIMAL},#{isremind:CHAR},#{remindtimes:DECIMAL}
+		)
+	</insert>
+	
+	
+	<!-- 批量插入满意度调查信息 -->
+	<insert id="batchInsertSatisfactionInfo" parameterType="java.util.ArrayList">		
+		INSERT INTO T_MILEAGE_SATISFACTION(
+			ID, CUSTOMERID, CUSTOMERTEL, 
+			QUESTIONID, ANSWER, DETAILANSWER
+		) 
+		SELECT S_MILEAGE_SATISFACTION.NEXTVAL, T.CUSTOMERID,
+			T.CUSTOMERTEL, T.QUESTIONID, T.ANSWER, T.DETAILANSWER FROM (
+		<foreach collection="list" item="item" index="index" separator="union all" >  
+	        (SELECT 
+	        	#{item.customerid:DECIMAL} AS CUSTOMERID,
+	        	#{item.customertel:VARCHAR} AS CUSTOMERTEL,
+	        	#{item.questionid:DECIMAL} AS QUESTIONID,
+	        	#{item.answer:VARCHAR} AS ANSWER,
+	        	#{item.detailanswer:VARCHAR} AS DETAILANSWER
+	        FROM DUAL)  
+	    </foreach> 
+	    ) T
+	</insert>
+	
+	
+	<!-- 更新满意度调查信息 -->
+	<update id="updateSatisfactionInfo" parameterType="java.util.ArrayList">				
+	    <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+			UPDATE T_MILEAGE_SATISFACTION S 
+			SET S.ANSWER = #{item.answer:VARCHAR},
+				S.DETAILANSWER = #{item.detailanswer:VARCHAR} 
+			WHERE S.CUSTOMERID = #{item.customerid:DECIMAL} 
+				AND S.QUESTIONID = #{item.questionid:DECIMAL}
+	   </foreach>
+	</update>
+	
+	
+	<!-- 更新客户里程提醒状态标识 -->
+	<update id="updateRemind" parameterType="java.util.ArrayList">				
+	    <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+			UPDATE T_MILEAGE_CUSTOMER_MILEAGE M 
+			SET M.ISREMIND=#{item.isremind:VARCHAR},
+			<if test="1 == item.isremind">
+				M.REMINDTIMES=(SELECT NVL(MAX(REMINDTIMES),0)+1 AS REMINDTIMES 
+            					FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            					GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=#{item.id:DECIMAL}))
+			</if>
+            <if test="0 == item.isremind">
+				M.REMINDTIMES=(SELECT DECODE(MAX(REMINDTIMES),'',1,0,1,MAX(REMINDTIMES))-1 AS REMINDTIMES 
+            					FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            					GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=#{item.id:DECIMAL}))
+			</if>	 
+     		WHERE M.ID=#{item.id:DECIMAL}
+	   </foreach>
+	</update>
+	
+	
+	<!-- 分页查询客户及最新里程信息 -->
+	<select id="queryCustomerMileageList" parameterType="com.jiezh.dao.leads.mileage.vo.CustomerVO" resultMap="customerMileageMap">
+		SELECT U.ID,U.SUBSIDIARY,U.STORE,U.CUSTOMERNAME,U.TEL,U.INVESTIGATOR,
+	           U.INVESTIGATORSEX,U.INVESTIGATIONDATE,U.CONNECTSTATUS,
+	           C.ID AS CID,C.CUSTOMERID,C.CUSTOMERTEL,C.CARVIN,C.BRANDTYPE,C.DELIVERDATE,
+	           M.ID AS MID,M.CARID,M.MILEAGE,M.LASTMILEAGE,
+	           DECODE(M.ISREMIND,'1','是','否') AS ISREMIND
+		FROM T_MILEAGE_CUSTOMER U 
+	       LEFT JOIN T_MILEAGE_CAR C ON U.ID=C.CUSTOMERID 
+	       LEFT JOIN (
+            	SELECT X.* FROM T_MILEAGE_CUSTOMER_MILEAGE X, (
+                	SELECT MAX(ID) AS ID,CARID
+                	FROM T_MILEAGE_CUSTOMER_MILEAGE GROUP BY CARID
+            	) Y WHERE X.ID=Y.ID
+	        ) M ON C.ID = M.CARID 
+		<where>
+			<if test="customername != null and '' != customername">
+				AND U.CUSTOMERNAME LIKE '%${customername}%'
+			</if>
+			<if test="tel != null and '' != tel">
+				AND U.TEL LIKE '%${tel}%'
+			</if>
+			<if test="carRentelVO != null and carRentelVO.carvin != null and '' != carRentelVO.carvin">
+				AND C.CARVIN LIKE '%${carRentelVO.carvin}%'
+			</if>
+			<if test="store != null and '' != store">
+				AND U.STORE LIKE '%${store}%'
+			</if>
+			<if test="needremind != null and '' != needremind and 0 == needremind">
+				<![CDATA[
+				AND M.MILEAGE<5000*(SELECT NVL(MAX(REMINDTIMES),0)+1 AS REMINDTIMES 
+            						 FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            						 GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=M.ID))
+			 	]]>
+			</if>
+			<if test="needremind != null and '' != needremind and 1 == needremind">
+				<![CDATA[
+				AND M.MILEAGE>=5000*(SELECT NVL(MAX(REMINDTIMES),0)+1 AS REMINDTIMES 
+            						 FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            						 GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=M.ID))
+				]]>
+			</if>
+		</where>
+	</select>
+	
+		
+	<!-- 查询满足条件的所有客户里程信息 -->
+	<select id="queryMatchingCustomerMileageList" parameterType="com.jiezh.dao.leads.mileage.vo.CustomerVO" resultMap="customerMileageMap">
+		SELECT U.ID,U.SUBSIDIARY,U.STORE,U.CUSTOMERNAME,U.TEL,U.INVESTIGATOR,
+	           U.INVESTIGATORSEX,U.INVESTIGATIONDATE,U.CONNECTSTATUS,
+	           C.ID AS CID,C.CUSTOMERID,C.CUSTOMERTEL,C.CARVIN,C.BRANDTYPE,C.DELIVERDATE,
+	           M.ID AS MID,M.CARID,M.MILEAGE,M.LASTMILEAGE,M.ISREMIND,
+	           S.ID AS SID,S.CUSTOMERID AS SCUSTOMERID,S.CUSTOMERTEL AS SCUSTOMERTEL,
+	           S.QUESTIONID,S.ANSWER,S.DETAILANSWER
+		FROM T_MILEAGE_CUSTOMER U 
+		    LEFT JOIN T_MILEAGE_CAR C ON U.ID=C.CUSTOMERID 
+		    LEFT JOIN (
+            	SELECT X.* FROM T_MILEAGE_CUSTOMER_MILEAGE X, (
+                	SELECT MAX(ID) AS ID,CARID
+                	FROM T_MILEAGE_CUSTOMER_MILEAGE GROUP BY CARID
+            	) Y WHERE X.ID=Y.ID
+	        ) M ON C.ID = M.CARID 
+		    LEFT JOIN T_MILEAGE_SATISFACTION S ON U.ID=S.CUSTOMERID
+		<where>
+			<if test="customername != null and '' != customername">
+				AND U.CUSTOMERNAME LIKE '%${customername}%'
+			</if>
+			<if test="tel != null and '' != tel">
+				AND U.TEL LIKE '%${tel}%'
+			</if>
+			<if test="carRentelVO != null and carRentelVO.carvin != null and '' != carRentelVO.carvin">
+				AND C.CARVIN LIKE '%${carRentelVO.carvin}%'
+			</if>
+			<if test="store != null and '' != store">
+				AND U.STORE LIKE '%${store}%'
+			</if>
+			<if test="needremind != null and '' != needremind and 0 == needremind">
+				<![CDATA[
+				AND M.MILEAGE<5000*(SELECT NVL(MAX(REMINDTIMES),0)+1 AS REMINDTIMES 
+            						 FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            						 GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=M.ID))
+			 	]]>
+			</if>
+			<if test="needremind != null and '' != needremind and 1 == needremind">
+				<![CDATA[
+				AND M.MILEAGE>=5000*(SELECT NVL(MAX(REMINDTIMES),0)+1 AS REMINDTIMES 
+            						 FROM T_MILEAGE_CUSTOMER_MILEAGE 
+            						 GROUP BY CARID HAVING CARID=(SELECT CARID FROM T_MILEAGE_CUSTOMER_MILEAGE WHERE ID=M.ID))
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 根据客户电话查询客户及租用车辆最新行驶里程信息 -->
+	<select id="queryCarMileageByCustomertel" parameterType="java.util.Map" resultMap="customerMileageMap">
+		SELECT U.ID,U.SUBSIDIARY,U.STORE,U.CUSTOMERNAME,U.TEL,U.INVESTIGATOR,
+	           U.INVESTIGATORSEX,U.INVESTIGATIONDATE,U.CONNECTSTATUS,
+	           C.ID AS CID,C.CUSTOMERID,C.CUSTOMERTEL,C.CARVIN,C.BRANDTYPE,C.DELIVERDATE,
+	           M.ID AS MID,M.CARID,M.MILEAGE,M.LASTMILEAGE,M.ISREMIND
+		FROM T_MILEAGE_CUSTOMER U 
+	       LEFT JOIN T_MILEAGE_CAR C ON U.ID=C.CUSTOMERID 
+	       LEFT JOIN (
+            	SELECT X.* FROM T_MILEAGE_CUSTOMER_MILEAGE X, (
+                	SELECT MAX(ID) AS ID,CARID
+                	FROM T_MILEAGE_CUSTOMER_MILEAGE GROUP BY CARID
+            	) Y WHERE X.ID=Y.ID
+	        ) M ON C.ID = M.CARID 
+       	WHERE U.TEL=#{tel:VARCHAR} AND C.CARVIN=#{carvin:VARCHAR}
+	</select>
+	
+	
+	<!-- 根据客户ID查询客户里程详情 -->
+	<select id="queryCustomerMileageDetail" parameterType="java.lang.Long" resultMap="customerMileageMap">
+		SELECT U.ID,U.SUBSIDIARY,U.STORE,U.CUSTOMERNAME,U.TEL,U.INVESTIGATOR,
+	           U.INVESTIGATORSEX,U.INVESTIGATIONDATE,U.CONNECTSTATUS,
+	           C.ID AS CID,C.CUSTOMERID,C.CUSTOMERTEL,C.CARVIN,C.BRANDTYPE,C.DELIVERDATE,
+	           M.ID AS MID,M.CARID,M.MILEAGE,M.LASTMILEAGE,M.ISREMIND
+		FROM T_MILEAGE_CUSTOMER U 
+		    LEFT JOIN T_MILEAGE_CAR C ON U.ID=C.CUSTOMERID 
+		    LEFT JOIN (
+            	SELECT X.* FROM T_MILEAGE_CUSTOMER_MILEAGE X, (
+                	SELECT MAX(ID) AS ID,CARID
+                	FROM T_MILEAGE_CUSTOMER_MILEAGE GROUP BY CARID
+            	) Y WHERE X.ID=Y.ID
+	        ) M ON C.ID = M.CARID 
+		WHERE U.ID=#{customerid:DECIMAL}
+	</select>
+	
+	
+	<!-- 根据客户ID查询客户满意度详情 -->
+	<select id="querySatisfactionDetail" parameterType="java.lang.Long" resultType="com.jiezh.dao.leads.mileage.vo.QuestionVO">
+		SELECT Q.ID,Q.SHORTNAME,Q.QUESTION,Q.OPTIONA,
+		       Q.OPTIONB,Q.OPTIONC,Q.OPTIOND,Q.OPTIONE,Q.INPUTOPTION,
+		       S.ANSWER,S.DETAILANSWER 
+		FROM T_SATISFACTION_QUESTION Q 
+		     LEFT JOIN T_MILEAGE_SATISFACTION S 
+		     ON S.QUESTIONID=Q.ID AND S.CUSTOMERID=#{customerid:DECIMAL} 
+		     ORDER BY Q.ID ASC
+	</select>
+	
+	
+	<!-- 客户里程 -->
+	<resultMap id="customerMileageMap" type="com.jiezh.dao.leads.mileage.vo.CustomerVO">
+		<!-- 客户信息 -->
+		<id column="id" property="id"/>
+		<result column="subsidiary" property="subsidiary"/>
+		<result column="store" property="store"/>
+		<result column="customername" property="customername"/>
+		<result column="tel" property="tel"/>
+		<result column="investigator" property="investigator"/>
+		<result column="investigatorsex" property="investigatorsex"/>
+		<result column="investigationdate" property="investigationdate"/>
+		<result column="connectstatus" property="connectstatus"/>
+		<!-- 租用车辆信息 -->
+		<association property="carRentelVO" javaType="com.jiezh.dao.leads.mileage.vo.CarRentelVO">
+			<id column="cid" property="id" />
+			<result column="customerid" property="customerid"/>
+			<result column="customertel" property="customertel"/>
+			<result column="carvin" property="carvin"/>
+			<result column="brandtype" property="brandtype"/>
+			<result column="deliverdate" property="deliverdate"/>
+			<!-- 行驶里程信息 -->
+			<association property="mileageVO" javaType="com.jiezh.dao.leads.mileage.vo.MileageVO">
+				<id column="mid" property="id"/>
+				<result column="carid" property="carid"/>
+				<result column="mileage" property="mileage"/>
+				<result column="lastmileage" property="lastmileage"/>
+				<result column="isremind" property="isremind"/>
+			</association>
+		</association>
+		<!-- 满意度调查信息 -->
+		<collection property="questionList" ofType="com.jiezh.dao.leads.mileage.vo.SatisfactionVO">
+			<id column="sid" property="id"/>
+			<result column="scustomerid" property="customerid"/>
+			<result column="scustomertel" property="customertel"/>
+			<result column="questionid" property="questionid"/>
+			<result column="answer" property="answer"/>
+			<result column="detailanswer" property="detailanswer"/>
+		</collection>
+	</resultMap>
+	
+
+	<sql id="T_MILEAGE_CUSTOMER_COLUMN">
+		ID, SUBSIDIARY, STORE, CUSTOMERNAME, TEL, INVESTIGATOR, 
+		INVESTIGATORSEX, INVESTIGATIONDATE, CONNECTSTATUS	
+	</sql>
+	
+	
+</mapper>

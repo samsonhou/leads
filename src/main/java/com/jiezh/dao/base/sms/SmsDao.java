@@ -22,4 +22,6 @@ public interface SmsDao {
 
     List<Map<String, Object>> selectClient(Map<String, Object> params);
 
+    List<Map<String, Object>> querySendMsgList(Map<String, Object> params);
+
 }

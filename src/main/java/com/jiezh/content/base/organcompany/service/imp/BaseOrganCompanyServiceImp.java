@@ -37,8 +37,6 @@ public class BaseOrganCompanyServiceImp implements BaseOrganCompanyService {
 
     @Override
     public int addOrganCompany(OrganCompanyVO record) {
-        //默认添加机构为3级机构
-        record.setOrganLevel("3");
         return baseOrganCompany.insert(record);
     }
 
@@ -73,9 +71,9 @@ public class BaseOrganCompanyServiceImp implements BaseOrganCompanyService {
             node.setChecked(false);
             node.setNocheck(false);
             node.setIsParent(false);
-            if (obj.get("ISPARENT").equals("true")) {
-                node.setIsParent(true);
-            }
+//            if (obj.get("ISPARENT").equals("true")) {
+//                node.setIsParent(true);
+//            }
 
             nodes.add(node);
         }

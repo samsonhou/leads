@@ -106,7 +106,7 @@
                                 <div class="col-sm-4">
 									<input type="text" readonly value="${cMap.IFK!''}" class="form-control">
                                 </div>
-                            	<label class="col-sm-2 control-label  required">滴滴订单号</label>
+                            	<label class="col-sm-2 control-label  required">外部订单号</label>
                                 <div class="col-sm-4">
 									<input type="text" readonly value="${cMap.ORDERNO!''}" class="form-control">
                                 </div>
@@ -158,7 +158,8 @@
                                    <input value="3" name="gift" type="checkbox"${(cMap.GIFT?index_of("3") != -1)?string("checked onclick='return false'","")}>交车礼
                                 </div>
                                 </#if>
-                            </div> 
+                            </div>
+                             
                               	
 		                 </div>
 		            </div>

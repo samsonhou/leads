@@ -60,6 +60,8 @@ public interface ClientDao {
 	List<Map<String, Object>> queryOrgPersonByRole(Map<String, Object> param);
 	
 	List<Map<String, Object>> queryOrgPersonManager(Map<String, Object> param);
+	
+	List<Map<String, Object>> queryOrgCustomerService(Map<String, Object> param);
 
 	Map<String, Object> getHfCount(Map<String, Object> param);
 	

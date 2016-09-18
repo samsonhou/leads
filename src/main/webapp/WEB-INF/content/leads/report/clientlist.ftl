@@ -108,6 +108,7 @@
                                         <td>${detail.M45}</td>                                     
                                         <td>${detail.M46}</td>                                     
                                         <td>${detail.M47}</td>                                     
+                                        <td>${detail.M48}</td>                                     
                                     </tr>  
                                     </#list>
                               </tbody>

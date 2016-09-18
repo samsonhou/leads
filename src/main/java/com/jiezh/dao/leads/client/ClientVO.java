@@ -3,7 +3,7 @@ package com.jiezh.dao.leads.client;
 import com.jiezh.content.base.pub.web.GeneralBean;
 import java.util.Date;
 import java.util.List;
-
+@SuppressWarnings("rawtypes")
 public class ClientVO extends GeneralBean {
     private long id;
 
@@ -105,8 +105,10 @@ public class ClientVO extends GeneralBean {
     private String isRecycle;
     // 礼品
     private String gift;
-    
+
     private List gifts;
+
+    private String isAssign;
 
     public String getCarno() {
         return carno;
@@ -529,7 +531,13 @@ public class ClientVO extends GeneralBean {
     public void setGifts(List gifts) {
         this.gifts = gifts;
     }
-    
-    
+
+    public String getIsAssign() {
+        return isAssign;
+    }
+
+    public void setIsAssign(String isAssign) {
+        this.isAssign = isAssign;
+    }
 
 }

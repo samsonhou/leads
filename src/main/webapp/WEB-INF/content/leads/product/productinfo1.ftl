@@ -3,6 +3,7 @@
 	<head>
 		<#include "/pub/message.ftl"/>
 			<#include "/pub/header_res.ftl"/>
+			<#include "/pub/header_image_viewer.ftl"/>
 				<link href="${contextPath}/res/pub/css/Pager.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/plugins/iCheck/custom.css" rel="stylesheet">
@@ -90,7 +91,15 @@
 															<div id="pager1" align="center"></div>
 														</div>
 													</div>
-
+													<div class="panel panel-default" style="margin-top:15px;">
+														<div class="panel-heading">
+															<h4>图片</h4>
+														</div>
+														<div class="panel-body">
+															<div class="row" id="picbody"></div>
+															<div id="pager2" align="center"></div>
+														</div>
+													</div>
 
 
 												</div>
@@ -111,6 +120,7 @@
 					<script src="${contextPath}/res/pub/js/jquery.ztree.core-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.ztree.excheck-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.pager.js" type="text/javascript"></script>
+					<script src="${contextPath}/res/pub/css/plugins/imageview/dist/viewer.js" type="text/javascript"></script>
 					<script type="text/javascript">
 
 						function onClick(e, treeId, treeNode) {
@@ -149,6 +159,7 @@
 								success: function(response){
 									$("#pbody").html("");
 									$("#fbody").html("");
+									$("#picbody").html("");
 									$("#pager").html("");
 									$("#pager1").html("");
 									$.each(response[0].list,function(i,item){
@@ -165,11 +176,15 @@
 										$("#fbody").append("<p>"+item.fileName+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a></p>")
 										$("#pager1").pager({ pagenumber: response[1].pageNum, pagecount: response[1].pages, buttonClickCallback: pageClick1 });
 									});
-
-
-
-
-
+									/*
+									$.each(response[2].list,function(i,item){
+										$("#picbody").append("<img class='showimg' src='${contextPath}/res/pub/css/plugins/imageview/chakan.png' data-original='${imgPath}"+item.fileNewName+"'/>&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a></p>")
+										$("#pager2").pager({ pagenumber: response[2].pageNum, pagecount: response[2].pages, buttonClickCallback: pageClick2 });
+									});*/
+									$.each(response[2],function(i,item){
+										$("#picbody").append("<div class='col-sm-6 col-md-2'><img class='thumbnail' style='height:100px;' src='${imgPath}"+item.fileNewName+"'/></div>")
+									});
+									var viewer = new Viewer(document.getElementById('picbody'), {url:'data-original',navbar:false});
 								}
 							});
 						}
@@ -214,7 +229,22 @@
 							});
 						}
 
-						
+						function pageClick2(pagenum){
+							$.ajax({
+								type: "POST",
+								url: "${contextPath}/leads/product/queryDetails.do?pagenum="+pagenum+"&pid="+$("#nodeId").val()+"&keyword="+encodeURI(encodeURI($("#keyword").val())),
+								data: "",
+								success: function(response){
+									$("#picbody").html("");
+									$("#pager2").html("");
+									$.each(response[2].list,function(i,item){
+										$("#picbody").append("<img class='showimg' src='${contextPath}/res/pub/css/plugins/imageview/chakan.png' data-original='${imgPath}"+item.fileNewName+"'/>&nbsp;&nbsp;<a href=\"${contextPath}/leads/product/downFile.do?filePath="+encodeURI(encodeURI(item.filePath))+"&fileName="+encodeURI(encodeURI(item.fileName))+"\">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"#\" onclick=\"changeFile(\'"+item.id+"\')\">删除</a></p>")
+										$("#pager2").pager({ pagenumber: response[2].pageNum, pagecount: response[2].pages, buttonClickCallback: pageClick2 });
+									});
+								}
+							});
+							$("#picbody").viewer({url:'data-original',navbar:false});
+						}
 
 						var setting = {
 							check: {

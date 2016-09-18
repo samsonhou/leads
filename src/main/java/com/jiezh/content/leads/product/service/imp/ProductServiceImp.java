@@ -71,7 +71,7 @@ public class ProductServiceImp implements ProductService {
             node.setHasChild(obj.get("HASCHILD").toString());
             node.setRoles(obj.get("ROLES").toString().replace(",", ""));
 
-            node.setOpen(false);
+            node.setOpen(true);
             node.setNocheck(true);
             if (obj.get("HASCHILD").equals("0")) {
                 node.setNocheck(false);
@@ -144,13 +144,21 @@ public class ProductServiceImp implements ProductService {
         return new PageInfo<QaDetailVO>(page);
     }
 
+    public List<QaDetailVO> getDetailsList(QaDetailVO condition) {
+        return detailVODao.selectDetails(condition);
+    }
+
     @Override
-    public String processImport(MultipartFile file, AuthorUser user, int pid) throws Exception {
+    public String processImport(MultipartFile file, AuthorUser user, int pid, String fileType) throws Exception {
         Map<String, Object> param = new HashMap<>();
-        param.put("sysvarCode", "file_dir");
+        if (fileType.equals("1")) {
+            param.put("sysvarCode", "pic_dir");
+        } else if (fileType.equals("2")) {
+            param.put("sysvarCode", "file_dir");
+        }
         String fileDir = productDao.selectFileDir(param).get("FILEDIR").toString();
-        File newfile = new File(
-            fileDir + "/" + String.valueOf(System.nanoTime()) + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")));
+        String fileNewName = String.valueOf(System.nanoTime()) + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        File newfile = new File(fileDir + "/" + fileNewName);
         if (!newfile.getParentFile().exists()) {
             newfile.getParentFile().mkdirs();
             newfile.createNewFile();
@@ -163,6 +171,8 @@ public class ProductServiceImp implements ProductService {
         detailVO.setStatus("1");// 有效
         detailVO.setFilePath(newfile.getAbsolutePath());
         detailVO.setPid((long) pid);
+        detailVO.setFileType(fileType);
+        detailVO.setFileNewName(fileNewName);
         detailVODao.insert(detailVO);
         return null;
     }
