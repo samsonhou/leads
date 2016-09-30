@@ -149,4 +149,8 @@
   </if>
     </where>
   </select>
+  
+  <select id="findSourceNameByCode" parameterType="java.lang.String" resultType="java.lang.String">
+  	SELECT NAME FROM T_BASE_SOURCE WHERE CODE=#{code}
+  </select>
 </mapper>

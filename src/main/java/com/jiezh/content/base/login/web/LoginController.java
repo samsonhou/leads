@@ -151,50 +151,61 @@ public class LoginController extends WebAction {
         paras.put("user_id", user.getUserId());
         paras.put("month", date);
 
-        // 不是销售不显示
-        if ("0".endsWith(checkRole(Env.ROLE_SALE))) {
-            return null;
-        }
         // 如果是捷越用户，首页不显示提示信息
         if (user.getOrganId().equals("6868")) {
             return null;
         }
-        Map<String, Object> plan = clientService.getPlan(paras);
-        // 重要客户查询
-        List<Map<String, Object>> impClient = clientService.getTimeoutList(paras);
+        // 销售显示
+        if ("1".endsWith(checkRole(Env.ROLE_SALE))) {
+            Map<String, Object> plan = clientService.getPlan(paras);
+            // 重要客户查询
+            List<Map<String, Object>> impClient = clientService.getTimeoutList(paras);
 
-        // 催促客户查询
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("urgeToPersonId", user.getUserId());
-        map.put("urgeStatus", "0");
-        List<Map<String, Object>> urgeClient = lmurgeService.selectByLmurgeList(map);
+            // 催促客户查询
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("urgeToPersonId", user.getUserId());
+            map.put("urgeStatus", "0");
+            List<Map<String, Object>> urgeClient = lmurgeService.selectByLmurgeList(map);
 
-        String totalScore = clientService.getTotalScore(paras);
-        ModelAndView mv = new ModelAndView("base/login/index_page");
-        mv.addObject("impClient", impClient);
-        mv.addObject("urgeClient", urgeClient);
-        Object[] score = clientService.getScore(paras);
-        // 本月减分
-        mv.addObject("subtract", score[0] == null ? "0" : score[0]);
-        // 本月加分
-        mv.addObject("add", score[1] == null ? "0" : score[1]);
-        // 任务量
-        mv.addObject("plan_num", plan == null ? "未设置" : plan.get("PLAN_NUM"));
-        // 完成数量
-        if (plan != null) {
-            mv.addObject("perform", plan.get("PERFORM"));
-            // 未完成数量
-            int num = (Integer.parseInt(plan.get("PLAN_NUM") + "") == 0 ? 0
-                : Integer.parseInt(plan.get("PLAN_NUM") + "") - Integer.parseInt(plan.get("PERFORM") + ""));
-            mv.addObject("num", num < 0 ? 0 : num);
+            String totalScore = clientService.getTotalScore(paras);
+            ModelAndView mv = new ModelAndView("base/login/index_page");
+            mv.addObject("impClient", impClient);
+            mv.addObject("urgeClient", urgeClient);
+            Object[] score = clientService.getScore(paras);
+            // 本月减分
+            mv.addObject("subtract", score[0] == null ? "0" : score[0]);
+            // 本月加分
+            mv.addObject("add", score[1] == null ? "0" : score[1]);
+            // 任务量
+            mv.addObject("plan_num", plan == null ? "未设置" : plan.get("PLAN_NUM"));
+            // 完成数量
+            if (plan != null) {
+                mv.addObject("perform", plan.get("PERFORM"));
+                // 未完成数量
+                int num = (Integer.parseInt(plan.get("PLAN_NUM") + "") == 0 ? 0
+                    : Integer.parseInt(plan.get("PLAN_NUM") + "") - Integer.parseInt(plan.get("PERFORM") + ""));
+                mv.addObject("num", num < 0 ? 0 : num);
+            }
+            // 当月积分
+            mv.addObject("sum", totalScore);
+
+            String[] count = clientService.getU_TCount(paras);
+
+            mv.addObject("u_count", count[0]);
+            mv.addObject("t_count", count[1]);
+            return mv;
+
         }
-        // 当月积分
-        mv.addObject("sum", totalScore);
 
-        String[] count = clientService.getU_TCount(paras);
-
-        mv.addObject("u_count", count[0]);
-        mv.addObject("t_count", count[1]);
-        return mv;
+        // 客服，返回客服待外呼信息
+        if ("1".equals(checkRole(Env.ROLE_CLIENT))) {
+            ModelAndView mav = new ModelAndView("base/login/customer_service");
+            // 查询客服待呼叫信息
+            List<Map<String, Object>> customerList = clientService.queryShortTimeCustomerList(getUser().getUserId().longValue());
+            mav.addObject("size", customerList.size());
+            mav.addObject("customerList", customerList);
+            return mav;
+        }
+        return null;
     }
 }

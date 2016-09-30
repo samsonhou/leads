@@ -33,12 +33,18 @@
                             
                             <div class="form-group ">
                          	    <label class="col-sm-2 control-label">来源</label>
+                         	    <!--
                                 <div class="col-sm-2">
                                     <input type="text" readonly value="${(cMap.FROMTYPEBIG=='1')?string('互联网',(cMap.FROMTYPEBIG=='2')?string('渠道',(cMap.FROMTYPEBIG=='3')?string('直销','')))}" class="form-control">
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" readonly value="${(cMap.FROMTYPEBIG=='1'||cMap.FROMTYPEBIG=='3')?string(cMap.FROMTYPE,cMap.CHANNEL)}" class="form-control">
                                 </div>
+                                -->
+                                <div class="select_org col-sm-4">
+                                <@fromtype defValue="${cMap.FROMTYPE}" props=" class='form-control' disabled"/>
+								</div>
+                                
                                 <label class="col-sm-2 control-label">手机1</label>
                                 <div class="col-sm-4 ">
                                    <input type="text" readonly value="${cMap.TEL1!''}" class="form-control">
@@ -160,6 +166,14 @@
                                 </#if>
                             </div>
                              
+                            <div class="form-group">
+                            <label class="col-sm-2 control-label">呼叫状态</label>
+                                <div class="col-sm-4 ">
+                                   <@select type='0' codeType="1055" defValue="${cMap.CALL_RESULT!''}" fieldId="callResult" fieldName="callResult" props="disabled class='form-control' " />
+                                </div>
+                            </div>
+		                 
+		                 </div>
                               	
 		                 </div>
 		            </div>
@@ -275,6 +289,9 @@
 	                            <div class="col-sm-4 col-sm-offset-8">
 	                                  <input id="btn" name ="btn" type="button" value="提 交" onclick="save();" class="btn btn-sm btn-primary zd-btn-pd1"  data-toggle="modal" data-target="#myModal">
 	                             	  &nbsp; &nbsp; 
+	                             	  <!--
+	                                  <input id="btn" name ="btn" type="button" value="进件" onclick="toErp();" ${(cMap.TOERP=='1')?string('disabled','')} class="btn btn-sm btn-primary zd-btn-pd1"  data-toggle="modal" data-target="#myModal">
+	                             	  &nbsp; &nbsp; -->
 	                            	  <input type="button" value="关 闭" id="closeBtn" onclick="closeWin();" class="btn btn-sm btn-primary zd-btn-pd1" >
 	                             </div>
                             </div>
@@ -401,9 +418,14 @@
 	        	return false;
 	        }
 	        
-	        var rk= saveform.find('#rank').val()
-	        var isCheck = $("input[name='reason']").is(':checked')
+	        var rk= saveform.find('#rank').val();
+	        var isCheck = $("input[name='reason']").is(':checked');
 	        var checkValue = $("input[name='reason']:checked").val();
+	        var telReson = $("input[name='status']").is(':checked');
+	        if(telReson==false&&rk=='D'){
+	        	swal({title:"",text:"请选择电话具体原因!"});
+	        	return false;
+	        }
 	        if(isCheck==false&&rk=='C'){
 	        	swal({title:"",text:"请选择放弃原因!"});
 	            return false;
@@ -634,6 +656,14 @@
      			$("#isGetCar").removeAttr('disabled');
      			$("#carInfo").hide();
      		}
+     	}
+     	
+     	function toErp(){
+     		layer.confirm("确定进件?",{icon: 3, title:'提示'},function(ind){
+     			form1.action = "${contextPath}/leads/vist/toERP.do";
+     			form1.submit();
+     			layer.close(ind);
+     		});
      	}
 	</script>
 

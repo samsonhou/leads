@@ -50,4 +50,10 @@ public interface CacheDao {
 
     // 获取机构信息
     public List<Map<String, Object>> getOrgans(Map<String, Object> map);
+
+    // 获取来源信息
+    public List<Map<String, Object>> getFromtype(Map<String, Object> map);
+
+    // 获取来源父级
+    public List<Map<String, Object>> getFromtypePid(Map<String, Object> map);
 }

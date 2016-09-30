@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.api.orgsyn.OrganSynDao">
+
+	<insert id="insertOrganSynVO" parameterType="com.jiezh.dao.api.orgsyn.OrganSynVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT S_ORGAN_SYN.NEXTVAL AS id FROM DUAL
+		</selectKey>
+		INSERT INTO T_ORGAN_SYN (
+			ID, ORGAN_ID, STORE_ID,
+			CITY_ID, STORE_NAME, STORE_ADD,
+			ORG_CODE, STATUS, CREATE_DATE,
+			UPDATE_DATE 
+		) VALUES (
+			#{id,jdbcType=DECIMAL}, #{oragnId,jdbcType=DECIMAL},#{storeId,jdbcType=DECIMAL},
+			#{cityId,jdbcType=DECIMAL}, #{storeName,jdbcType=VARCHAR}, #{storeAdd,jdbcType=VARCHAR},
+			#{orgCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, SYSDATE, 
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="updateOrganSynVO" parameterType="com.jiezh.dao.api.orgsyn.OrganSynVO">
+		UPDATE T_ORGAN_SYN
+		SET CITY_ID = #{cityId,jdbcType=DECIMAL},
+			STORE_NAME = #{storeName,jdbcType=VARCHAR},
+			STORE_ADD = #{storeAdd,jdbcType=VARCHAR},
+			ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=VARCHAR},
+			UPDATE_DATE = SYSDATE 
+		WHERE STORE_ID = #{storeId,jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="deleteOrganSynVO" parameterType="java.lang.Long">
+		DELETE FROM T_ORGAN_SYN WHERE STORE_ID = #{storeId,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="queryOrganCountByStoreId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM T_ORGAN_SYN WHERE STORE_ID = #{storeId,jdbcType=DECIMAL}
+	</select>
+	
+</mapper>

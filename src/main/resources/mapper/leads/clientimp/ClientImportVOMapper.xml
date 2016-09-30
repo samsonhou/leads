@@ -8,7 +8,7 @@
     <result column="STATION_NO" property="stationNo" jdbcType="VARCHAR" />
     <result column="CITY" property="city" jdbcType="VARCHAR" />
     <result column="FROM_TYPE_BIG" property="fromTypeBig" jdbcType="VARCHAR" />
-    <result column="FROM_TYPE" property="fromType" jdbcType="DECIMAL" />
+    <result column="FROM_TYPE" property="fromType" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
@@ -19,10 +19,13 @@
     <result column="CREATED_USER_NAME" property="createdUserName" jdbcType="VARCHAR" />
     <result column="CHANNEL" property="channel" jdbcType="VARCHAR" />
     <result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_MANAGER" property="customerManager" jdbcType="VARCHAR" />
+    <result column="COUPONE_CODE" property="couponeCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     ID, CLIENT_NAME, TEL, STATION_NO, CITY, FROM_TYPE_BIG, FROM_TYPE, STATUS, CREATED_TIME, 
-    CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, REMARK, CHANNEL,ID_NO
+    CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, REMARK, CHANNEL,ID_NO, CUSTOMER_MANAGER, 
+    COUPONE_CODE 
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -42,12 +45,12 @@
       STATION_NO, CITY, FROM_TYPE_BIG, 
       FROM_TYPE, STATUS, CREATED_TIME, 
       CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, 
-      REMARK, CHANNEL,ID_NO)
+      REMARK, CHANNEL,ID_NO,CUSTOMER_MANAGER)
     values (#{id,jdbcType=DECIMAL}, #{clientName,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
       #{stationNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{fromTypeBig,jdbcType=VARCHAR}, 
-      #{fromType,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{fromType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
       #{createdUserId,jdbcType=DECIMAL}, #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL}, 
-      #{remark,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR},#{customerManager,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
     insert into LM_CLIENT_IMPORT
@@ -115,7 +118,7 @@
         #{fromTypeBig,jdbcType=VARCHAR},
       </if>
       <if test="fromType != null" >
-        #{fromType,jdbcType=DECIMAL},
+        #{fromType,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         #{status,jdbcType=VARCHAR},
@@ -159,7 +162,7 @@
         FROM_TYPE_BIG = #{fromTypeBig,jdbcType=VARCHAR},
       </if>
       <if test="fromType != null" >
-        FROM_TYPE = #{fromType,jdbcType=DECIMAL},
+        FROM_TYPE = #{fromType,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         STATUS = #{status,jdbcType=VARCHAR},
@@ -192,7 +195,7 @@
       STATION_NO = #{stationNo,jdbcType=VARCHAR},
       CITY = #{city,jdbcType=VARCHAR},
       FROM_TYPE_BIG = #{fromTypeBig,jdbcType=VARCHAR},
-      FROM_TYPE = #{fromType,jdbcType=DECIMAL},
+      FROM_TYPE = #{fromType,jdbcType=VARCHAR},
       STATUS = #{status,jdbcType=VARCHAR},
       CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
       CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
@@ -211,11 +214,10 @@
 	<select id="selectByVo" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO"
 		resultMap="BaseResultMap">
 		select 
-		(select a.name  from t_code_item a where a.code_item_id = t.from_type) FROM_TYPE_DESC,
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=t.from_type) FROM_TYPE_DESC,
 		<include refid="Base_Column_List" />
 		from lm_client_import t
 		<where>
-			t.status = '0'
 			<if test="clientName != null">
 				and t.client_name = #{clientName,jdbcType=VARCHAR}
 			</if>
@@ -226,7 +228,10 @@
 				and t.from_type_big = #{fromTypeBig,jdbcType=VARCHAR}
 			</if>
 			<if test="fromType != null">
-				and t.from_type = #{fromType,jdbcType=VARCHAR}
+				and t.from_type like #{fromType,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="status != null">
+				and t.status = #{status,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -254,12 +259,12 @@
 			ID, CLIENT_NAME, TEL, STATION_NO, 
 			CITY, FROM_TYPE_BIG, FROM_TYPE, STATUS, 
 			CREATED_TIME, CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, 
-			REMARK, CHANNEL
+			REMARK, CHANNEL, COUPONE_CODE
 		) 
 		SELECT S_CLIENT_IMPORT.NEXTVAL, T.CLIENT_NAME,
 			T.TEL, T.STATION_NO, T.CITY, T.FROM_TYPE_BIG,
 			T.FROM_TYPE, T.STATUS, T.CREATED_TIME, T.CREATED_USER_ID,
-			T.UPDATED_TIME, T.UPDATED_USER_ID, T.REMARK, T.CHANNEL
+			T.UPDATED_TIME, T.UPDATED_USER_ID, T.REMARK, T.CHANNEL, T.COUPONE_CODE
 			 FROM (
 		<foreach collection="list" item="item" index="index" separator="union all" >  
 	        (SELECT 
@@ -268,22 +273,23 @@
 	        	#{item.stationNo:VARCHAR} AS STATION_NO,
 	        	#{item.city:VARCHAR} AS CITY,
 	        	#{item.fromTypeBig:VARCHAR} AS FROM_TYPE_BIG,
-	        	#{item.fromType:DECIMAL} AS FROM_TYPE,
+	        	#{item.fromType:VARCHAR} AS FROM_TYPE,
 	        	#{item.status:VARCHAR} AS STATUS,
 	        	#{item.createdTime:TIMESTAMP} AS CREATED_TIME,
 	        	#{item.createdUserId:DECIMAL} AS CREATED_USER_ID,
 	        	#{item.updatedTime:TIMESTAMP} AS UPDATED_TIME,
 	        	#{item.updatedUserId:DECIMAL} AS UPDATED_USER_ID,
 	        	#{item.remark:VARCHAR} AS REMARK,
-	        	#{item.channel:VARCHAR} AS CHANNEL
+	        	#{item.channel:VARCHAR} AS CHANNEL,
+	        	#{item.couponeCode:VARCHAR} AS COUPONE_CODE
 	        FROM DUAL)  
 	    </foreach> 
 	    ) T
 	</insert>
 	
 	
-	<select id="queryCodeByLabel" parameterType="java.util.Map" resultType="java.lang.String">
-		SELECT ${column} FROM T_CODE_ITEM WHERE CODE_TYPE=#{type} AND NAME=#{label} AND STATUS='1'
+	<select id="queryCodeByLabel" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT CODE FROM T_BASE_SOURCE WHERE NAME=#{label} AND STATUS='1' AND CODE_LEVEL='3'
 	</select>
 	
 	

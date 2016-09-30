@@ -27,7 +27,6 @@ import com.jiezh.content.base.pub.util.ExcelUtil;
 import com.jiezh.content.base.pub.util.ExcelUtil.ExcelExportData;
 import com.jiezh.content.base.pub.web.WebAction;
 import com.jiezh.content.leads.service.ClientService;
-import com.jiezh.dao.base.codetype.CodeItemVO;
 
 /**
  * 报表相关
@@ -175,19 +174,15 @@ public class ReportController extends WebAction {
         // String fileName = "滴滴合作数据报表";
 
         // 查询的计划列表
-        //int currenPage = 1;
+        // int currenPage = 1;
 
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String depositStatus = request.getParameter("depositStatus");
-        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
-        String fileName = "";
-        if(StringUtils.isNotBlank(fromType)){
-            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
-            fileName = codeItemVO.getName();
-        }
+        String fromType = request.getParameter("fromType") == null ? "" : request.getParameter("fromType");
+        String fileName = clientService.findSourceNameByCode(fromType);
+        fileName = fileName == null ? "数据报表" : fileName + "数据报表";
 
-        fileName += "数据报表";
         // String fileName = (fromType.equals("391")?"滴滴商城":"唯品会")+"数据报表";
 
         if (stime == null || "".equals(stime)) stime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -306,7 +301,7 @@ public class ReportController extends WebAction {
     public ModelAndView reportToClient() {
         OutputStream outputStream = null;
         try {
-            //String status = request.getParameter("status");
+            // String status = request.getParameter("status");
             String stime = request.getParameter("stnextdate");
             String stime1 = request.getParameter("stnextdate1");
             String organId = request.getParameter("organId");
@@ -405,14 +400,9 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
-        String fileName = "";
-        if(StringUtils.isNotBlank(fromType)){
-            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
-            fileName = codeItemVO.getName();
-        }
-
-        fileName += "数据报表";
+        String fromType = request.getParameter("fromType") == null ? "" : request.getParameter("fromType");
+        String fileName = clientService.findSourceNameByCode(fromType);
+        fileName = fileName == null ? "数据报表" : fileName + "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);
@@ -492,14 +482,9 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
-        String fileName = "";
-        if(StringUtils.isNotBlank(fromType)){
-            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
-            fileName = codeItemVO.getName();
-        }
-
-        fileName += "数据报表";
+        String fromType = request.getParameter("fromType") == null ? "" : request.getParameter("fromType");
+        String fileName = clientService.findSourceNameByCode(fromType);
+        fileName = fileName == null ? "数据报表" : fileName + "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);
@@ -580,14 +565,9 @@ public class ReportController extends WebAction {
         String organId = request.getParameter("organId");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        String fromType = request.getParameter("fromType")==null?"":request.getParameter("fromType");
-        String fileName = "";
-        if(StringUtils.isNotBlank(fromType)){
-            CodeItemVO codeItemVO = this.clientService.findOneCodeType(Long.valueOf(fromType));
-            fileName = codeItemVO.getName();
-        }
-
-        fileName += "数据报表";
+        String fromType = request.getParameter("fromType") == null ? "" : request.getParameter("fromType");
+        String fileName = clientService.findSourceNameByCode(fromType);
+        fileName = fileName == null ? "数据报表" : fileName + "数据报表";
 
         Map<String, Object> paras = new HashMap<>();
         paras.put("organId", organId);

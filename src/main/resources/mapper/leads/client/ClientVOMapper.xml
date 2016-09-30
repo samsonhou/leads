@@ -47,6 +47,8 @@
 			jdbcType="VARCHAR" />
 		<result column="CHANNEL" property="channel"
 			jdbcType="VARCHAR" />
+			
+		<result column="CALL_RESULT" property="callResult" jdbcType="VARCHAR" />
 
 
 	</resultMap>
@@ -56,7 +58,7 @@
 		BIG_PID, SMALL_PID,
 		RID, IFURGENT, CITYID, COMPANYID, SID,
 		DDATE, NEXTDATE, RANK, STATUS ,QQ ,
-		WEIXIN , PHONE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,CHANNEL
+		WEIXIN , PHONE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,CHANNEL,CALL_RESULT 
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
@@ -85,7 +87,7 @@
 		DDATE, NEXTDATE, RANK,
 		STATUS,QQ , WEIXIN ,
 		PHONE,ALLOTDATE,DEPOSIT_STATUS,TEL1,FROMTYPE_BIG,FIRST_TIME_COMING,CHANNEL,PRODUCT,WILL,IS_SUB_MATERIAL,IS_GET_CAR,GET_CAR_DATE,CARNO,
-		IDD,IFK,CONTRACTNO,ORDER_NO,IS_CHARGED,INN_DEPOSIT)
+		IDD,IFK,CONTRACTNO,ORDER_NO,IS_CHARGED,INN_DEPOSIT,CALL_RESULT)
 		values
 		(#{id,jdbcType=DECIMAL},#{clientName,jdbcType=VARCHAR},
 		#{tel,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
@@ -104,7 +106,8 @@
 		#{phone,jdbcType=CHAR},#{allotdate,jdbcType=TIMESTAMP},
 		#{depositStatus,jdbcType=VARCHAR},#{tel1,jdbcType=VARCHAR},#{fromtypeBig,jdbcType=VARCHAR},#{firstTimeComing,jdbcType=TIMESTAMP},#{channel,jdbcType=VARCHAR},
 		#{product,jdbcType=VARCHAR},#{will,jdbcType=VARCHAR},#{isSubMaterial,jdbcType=VARCHAR},#{isGetCar,jdbcType=VARCHAR},#{getCarDate,jdbcType=TIMESTAMP},
-		#{carno,jdbcType=VARCHAR},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR},#{contractno,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR},#{isCharged,jdbcType=VARCHAR},#{innDeposit,jdbcType=VARCHAR})
+		#{carno,jdbcType=VARCHAR},#{idd,jdbcType=VARCHAR},#{ifk,jdbcType=VARCHAR},#{contractno,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR},#{isCharged,jdbcType=VARCHAR},
+		#{innDeposit,jdbcType=VARCHAR},#{callResult,jdbcType=VARCHAR})
 	</insert>
 
 	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.client.ClientVO">
@@ -218,10 +221,21 @@
 			<if test="orderNo != null">
 				order_no = #{orderNo,jdbcType=VARCHAR},
 			</if>
-
+			
 			REASONCONT = #{reasonCont,jdbcType=VARCHAR}, ALLOTDATE = sysdate ,
 			IFK = #{ifk,jdbcType=CHAR},INIT_RANK=#{init_rank,jdbcType=VARCHAR},
 			GET_CAR_DATE = #{getCarDate,jdbcType=VARCHAR},gift = #{gift,jdbcType=VARCHAR},
+			CALL_RESULT = #{callResult,jdbcType=VARCHAR} 
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.client.ClientVO">
+		update LM_CLIENT
+		<set>
+			<if test="toErp != null">
+				TO_ERP = #{toErp,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=DECIMAL}
 	</update>
@@ -233,9 +247,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		nvl((select name from t_code_item where
-		code_item_id = lmc.fromtype),'')
-		FROMTYPE,
+		lmc.FROMTYPE FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE, 'YYYY-MM-DD') QDATE,
 		nvl((select title from
@@ -285,8 +297,9 @@
 		decode(lmc.is_charged,'1','是','0','否','') ISCHARGED,
 		lmc.first_time_coming FIRSTTIMECOMING,
 		lmc.inn_deposit INNDEPOSIT,
-		lmc.gift GIFT
-		
+		lmc.gift GIFT,
+		lmc.CALL_RESULT,  
+		lmc.to_erp TOERP
 		from
 		lm_client lmc
 		where lmc.ID = #{id,jdbcType=DECIMAL}
@@ -300,9 +313,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big)||' - '||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel)
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype)
 		FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
@@ -373,9 +384,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) ||' - '||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel)
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype)
 		FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
@@ -408,10 +417,10 @@
 		from lm_client lmc, t_user b
 		<where>
 			lmc.rid = b.user_id and lmc.sex = '1'
-			
 			<if test="tel != null and '' != tel">
 				AND lmc.tel like '%${tel}%'
 			</if>
+			AND lmc.companyid in (select t.organ_id from t_organ_company t where t.status='1' start with t.organ_id = #{companyid,jdbcType=VARCHAR} connect by prior t.organ_id = t.parent_id)
 		</where>
 		order by lmc.id desc
 	</select>
@@ -423,9 +432,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) || ' - ' ||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel) FROMTYPE,
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype) FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
 		'YYYY-MM-DD') QDATE,
@@ -438,11 +445,7 @@
 		from t_user a, t_organ_company b where a.organ_id =
 		b.organ_id and
 		a.user_id = lmc.sid),'') SID,
-		nvl((select name from t_user a,
-		t_organ_company b where a.organ_id = b.organ_id
-		
-		and a.user_id =
-		lmc.sid),'') COMNAME,
+		(select listagg(t.name,'-') within group(order by t.organ_level) from t_organ_company t connect by prior t.parent_id = t.organ_id start with t.organ_id=(select a.organ_id from t_user a where a.user_id = lmc.sid)) COMNAME,
 		to_char(DDATE, 'YYYY-MM-DD') DDATE,
 		to_char(NEXTDATE, 'YYYY-MM-DD') NEXTDATE,
 		nvl((select name from
@@ -557,7 +560,7 @@
 			</if>
 			<!-- add by cj加入来源条件 -->
 			<if test="fromtype != null and '' != fromtype">
-				AND lmc.fromtype = #{fromtype,jdbcType=DECIMAL}
+				AND lmc.fromtype like #{fromtype,jdbcType=DECIMAL}||'%'
 			</if>
 
 			<!-- add by houjiq 是否进件 -->
@@ -585,8 +588,8 @@
 			<if test="isGetCar == 0">
 				And (lmc.is_get_car != '1' or lmc.is_get_car is null)
 			</if>
-			<if test="getCarDate != null">
-				And lmc.get_car_date = #{product,jdbcType=TIMESTAMP}
+			<if test="callResult != null">
+				And lmc.call_result = #{callResult,jdbcType=VARCHAR}
 			</if>
 			<if test="idd != null">
 				And lmc.idd = #{idd,jdbcType=VARCHAR}
@@ -612,6 +615,12 @@
 				    separator="or" close=")">
 				   instr(lmc.gift,#{gift,jdbcType=VARCHAR})>0
 				  </foreach>
+			</if>
+			<if test="getCarStart != null and getCarStart != ''">
+				and lmc.get_car_date >= to_date(#{getCarStart,jdbcType=VARCHAR}||'00:00:00','yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="getCarEnd != null and getCarEnd != ''">
+				and lmc.get_car_date <![CDATA[ <= ]]> to_date(#{getCarEnd,jdbcType=VARCHAR}||'23:59:59','yyyy-mm-dd hh24:mi:ss')
 			</if>
 			
 		</where>
@@ -846,9 +855,8 @@
        ]]>
 		u.organ_id PID,'check' CHE
 		FROM t_user u ,t_user_role b where
-		u.user_id=b.user_id and b.role_id in
-		(1,2) and u.status ='1' and
-		u.organ_id !='00' and u.organ_code =
+		u.user_id=b.user_id and ((b.role_id=1 and u.organ_id !='00') or b.role_id in
+		(2,3)) and u.status ='1' and u.organ_code =
 		#{organCode}
 		and not exists (select
 		1 from t_user_lock l where l.user_id = u.user_id
@@ -921,9 +929,10 @@
 		SID=#{newUserId},COMPANYID=#{newUserOrganId},DDATE=SYSDATE,INIT_RANK=(case
 		when RANK = 'C' then 'C' else init_rank end),RANK=(case when RANK =
 		'C' then '' else RANK end),
-		<if test="newUserId != null and 0 != newUserId">
-			ALLOTDATE=SYSDATE
+		<if test="rid != null and 0 != rid">
+			RID=#{rid},
 		</if>
+		ALLOTDATE=SYSDATE
 		where id in
 		<foreach item="item" index="index" collection="ids" open="("
 			separator="," close=")">
@@ -987,10 +996,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value= lmc.fromtype_big) || ' - ' ||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel)
-		FROMTYPE,
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype) FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
 		'YYYY-MM-DD') QDATE,
@@ -1138,10 +1144,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value=lmc.fromtype_big) || ' - ' ||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel)
-		FROMTYPE,
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype) FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
 		'YYYY-MM-DD') QDATE,
@@ -1152,8 +1155,7 @@
 		b.real_name RID,
 		nvl((select
 		real_name||'-'||name real_name from t_user a, t_organ_company b where
-		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
-		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		a.organ_id = b.organ_id  and a.user_id = lmc.sid),'') SID,
 		to_char(DDATE, 'YYYY-MM-DD') DDATE,
 		to_char(NEXTDATE, 'YYYY-MM-DD')
 		NEXTDATE,
@@ -1174,8 +1176,6 @@
 		from lm_client lmc, t_user b
 		<where>
 			lmc.rid = b.user_id and lmc.sex = '1'
-			and b.organ_code
-			=#{sysOrganCode} and lmc.cityid =#{sysOrganCode}
 			<if test="tel != null and '' != tel">
 				AND lmc.tel like '%${tel}%'
 			</if>
@@ -1190,9 +1190,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		(select t.name from t_code_item t where t.code_type='1044' and t.value = lmc.fromtype_big) || ' - ' ||
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),lmc.channel)
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype)
 		FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
@@ -1204,8 +1202,7 @@
 		b.real_name RID,
 		nvl((select
 		real_name||'-'||name real_name from t_user a, t_organ_company b where
-		a.organ_id = b.organ_id and a.organ_code =#{sysOrganCode} and
-		b.organ_code =#{sysOrganCode} and a.user_id = lmc.sid),'') SID,
+		a.organ_id = b.organ_id  and a.user_id = lmc.sid),'') SID,
 		to_char(DDATE, 'YYYY-MM-DD') DDATE,
 		to_char(NEXTDATE, 'YYYY-MM-DD')
 		NEXTDATE,
@@ -1225,9 +1222,9 @@
 		lmc.PHONE
 		from lm_client lmc, t_user b
 		<where>
-			lmc.rid = b.user_id and lmc.cityid =#{sysOrganCode} and lmc.sex = '1'
+			lmc.rid = b.user_id and lmc.sex = '1'
 			and (nvl(lmc.companyid,'00') in(SELECT ORGAN_ID FROM (select * from
-			t_organ_company where status = '1' and organ_code =#{sysOrganCode})
+			t_organ_company where status = '1')
 			START WITH ORGAN_ID =#{companyid} CONNECT BY PRIOR ORGAN_ID =
 			PARENT_ID)
 			or lmc.rid = #{rid})
@@ -2778,7 +2775,18 @@
 		where
 		d.code_type = '1000'
 		and d.value = a.field_after),
-
+		'callResult',
+		b.comments || ':由' ||
+		(select d.name
+		from t_code_item d
+		where d.code_type = '1055'
+		and d.value
+		= a.field_before) || ' to ' ||
+		(select d.name
+		from t_code_item d
+		where
+		d.code_type = '1055'
+		and d.value = a.field_after),
 		b.comments || ':由' ||
 		nvl(a.field_before,
 		'空') ||
@@ -2919,5 +2927,36 @@
 		        connect by prior q.organ_id = q.parent_id)
 		 order by ID
 	
+	</select>
+	
+	<!-- 查询待外呼客户 -->
+	<select id="queryShortTimeCustomerList" resultType="java.util.Map" parameterType="java.lang.Long">
+		<![CDATA[
+		SELECT C.ID,C.CLIENT_NAME AS CLIENTNAME,C.TEL, 
+		       CASE WHEN ROUND(TO_NUMBER(SYSDATE - C.QDATE) * 24)<=72 
+		            THEN '未超72小时' ELSE '未超96小时' END AS TIMETYPE 
+		FROM LM_CLIENT C 
+		WHERE ROUND(TO_NUMBER(SYSDATE-C.QDATE)*24)<=96 
+			AND C.RID=#{rid:DECIMAL} AND (C.CALL_RESULT='1' OR (C.CALL_RESULT IS NULL AND SID=0))
+		]]>
+	</select>
+	
+	<!-- 根据用户ID查询用户角色 -->
+	<select id="queryUserRoleByUserId" resultType="java.lang.String" parameterType="java.lang.Long">
+		SELECT R.ID FROM T_USER U,T_USER_ROLE T,T_ROLE R 
+		WHERE U.USER_ID=T.USER_ID AND T.ROLE_ID=R.ID AND U.USER_ID=#{newUserId:DECIMAL}
+	</select>
+	
+	<select id="selectErpInfoById" parameterType="long" resultType="com.jiezh.dao.leads.erp.ErpDataVO">
+		select a.client_name clientName,
+			a.id  clientId,
+	       a.tel         clientTel,
+	       a.fromtype    sourceCode,
+	       b.name        sourceName,
+	       c.store_id    organCode
+	  from lm_client a
+	  left join t_base_source b on a.fromtype = b.code
+	  left join t_organ_syn c on a.companyid = c.organ_id
+	 where a.id = #{clientId,jdbcType=DECIMAL}
 	</select>
 </mapper>

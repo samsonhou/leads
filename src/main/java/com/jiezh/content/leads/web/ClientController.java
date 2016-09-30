@@ -1,6 +1,5 @@
 package com.jiezh.content.leads.web;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.jiezh.content.base.pub.author.AuthorUser;
@@ -68,6 +68,7 @@ public class ClientController extends WebAction {
         AuthorUser user = getUser();
         clientVO.setRid(user.getUserId().intValue());
         clientVO.setSysOrganCode(user.getOrganCode());
+        clientVO.setCompanyid(user.getOrganId());
 
         mv.addObject("page", clientService.getClientList(currenPage, clientVO));
         mv.addObject("clientVO", clientVO);
@@ -159,6 +160,8 @@ public class ClientController extends WebAction {
         ModelAndView mv = new ModelAndView("leads/client/addClient");
         AuthorUser user = getUser();
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
+        String code = request.getParameter("code");// 来源
+        clientVO.setFromtype(Integer.valueOf(code));
 
         // modify bj cj
         if (clientVO.getSid() > 0) {
@@ -412,6 +415,23 @@ public class ClientController extends WebAction {
         response.getWriter().write(clientService.hastenTask(taskId, getUser()).get("msg"));
         response.getWriter().flush();
         response.getWriter().close();
+    }
+
+    /**
+     * 客服外呼
+     * 
+     * @return
+     */
+    @RequestMapping("dialout")
+    @ResponseBody
+    public void dialout() throws Exception {
+        try {
+            AuthorUser currenUser = getUser();
+            String tel = request.getParameter("tel");
+            response.getWriter().print(clientService.dialout(currenUser, tel));
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), null);
+        }
     }
 
 }

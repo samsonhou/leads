@@ -17,7 +17,7 @@ public class ClientImportVO extends GeneralBean {
 
     private String fromTypeBig;
 
-    private Long fromType;
+    private String fromType;
 
     private String status;
 
@@ -36,8 +36,12 @@ public class ClientImportVO extends GeneralBean {
     private String createdUserName;
 
     private String idNo;
-	
-	private String channel;
+
+    private String channel;
+
+    private String customerManager;
+
+    private String couponeCode;
 
     public Long getId() {
         return id;
@@ -87,11 +91,11 @@ public class ClientImportVO extends GeneralBean {
         this.fromTypeBig = fromTypeBig == null ? null : fromTypeBig.trim();
     }
 
-    public Long getFromType() {
+    public String getFromType() {
         return fromType;
     }
 
-    public void setFromType(Long fromType) {
+    public void setFromType(String fromType) {
         this.fromType = fromType;
     }
 
@@ -158,7 +162,7 @@ public class ClientImportVO extends GeneralBean {
     public void setCreatedUserName(String createdUserName) {
         this.createdUserName = createdUserName;
     }
-    
+
     public String getChannel() {
         return channel;
     }
@@ -166,13 +170,29 @@ public class ClientImportVO extends GeneralBean {
     public void setChannel(String channel) {
         this.channel = channel;
     }
-    
+
     public String getIdNo() {
         return idNo;
     }
 
     public void setIdNo(String idNo) {
         this.idNo = idNo;
+    }
+
+    public String getCustomerManager() {
+        return customerManager;
+    }
+
+    public void setCustomerManager(String customerManager) {
+        this.customerManager = customerManager;
+    }
+
+    public String getCouponeCode() {
+        return couponeCode;
+    }
+
+    public void setCouponeCode(String couponeCode) {
+        this.couponeCode = couponeCode;
     }
 
 }

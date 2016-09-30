@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.session.SessionRegistry;
@@ -141,6 +142,8 @@ public class SearchController extends WebAction {
         ModelAndView mv = new ModelAndView("leads/search/clientlist");
 
         ClientVO clientVO = (ClientVO) getBean(ClientVO.class);
+        String fromtype = request.getParameter("code");
+        if (StringUtils.isNotBlank(fromtype)) clientVO.setFromtype(Integer.valueOf(fromtype));
         int currenPage = 1;
         if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
@@ -154,10 +157,14 @@ public class SearchController extends WebAction {
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String companyid = request.getParameter("organId");
+        String getCarStart = request.getParameter("getCarStart");
+        String getCarEnd = request.getParameter("getCarEnd");
         // 查询条件临时存进去vo
         clientVO.setEmail(stime);
         clientVO.setTitle(etime);
-
+        clientVO.setGetCarStart(getCarStart);
+        clientVO.setGetCarEnd(getCarEnd);
+        
         String flag = "";
         if ("1".endsWith(checkRole(Env.ROLE_MANAGE))) {
             clientVO.setCadTmp(companyid);
@@ -179,6 +186,9 @@ public class SearchController extends WebAction {
         mv.addObject("stnextdate", stime);
         mv.addObject("nextdate", etime);
         mv.addObject("ogId", user.getOrganId());
+        mv.addObject("getCarStart", getCarStart);
+        mv.addObject("getCarEnd", getCarEnd);
+        
 
         mv.addObject("organId", clientVO.getCadTmp());
         mv.addObject("count", clientService.getClientCount());
@@ -296,6 +306,13 @@ public class SearchController extends WebAction {
         String stime = request.getParameter("stnextdate");
         String etime = request.getParameter("nextdate");
         String companyid = request.getParameter("organId");
+        String fromtype = request.getParameter("code");// 来源
+        if (StringUtils.isNotBlank(fromtype)) clientVO.setFromtype(Integer.valueOf(fromtype));
+        String getCarStart = request.getParameter("getCarStart");
+        String getCarEnd = request.getParameter("getCarEnd");
+        clientVO.setGetCarStart(getCarStart);
+        clientVO.setGetCarEnd(getCarEnd);
+        
         // 查询条件临时存进去vo
         clientVO.setEmail(stime);
         clientVO.setTitle(etime);
@@ -307,6 +324,8 @@ public class SearchController extends WebAction {
         mv.addObject("nextdate", etime);
         mv.addObject("count", clientService.getClientCount());
         mv.addObject("organId", companyid);
+        mv.addObject("getCarStart", getCarStart);
+        mv.addObject("getCarEnd", getCarEnd);
 
         String[] gifts = request.getParameterValues("gift");
 

@@ -17,7 +17,7 @@
 			  	 	 	 
 			  	 	 	 	<div class="form-group">
                                 <label class="col-sm-2 control-label">姓名</label>
-                                <div class="col-sm-3 ">
+                                <div class="col-sm-4 ">
                                     <input type="text" name="clientName" value="${vo.clientName!''}" class="form-control">
                                 </div>
                                 <label class="col-sm-2 control-label  required">手机</label>
@@ -27,22 +27,17 @@
                             </div>
                             <div class="form-group">
                             	<label class="col-sm-2 control-label">来源</label>
-                                 <div class="col-sm-1">
-                                    <@select type='0' codeType="1044" defValue="${vo.fromTypeBig}" fieldId="fromtypeBig" fieldName="fromTypeBig" props=" datatype='*' nullmsg='请选择线索来源' class='form-control' " />
-                                </div>
-                                <div class="col-sm-2">
-                                    <select style='display:none;'  class='form-control fromtype'"></select>
-                                    <div class="fromtype" style='display:none;'>
-                                    <div id="magicsuggest_1022"></div>
-                                	<input type="hidden" id="fromtype" name="fromType" value="${vo.fromType}" class="form-control">
-                                	</div>
-                                    <input id="channel" name="channel" value="${vo.channel}" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
-                                    <@select type='1' codeType="1046" defValue="${vo.fromType}" fieldId="fromtype" fieldName="fromType" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
-                                </div>  
+                                 <div class="select_org col-sm-4">
+                                <@fromtype defValue="${vo.fromType}" props=" class='form-control'"/>
+								</div> 
+                            	<label class="col-sm-2 control-label">是否分配</label>
+                            	<div class="col-sm-2">
+                                <@select type='0' codeType="1000" defValue="${vo.status!''}" fieldId="status" fieldName="status"  props=" class='form-control' " />
+								</div> 
                             </div>
                             
                             <div class="form-group">
-                                 <label class="col-sm-7 control-label"></label>
+                                 <label class="col-sm-8 control-label"></label>
                                 <div class="col-sm-4">
 	                                 <input type="button" onclick="search();" value="查 询" class="btn btn-primary btn-sm zd-btn-pd1">
 	                                 &nbsp;&nbsp;
@@ -71,6 +66,7 @@
                             <th style="text-align: center;">手机</th>
                             <th style="text-align: center;">城市</th>
                             <th style="text-align: center;">来源</th>
+                            <th style="text-align: center;">状态</th>
 					 	</tr>
 					 </thead>
 					 <tbody>
@@ -83,13 +79,8 @@
                                         <td>${client.clientName}</td>
                                         <td>${client.tel}</td>
                                         <td>${client.city}</td>
-                                        <td>
-											<#if client.fromTypeBig = '1'>互联网-${client.fromTypeDesc}
-											<#elseif client.fromTypeBig = '2'>渠道-${client.channel}
-											<#elseif client.fromTypeBig = '3'>直销-${client.fromTypeDesc}
-											 </#if>
-										</td>
-                                       
+                                        <td>${client.fromTypeDesc}</td>
+                                        <td>${(client.status='1')?string('已分配','未分配')}</td>
                                     </tr>  
                                     </#list>
 					 </tbody>
@@ -250,7 +241,7 @@
 			return items;
 		}
 		jQuery(document).ready(function(){
-			getmagicSuggest_1022();
+			//getmagicSuggest_1022();
 			var msg = jQuery("#msg").val();
 			if(msg.length>0){
 				layer.alert(msg);
@@ -325,7 +316,6 @@
 				}
 				uploadForm.submit();
 			}
-			layer.load();
 		}
 		
 		

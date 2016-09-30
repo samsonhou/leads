@@ -39,6 +39,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -46,6 +47,7 @@ import com.jiezh.content.base.pub.Env;
 import com.jiezh.content.base.pub.author.AuthorUser;
 import com.jiezh.content.base.pub.util.DaoUtil;
 import com.jiezh.content.base.pub.util.DateUtil;
+import com.jiezh.content.base.pub.util.HttpClientUtil;
 import com.jiezh.content.base.pub.util.Node;
 import com.jiezh.content.base.pub.util.Tools;
 import com.jiezh.content.base.weixin.tools.Parameters;
@@ -57,8 +59,11 @@ import com.jiezh.content.leads.exchange.QueueTools;
 import com.jiezh.content.leads.search.web.ExcelUtil;
 import com.jiezh.content.leads.service.ClientService;
 import com.jiezh.content.leads.vist.web.VistBean;
+import com.jiezh.dao.api.moor.UserMoorVODao;
 import com.jiezh.dao.base.codetype.BaseCodeItemVODao;
 import com.jiezh.dao.base.codetype.CodeItemVO;
+import com.jiezh.dao.base.sysvar.SysvarVO;
+import com.jiezh.dao.base.sysvar.SysvarVODao;
 import com.jiezh.dao.base.user.UserVO;
 import com.jiezh.dao.leads.activity.ActivityConfigVO;
 import com.jiezh.dao.leads.activity.ActivityConfigVODao;
@@ -71,6 +76,10 @@ import com.jiezh.dao.leads.client.update.ClientUpdateDao;
 import com.jiezh.dao.leads.client.update.ClientUpdateVO;
 import com.jiezh.dao.leads.client.urge.LmurgeVO;
 import com.jiezh.dao.leads.client.urge.LmurgeVODao;
+import com.jiezh.dao.leads.erp.ErpDataVO;
+import com.jiezh.dao.leads.erp.ErpDataVODao;
+
+import net.sf.json.JSONObject;
 
 @Service("leads.service.BaseClientService")
 public class ClientServiceImp implements ClientService {
@@ -86,6 +95,13 @@ public class ClientServiceImp implements ClientService {
     ActivityConfigVODao activityConfigVODao;
     @Autowired
     BaseCodeItemVODao baseCodeItemVODao;
+    @Autowired
+    UserMoorVODao userMoorDao;
+    @Autowired
+    SysvarVODao sysvarVODao;
+    @Autowired
+    ErpDataVODao erpDataVODao;
+
     final static ReentrantLock lock = new ReentrantLock();
 
     public int addClient(ClientVO recode) throws Exception {
@@ -156,11 +172,11 @@ public class ClientServiceImp implements ClientService {
         // listR = clientDao.queryOrgPerson(param);
 
         // 如果是从forAssign页面进来。把是管理员的查询出来。。 1-25
-        if ("forAssign".equals(from)){
+        if ("forAssign".equals(from)) {
             listR = clientDao.queryOrgPersonManager(param);
-        }else if("server".equals(from)){
+        } else if ("server".equals(from)) {
             listR = clientDao.queryOrgCustomerService(param);
-        }else listR = clientDao.queryOrgPerson(param);
+        } else listR = clientDao.queryOrgPerson(param);
         for (Map<String, Object> obj : listR) {
             node = new Node();
             node.setId(obj.get("ID").toString());
@@ -228,9 +244,16 @@ public class ClientServiceImp implements ClientService {
      */
     public int updateTaskUser(List<String> ids, String newUserId, String newUserOrganId) {
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("newUserId", newUserId);
+        String roleid = clientDao.queryUserRoleByUserId(Long.valueOf(newUserId));
         param.put("newUserOrganId", newUserOrganId);
+        param.put("newUserId", newUserId);
         param.put("ids", ids);
+        if (StringUtils.equals("3", roleid)) {
+            param.put("newUserOrganId", "");
+            param.put("newUserId", "");
+            param.put("rid", newUserId);
+        }
+
         return clientDao.updateAssign(param);
     }
 
@@ -2194,6 +2217,117 @@ public class ClientServiceImp implements ClientService {
     @Override
     public CodeItemVO findOneCodeType(long codeItemId) {
         return baseCodeItemVODao.selectByPrimaryKey(codeItemId);
+    }
+
+    public String findSourceNameByCode(String code) {
+        return baseCodeItemVODao.findSourceNameByCode(code);
+    }
+
+    /**
+     * 查询超时待外呼客户
+     */
+    public List<Map<String, Object>> queryShortTimeCustomerList(long rid) {
+        List<Map<String, Object>> list = clientDao.queryShortTimeCustomerList(rid);
+        if (list == null) {
+            return new ArrayList<Map<String, Object>>();
+        }
+        return list;
+    }
+
+    /**
+     * 呼叫客户
+     */
+    public String dialout(AuthorUser currenUser, String tel) throws Exception {
+        // 获取用户信息组装参数，调用外呼系统
+        String msg = "";
+        String agentid = userMoorDao.selectUserAgentIdByUserId(currenUser.getUserId());
+        if (StringUtils.isEmpty(agentid)) {
+            msg = "系统没有找到您的坐席号，请联系管理员配置！";
+            return msg;
+        }
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("Action", "Dialout");
+        paraMap.put("Account", "N00000009345");
+        paraMap.put("ActionID", currenUser.getUserId() + "");
+        paraMap.put("Exten", tel);
+        paraMap.put("FromExten", agentid);
+        paraMap.put("PBX", "bj.ali.7.0");
+        paraMap.put("ExtenType", "gateway");
+        String responseStatus = HttpClientUtil.httpGet("http://115.29.175.177/app", paraMap);
+        JSONObject json = JSONObject.fromObject(responseStatus);
+        boolean succeed = json.getBoolean("Succeed");
+        if (!succeed) {
+            String[] errMsg = json.getString("Message").split(" ");
+            int errCode = Integer.valueOf(errMsg[0]).intValue();
+            switch (errCode) {
+                case 400:
+                    msg = "错误的请求，请检查请求传递参数是否正确！";
+                    break;
+                case 401:
+                    msg = "请求账户配置异常，不能使用外呼功能，请稍后再试！";
+                    break;
+                case 403:
+                    msg = "请求账户或验证码无效或过期，请联系管理员！";
+                    break;
+                case 404:
+                    msg = "无法找到坐席" + paraMap.get("FromExten") + "分机号！";
+                    break;
+                case 500:
+                    msg = "外呼系统异常，请联系管理员！";
+                    break;
+                default:
+                    msg = "外呼失败，未知的错误！";
+            }
+        }
+        return msg;
+    }
+
+    @Override
+    public String processToErp(AuthorUser user, ClientVO vo) throws Exception {
+        SysvarVO sysvarVO = sysvarVODao.selectBySysvarCode("erp_url");
+        ErpDataVO dataVo = clientDao.selectErpInfoById(vo.getId());
+        dataVo.setOrderNo(UUID.randomUUID().toString());
+        dataVo.setCreatedTime(new Date());
+        dataVo.setCreatedUserId(user.getUserId());
+        JSONObject param = new JSONObject();
+        param.put("orderNo", dataVo.getOrderNo());
+        param.put("customerName", dataVo.getClientName());
+        param.put("customerTel", dataVo.getClientTel());
+        param.put("storeSpecNo", dataVo.getOrganCode());
+        param.put("channel", dataVo.getSourceName());
+        param.put("orderSource", "201");
+        // param.put("customerIdcardno", "");
+        // param.put("schemeFirstpay", "");
+        // param.put("schemeMonthpay", "");
+        // param.put("schemeTerm", "");
+        // param.put("typeSpecNo", "");
+        // param.put("purchaseAmount", "");
+        // param.put("enteringTime", "");
+        // param.put("recharge_no", "");
+        // param.put("retainage", "");
+        JSONObject resq = null;
+        String msg = "";
+        try {
+            resq = JSONObject.fromObject(HttpClientUtil.httpPostByJson(sysvarVO.getSysvarValue(), param.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "调用erp接口出错！！";
+        }
+        if (org.apache.commons.lang.StringUtils.isNotBlank(msg)) {
+            return msg;
+        } else {
+            if (resq.optBoolean("isSuccess")) {
+                erpDataVODao.insert(dataVo);
+                ClientVO record = new ClientVO();
+                record.setId(vo.getId());
+                record.setToErp("1");
+                clientDao.updateByPrimaryKeySelective(record);
+                return "进件成功";
+            } else {
+                return resq.optString("returnMsg");
+            }
+        }
+
     }
 
 }

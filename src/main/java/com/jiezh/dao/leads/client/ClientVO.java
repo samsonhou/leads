@@ -1,8 +1,10 @@
 package com.jiezh.dao.leads.client;
 
-import com.jiezh.content.base.pub.web.GeneralBean;
 import java.util.Date;
 import java.util.List;
+
+import com.jiezh.content.base.pub.web.GeneralBean;
+
 @SuppressWarnings("rawtypes")
 public class ClientVO extends GeneralBean {
     private long id;
@@ -109,6 +111,39 @@ public class ClientVO extends GeneralBean {
     private List gifts;
 
     private String isAssign;
+
+    // 呼叫结果
+    private String callResult;
+
+    private String getCarEnd;
+
+    private String getCarStart;
+    // 推送ERP
+    private String toErp;
+
+    public String getGetCarEnd() {
+        return getCarEnd;
+    }
+
+    public void setGetCarEnd(String getCarEnd) {
+        this.getCarEnd = getCarEnd;
+    }
+
+    public String getGetCarStart() {
+        return getCarStart;
+    }
+
+    public void setGetCarStart(String getcarStart) {
+        this.getCarStart = getcarStart;
+    }
+
+    public String getCallResult() {
+        return callResult;
+    }
+
+    public void setCallResult(String callResult) {
+        this.callResult = callResult;
+    }
 
     public String getCarno() {
         return carno;
@@ -538,6 +573,14 @@ public class ClientVO extends GeneralBean {
 
     public void setIsAssign(String isAssign) {
         this.isAssign = isAssign;
+    }
+
+    public String getToErp() {
+        return toErp;
+    }
+
+    public void setToErp(String toErp) {
+        this.toErp = toErp;
     }
 
 }

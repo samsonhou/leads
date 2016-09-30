@@ -26,9 +26,9 @@
                                 </div>
                             </div>
 			  	 	 	 	 <div class="form-group ">
-                                <label class="col-sm-2 control-label">填写人</label>
+                                <label class="col-sm-2 control-label">客户经理</label>
                                 <div class="col-sm-4 ">
-                                    <input type="text" name="createdUserName" value="${clientVO.createdUserName!''}" class="form-control">
+                                    <input type="text" name="customerManager" value="${clientVO.customerManager!''}" class="form-control">
                                 </div>
                             </div>
                             
@@ -57,8 +57,9 @@
                                         <th style="text-align: center;">身份证</th>
                                         <th style="text-align: center;">手机</th>
                                         <th style="text-align: center;">城市</th>
-                                        <th style="text-align: center;">填写人姓名</th>
+                                        <th style="text-align: center;">客户经理</th>
                                         <th style="text-align: center;">填写时间</th>
+                                        <th style="text-align: center;">状态</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,8 +70,9 @@
                                         <td>${client.idNo}</td>
                                         <td>${client.tel}</td>
                                         <td>${client.city}</td>
-                                        <td>${client.createdUserName}</td>
+                                        <td>${client.customerManager}</td>
                                         <td>${(client.createdTime?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+                                        <td>${(client.status='1')?string('已分配','未分配')}</td>
                                         
                                     </tr>  
                                     </#list>
@@ -109,11 +111,18 @@
 	                            <div class="form-group ziding-ibox-modal model_alert_1">
 	                            	<label class="col-sm-2 control-label">电话</label>
 	                                <div class="col-sm-4 ">
-	                                	<input type="text" ajaxurl="${contextPath}/leads/jy/checkTel.do" name="tel" id="tel" datatype="m" nullmsg="请填写客户电话！" class="form-control"/>
+	                                	<input type="text" ajaxurl="${contextPath}/leads/jy/checkTel.do" name="tel" id="tel" datatype="m" nullmsg="请填写客户电话！" errormsg="请填写正确的电话号码！" class="form-control"/>
 	                                </div>
 	                            	<label class="col-sm-2 control-label">城市</label>
 	                                <div class="col-sm-4 ">
 	                                	<input type="text" name="city" id="city" class="form-control" datatype="*" nullmsg="请填写城市！" />
+	                                </div>
+	                            </div>
+	                            
+	                            <div class="form-group ziding-ibox-modal model_alert_1">
+	                            	<label class="col-sm-2 control-label">客户经理</label>
+	                                <div class="col-sm-4 ">
+	                                	<input type="text" name="customerManager" maxlength="10" id="customerManager" datatype="*" nullmsg="请填写客户经理！" class="form-control"/>
 	                                </div>
 	                            </div>
 	                              																		
@@ -136,6 +145,10 @@
 			form1.action="${contextPath}/leads/jy/queryList.do";
 			form1.submit();
 		}
+		
+		$(document).ready(function(){
+			jQuery("#pagination").page("form1");
+		});
 		
 		var saveForm=$("#saveform").Validform({
 				showAllError:true,

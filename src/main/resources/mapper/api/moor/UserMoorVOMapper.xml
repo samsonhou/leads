@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.api.moor.UserMoorVODao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.api.moor.UserMoorVO">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+		<result column="AGENT_ID" property="agentId" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="CREATED_USER_ID" property="createdUserId"
+			jdbcType="DECIMAL" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATED_USER_ID" property="updatedUserId"
+			jdbcType="DECIMAL" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, USER_ID, AGENT_ID, CREATED_TIME, CREATED_USER_ID, UPDATED_TIME,
+		UPDATED_USER_ID,
+		REMARK
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from T_USER_MOOR
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_USER_MOOR
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.jiezh.dao.api.moor.UserMoorVO">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			select s_user_moor_id.nextval as id from dual
+		</selectKey>
+		insert into T_USER_MOOR (ID, USER_ID, AGENT_ID,
+		CREATED_TIME, CREATED_USER_ID, UPDATED_TIME,
+		UPDATED_USER_ID, REMARK)
+		values (#{id,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL},
+		#{agentId,jdbcType=VARCHAR},
+		#{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=DECIMAL}, #{updatedTime,jdbcType=TIMESTAMP},
+		#{updatedUserId,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jiezh.dao.api.moor.UserMoorVO">
+		insert into T_USER_MOOR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="userId != null">
+				USER_ID,
+			</if>
+			<if test="agentId != null">
+				AGENT_ID,
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME,
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID,
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME,
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=DECIMAL},
+			</if>
+			<if test="agentId != null">
+				#{agentId,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				#{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				#{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				#{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.api.moor.UserMoorVO">
+		update T_USER_MOOR
+		<set>
+			<if test="userId != null">
+				USER_ID = #{userId,jdbcType=DECIMAL},
+			</if>
+			<if test="agentId != null">
+				AGENT_ID = #{agentId,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.api.moor.UserMoorVO">
+		update T_USER_MOOR
+		set USER_ID = #{userId,jdbcType=DECIMAL},
+		AGENT_ID = #{agentId,jdbcType=VARCHAR},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+		UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+		UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="selectUser" parameterType="map" resultType="com.jiezh.dao.base.user.UserVO">
+		select a.user_code userCode,
+			   a.user_id userId,
+			   a.password password,
+			   a.real_name realName
+		 from t_user a,t_user_moor b
+		where a.user_id = b.user_id
+		<if test="agentId != null">
+			and b.agent_id = #{agentId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectUserAgentIdByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
+		SELECT AGENT_ID FROM T_USER_MOOR WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="selectUserIdByUserName" parameterType="java.lang.String" resultType="java.lang.Long">
+		SELECT U.USER_ID FROM T_USER U WHERE U.USER_NAME=#{userName} 
+	</select>
+	
+	<delete id="deleteAllUserMoor">
+		DELETE FROM T_USER_MOOR
+	</delete>
+	
+	<insert id="insertUserMoorList" parameterType="java.util.List">		
+		INSERT INTO T_USER_MOOR(
+			ID, USER_ID, AGENT_ID, UPDATED_TIME
+		) 
+		<foreach collection="list" item="item" index="index" separator="union all" >  
+	        (SELECT 
+	        	#{item.id:DECIMAL},
+	        	#{item.userId:VARCHAR},
+	        	#{item.agentId:DECIMAL},
+	        	SYSDATE
+	        FROM DUAL)  
+	    </foreach> 
+	</insert>
+	
+	<insert id="recordLog2DB" parameterType="java.util.Map">
+		INSERT INTO T_BATCH_LOG(
+			ID,BAT_NAME,BAT_STATUS,REMARK,CREATE_DATE
+		) VALUES (
+			S_BATCH_LOG.NEXTVAL,#{name:VARCHAR},#{flag:VARCHAR},#{msg:VARCHAR},SYSDATE
+		)
+	</insert>
+	
+</mapper>

@@ -3,10 +3,10 @@
 	<head>
 		<#include "/pub/message.ftl"/>
 			<#include "/pub/header_res.ftl"/>
-			<#include "/pub/header_image_viewer.ftl"/>
 				<link href="${contextPath}/res/pub/css/Pager.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
 				<link href="${contextPath}/res/pub/css/plugins/iCheck/custom.css" rel="stylesheet">
+				<link href="${contextPath}/res/pub/plugins/imageview/viewer.min.css" rel="stylesheet">
 
 				<style>
 					div.content_wrap {width: 600px;height:380px;}
@@ -120,7 +120,7 @@
 					<script src="${contextPath}/res/pub/js/jquery.ztree.core-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.ztree.excheck-3.5.js" type="text/javascript"></script>
 					<script src="${contextPath}/res/pub/js/jquery.pager.js" type="text/javascript"></script>
-					<script src="${contextPath}/res/pub/css/plugins/imageview/dist/viewer.js" type="text/javascript"></script>
+					<script src="${contextPath}/res/pub/plugins/imageview/viewer.min.js" type="text/javascript"></script>
 					<script type="text/javascript">
 
 						function onClick(e, treeId, treeNode) {

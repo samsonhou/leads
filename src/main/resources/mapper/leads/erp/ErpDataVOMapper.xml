@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.erp.ErpDataVODao" >
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.leads.erp.ErpDataVO" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CLIENT_ID" property="clientId" jdbcType="DECIMAL" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="CLIENT_NAME" property="clientName" jdbcType="VARCHAR" />
+    <result column="CLIENT_TEL" property="clientTel" jdbcType="VARCHAR" />
+    <result column="ORGAN_CODE" property="organCode" jdbcType="VARCHAR" />
+    <result column="SOURCE_CODE" property="sourceCode" jdbcType="VARCHAR" />
+    <result column="SOURCE_NAME" property="sourceName" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_USER_ID" property="createdUserId" jdbcType="DECIMAL" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_USER_ID" property="updatedUserId" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CLIENT_ID, ORDER_NO, CLIENT_NAME, CLIENT_TEL, ORGAN_CODE, SOURCE_CODE, CREATED_TIME, 
+    CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from LM_DATA_ERP
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from LM_DATA_ERP
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.leads.erp.ErpDataVO" >
+  	<selectKey keyProperty="id" order="BEFORE" resultType="long">
+  		select s_data_erp_id.nextval as id from dual
+  	</selectKey>
+    insert into LM_DATA_ERP (ID, CLIENT_ID, ORDER_NO, 
+      CLIENT_NAME, CLIENT_TEL, ORGAN_CODE, 
+      SOURCE_CODE, CREATED_TIME, CREATED_USER_ID, 
+      UPDATED_TIME, UPDATED_USER_ID, REMARK,SOURCE_NAME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{clientId,jdbcType=DECIMAL}, #{orderNo,jdbcType=VARCHAR}, 
+      #{clientName,jdbcType=VARCHAR}, #{clientTel,jdbcType=VARCHAR}, #{organCode,jdbcType=VARCHAR}, 
+      #{sourceCode,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=DECIMAL}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{sourceName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.leads.erp.ErpDataVO" >
+    insert into LM_DATA_ERP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="clientId != null" >
+        CLIENT_ID,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+      <if test="clientName != null" >
+        CLIENT_NAME,
+      </if>
+      <if test="clientTel != null" >
+        CLIENT_TEL,
+      </if>
+      <if test="organCode != null" >
+        ORGAN_CODE,
+      </if>
+      <if test="sourceCode != null" >
+        SOURCE_CODE,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID,
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME,
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="clientId != null" >
+        #{clientId,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="clientName != null" >
+        #{clientName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientTel != null" >
+        #{clientTel,jdbcType=VARCHAR},
+      </if>
+      <if test="organCode != null" >
+        #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceCode != null" >
+        #{sourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.leads.erp.ErpDataVO" >
+    update LM_DATA_ERP
+    <set >
+      <if test="clientId != null" >
+        CLIENT_ID = #{clientId,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="clientName != null" >
+        CLIENT_NAME = #{clientName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientTel != null" >
+        CLIENT_TEL = #{clientTel,jdbcType=VARCHAR},
+      </if>
+      <if test="organCode != null" >
+        ORGAN_CODE = #{organCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceCode != null" >
+        SOURCE_CODE = #{sourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.leads.erp.ErpDataVO" >
+    update LM_DATA_ERP
+    set CLIENT_ID = #{clientId,jdbcType=DECIMAL},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      CLIENT_NAME = #{clientName,jdbcType=VARCHAR},
+      CLIENT_TEL = #{clientTel,jdbcType=VARCHAR},
+      ORGAN_CODE = #{organCode,jdbcType=VARCHAR},
+      SOURCE_CODE = #{sourceCode,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

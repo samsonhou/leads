@@ -244,49 +244,6 @@
 			openNewTab("${contextPath}/leads/mileage/mileageDetail.do?"+parm,"满意度详情");
 		}
 		
-		
-
-		function showMenu() {
-			var isnew = jQuery("#isnew").val();
-			if(isnew=="1"){
-				return;
-			}
-			var cityObj = jQuery("#sidName");
-			var cityOffset = jQuery("#sidName").offset();
-			jQuery("#menuContent").css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
-			jQuery("body").bind("mousedown", onBodyDown);
-		}
-		
-		function hideMenu() {
-			jQuery("#menuContent").fadeOut("fast");
-			jQuery("body").unbind("mousedown", onBodyDown);
-		}
-		
-		function onBodyDown(event) {
-			if (!(event.target.id == "sidName" || event.target.id == "menuContent" || jQuery(event.target).parents("#menuContent").length>0)) {
-				hideMenu();
-			}
-		}
-		
-		var setting = {
-			check: {
-				enable: true,
-				chkStyle: "radio",
-				radioType: "all"
-			},
-			view: {
-				dblClickExpand: false
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				onClick: onClick,
-				onCheck: onCheck
-			}
-		};
 	</script>
 	</body>
 </html>

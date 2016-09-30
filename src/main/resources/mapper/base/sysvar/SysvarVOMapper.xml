@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezh.dao.base.sysvar.SysvarVODao">
+  <resultMap id="BaseResultMap" type="com.jiezh.dao.base.sysvar.SysvarVO">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="SYSVAR_CODE" jdbcType="VARCHAR" property="sysvarCode" />
+    <result column="SYSVAR_NAME" jdbcType="VARCHAR" property="sysvarName" />
+    <result column="SYSVAR_VALUE" jdbcType="VARCHAR" property="sysvarValue" />
+    <result column="SYSVAR_TYPE" jdbcType="VARCHAR" property="sysvarType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SYSVAR_CODE, SYSVAR_NAME, SYSVAR_VALUE, SYSVAR_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYSVAR
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from T_SYSVAR
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jiezh.dao.base.sysvar.SysvarVO">
+    insert into T_SYSVAR (ID, SYSVAR_CODE, SYSVAR_NAME, 
+      SYSVAR_VALUE, SYSVAR_TYPE)
+    values (#{id,jdbcType=DECIMAL}, #{sysvarCode,jdbcType=VARCHAR}, #{sysvarName,jdbcType=VARCHAR}, 
+      #{sysvarValue,jdbcType=VARCHAR}, #{sysvarType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiezh.dao.base.sysvar.SysvarVO">
+    insert into T_SYSVAR
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="sysvarCode != null">
+        SYSVAR_CODE,
+      </if>
+      <if test="sysvarName != null">
+        SYSVAR_NAME,
+      </if>
+      <if test="sysvarValue != null">
+        SYSVAR_VALUE,
+      </if>
+      <if test="sysvarType != null">
+        SYSVAR_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="sysvarCode != null">
+        #{sysvarCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarName != null">
+        #{sysvarName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarValue != null">
+        #{sysvarValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarType != null">
+        #{sysvarType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.sysvar.SysvarVO">
+    update T_SYSVAR
+    <set>
+      <if test="sysvarCode != null">
+        SYSVAR_CODE = #{sysvarCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarName != null">
+        SYSVAR_NAME = #{sysvarName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarValue != null">
+        SYSVAR_VALUE = #{sysvarValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sysvarType != null">
+        SYSVAR_TYPE = #{sysvarType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiezh.dao.base.sysvar.SysvarVO">
+    update T_SYSVAR
+    set SYSVAR_CODE = #{sysvarCode,jdbcType=VARCHAR},
+      SYSVAR_NAME = #{sysvarName,jdbcType=VARCHAR},
+      SYSVAR_VALUE = #{sysvarValue,jdbcType=VARCHAR},
+      SYSVAR_TYPE = #{sysvarType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectBySysvarCode" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+  	 from t_sysvar t 
+  	 <where>
+  	 	<if test="sysvarCode != null">
+  	 		and t.sysvar_code = #{sysvarCode,jdbcType=VARCHAR}
+  	 	</if>
+  	 </where>
+  </select>
+</mapper>

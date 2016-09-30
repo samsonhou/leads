@@ -43,11 +43,13 @@ public class WaitingAssignController extends WebAction {
         return mv;
     }
 
-
     @RequestMapping("queryList")
     public ModelAndView queryList() throws Exception {
         ModelAndView mv = new ModelAndView("leads/assign/waitinglist");
         ClientImportVO vo = (ClientImportVO) getBean(ClientImportVO.class);
+        String fromType = request.getParameter("code");
+        vo.setFromType(fromType);
+        
         int currenPage = 1;
         if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
@@ -104,12 +106,22 @@ public class WaitingAssignController extends WebAction {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             CommonsMultipartFile file = (CommonsMultipartFile) multipartRequest.getFile("uploadFile");
             if (!file.isEmpty()) {
-                Map<String, Object> map = waitingAssignService.importExcel(file.getInputStream(), file.getFileItem().getName());
-                mav.addObject("msg", map.get("msg"));
-                mav.addObject("page", map.get("page"));
+                Map<String, Object> map = waitingAssignService.importExcel(file.getInputStream(), file.getFileItem().getName(), getUser());
+                byte[] errorMsg = (byte[]) map.get("errorMsg");
+                if (errorMsg == null) {
+                    mav.addObject("msg", "导入成功！");
+                    mav.addObject("page", map.get("page"));
+                } else {
+                    response.reset();
+                    response.setContentType("application/vnd.ms-excel;charset=utf-8");
+                    response.setHeader("Content-Disposition", "attachment;filename=" + new String(("导入错误信息" + ".txt").getBytes(), "iso-8859-1"));
+                    OutputStream outputStream = response.getOutputStream();
+                    outputStream.write(errorMsg);
+                    outputStream.close();
+                }
             }
         } catch (Exception e) {
-            mav.addObject("msg", "获取导入文件流出错！");
+            mav.addObject("msg", "导入失败！获取导入文件内容出错！");
         }
         return mav;
     }

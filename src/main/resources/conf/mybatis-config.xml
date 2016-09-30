@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<setting name="cacheEnabled" value="true" />
 	</settings>
 	<plugins>
-		<plugin interceptor="com.github.pagehelper.PageHelper" >
+		<plugin interceptor="com.github.pagehelper.PageHelper">
 			<property name="dialect" value="oracle" />
 			<property name="rowBoundsWithCount" value="true" />
 			<property name="reasonable" value="true" />

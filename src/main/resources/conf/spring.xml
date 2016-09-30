@@ -16,7 +16,7 @@
     
     <bean id="exceptionHandler" class="com.jiezh.content.base.pub.exception.PlatformExceptionHandler"/>
     
-    <bean id="md5PasswordEncode" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+    <bean id="md5PasswordEncode" class="org.springframework.security.web.authentication.MyMd5PasswordEncoder" />
 	
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">

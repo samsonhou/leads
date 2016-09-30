@@ -98,6 +98,8 @@
                                         	<a href="#" onclick="updateClient('${client.ID}');">修改</a>
                                         	&nbsp;
                                         	<a href="#" onclick="hastenTask('${client.ID}');">催促</a>
+                                        	&nbsp;
+                                        	<a href="#" onclick="showMsgModal('${client.ID}','${client.TEL}')">发送短信</a>
                                         </td>
                                         <td>${client.NAME}</td>
                                         <td>${client.BIG_PID} - ${client.SMALL_PID}</td>
@@ -118,6 +120,44 @@
 			<@pages url="${contextPath}/leads/client/queryList.do" pageCount="${page.pages}" currentPage="${page.pageNum}" />
 		</div>
 	</form>
+	
+	<div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						编辑短信
+					</h4>
+				</div>
+				<form name="sendForm" id="sendForm" class="form-search">
+					<input type="hidden" id="clientId" name="clientId" value="" />
+					<div class="modal-body" style="height:270px;">
+						<div class="ibox-content" style="padding:0 0 0 0">
+                            <div class="form-group ziding-ibox-modal">
+                                <label class="col-sm-2 control-label">接收号码</label>
+                                <div class="col-sm-10">
+                                 <input type="text" name="receiveTel" id="receiveTel" readonly value="${receiveTel}" class="form-control" >
+                                </div>
+                            </div>	
+                            <div class="form-group ziding-ibox-modal">
+                                <label class="col-sm-2 control-label" required>短信内容</label>
+                                <div class="col-sm-10">
+                                 <textarea rows="7" id="msgContent" name="msgContent" class="form-control" value="${msgContent}" placeholder="编辑短信内容" datatype="*" nullmsg="请填写短信内容！"></textarea>
+                                </div>
+                            </div>	
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" class="btn btn-primary" onclick="sendMsg()">发送</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<#include "/pub/message.ftl"/>
 	<#include "/pub/footer_res_detail.ftl"/>
 	<script type="text/javascript">
@@ -176,6 +216,47 @@
 				}
 			});	
 		});
+		
+		//短信编辑模态窗口弹出
+		function showMsgModal(id,tel){
+			var msgModal = $('#msgModal');
+			$('#receiveTel').val(tel);
+			$('#clientId').val(id);
+			msgModal.modal('show');
+		}
+		
+		//发送短信
+		function sendMsg(){
+			var id = $('#clientId').val();
+			var tel = $('#receiveTel').val();
+			var msg = $('#msgContent').val();
+			if(msg==''){
+				layer.alert("请填写短信内容！");
+				return;
+			}
+			layer.confirm('确定发送短信?', {icon: 3, title:'提示'}, function(index){
+				$('#msgModal').modal('hide');
+				var load = layer.load();
+    			layer.close(index);
+    			
+    			$.ajax({  
+	            	type: "POST",  
+	            	url: "${contextPath}/base/csms/sendMsg.do",  
+	            	data: {
+	            		id:id,
+	            		tel:tel, 
+	            		msg:msg
+	            	},
+		            success: function(resp){
+		            	layer.close(load);
+		            	layer.alert(resp.msg,function(index){
+		            		$('#but').click();
+		            		layer.close(index);
+		            	});
+		            }
+	            }); 
+			});
+		}
 	</script>
 	</body>
 </html>

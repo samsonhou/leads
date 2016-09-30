@@ -23,7 +23,10 @@
                                 <div class="col-sm-4 ">
                                     <input type="text" name="clientName" id="clientName" datatype="*" maxlength="10" nullmsg="请输入客户姓名" value="${clientVO.clientName!''}" class="form-control">
                                 </div>
-                                <label class="col-sm-2 control-label  required" >手机<font color="#ff0000">*</font></label>
+                                <label class="col-sm-2 control-label  required" style="vertical-align:middle;">
+                                	<input id="dialout" type="button" value="外呼" class="btn btn-sm btn-primary zd-btn-pd1" >&nbsp;手机
+                                	<font color="#ff0000">*</font>
+                                </label>
                                 <div class="col-sm-4">
                                     <input type="text" name="tel" id="tel" onblur="codeCheckTel(this)" datatype="m" errormsg="请正确输入手机号" maxlength="11" value="${clientVO.tel!''}" class="form-control" >
                                     <input	name="telPre" id="telPre" type="hidden" value="${clientVO.tel!''}"/>
@@ -32,18 +35,9 @@
                             
                              <div class="form-group ">
                                 <label class="col-sm-2 control-label  required">来源  <font color="#ff0000">*</font></label>
-                                 <div class="col-sm-2">
-                                    <@select type='0' codeType="1044" defValue="${clientVO.fromtypeBig}" fieldId="fromtypeBig" fieldName="fromtypeBig" props=" datatype='*' nullmsg='请选择线索来源' class='form-control' " />
-                                </div>
-                                <div class="col-sm-2">
-                                    <select style='display:none;'  class='form-control fromtype'"></select>
-                                    <div class="fromtype">
-                                    <div id="magicsuggest_1022"></div>
-                                	<input type="hidden" id="fromtype" name="fromtype" value="${clientVO.fromtype}" class="form-control">
-                                	</div>
-                                    <input id="channel" name="channel" value="${clientVO.channel}" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
-                                    <@select type='1' codeType="1046" defValue="${clientVO.fromtype}" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
-                                </div>
+                                <div class="select_org col-sm-4">
+                                <@fromtype defValue="${clientVO.fromtype}" props=" class='form-control' datatype='*' "/>
+								</div>
                                 <label class="col-sm-2 control-label">手机1</label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="tel1" id="tel1" maxlength="11"  value="${clientVO.tel1!''}" datatype="mOe" onblur="codeCheckTel(this)" class="form-control">
@@ -97,10 +91,12 @@
                             <label class="col-sm-2 control-label">是否已结算</label>
                                 <div class="col-sm-4 ">
                                    <@select type='0' codeType="1000" defValue="${clientVO.isCharged!''}" fieldId="isCharged" fieldName="isCharged" props="class='form-control' " />
-
+                                </div>
+                            <label class="col-sm-2 control-label">呼叫状态</label>
+                                <div class="col-sm-4 ">
+                                   <@select type='0' codeType="1055" defValue="${clientVO.callResult!''}" fieldId="callResult" fieldName="callResult" props="datatype='*' nullmsg='请选择沟通结果' class='form-control' " />
                                 </div>
                             </div>
-                            
 		                 
 		                 </div>
 		            </div>
@@ -153,7 +149,7 @@
                                 <label class="col-sm-2 control-label">客户经理</label>
                                 <div class="col-sm-1"><input type="text" id= "filName"  size="6" onblur="setOpen();" placeholder="定位公司" class="form-control"></div> 
                                 <div class="col-sm-3">
-                                   <input id="sidName" name ="sidName" type="text" value="${dealPerson!''}" datatype="*" nullmsg="请选择客户经理" class='form-control' readonly  placeholder="请选择客户经理"  onclick="showMenu();" />
+                                   <input id="sidName" name ="sidName" type="text" value="${dealPerson!''}" class='form-control' readonly  placeholder="请选择客户经理"  onclick="showMenu();" />
                                    <input id="sid" name ="sid" type="hidden"  value="${clientVO.sid!''}" />                                
                                    <input id="companyid" name ="companyid" type="hidden"  value="${clientVO.companyid!''}"  />
                                    
@@ -187,144 +183,150 @@
 	<#include "/pub/footer_res_detail.ftl"/>
 	<script src="${contextPath}/res/pub/js/jquery.ztree.core-3.5.js" type="text/javascript"></script>
     <script src="${contextPath}/res/pub/js/jquery.ztree.excheck-3.5.js" type="text/javascript"></script>
+    <script src="${contextPath}/res/pub/js/public/fromtypeSelect.js" type="text/javascript"></script>
+    <script src="${contextPath}/res/pub/js/jquery.ztree.exhide.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	var myData_1022=<@queryselect type="1" codeType="1022" />
- //读取下拉框的 值，健 
- 		function getmagicSuggest_1022(){
- 			ms1 = $('#magicsuggest_1022').magicSuggest({
- 		        width: '80%',//宽度
- 		        placeholder: '请选择',
- 		        style:'float:left;width:100%;',
- 		        allowFreeEntries: false,   //这个参数很重要，如果你不需要用户自已创建标签，则用这个
- 		        data: myData_1022.data,
- 		        selectionStacked: true ,
- 		        maxSelectionRenderer: function(data){ return ""},
- 		        noSuggestionText: '',
- 		        maxSelection:1 //单选按照 0取值
- 		        
- 		    });
- 		    $(ms1).on('selectionchange', function(e, cb, s){
- 		     var object =cb.getSelection()[0];  
- 		    console.log(object);
- 		    if(undefined==object){$("#fromtype").val("");}else{
- 		     $("#fromtype").val(object.id);}
- 		    });
- 		    getStoredCallback_1022(ms1);
- 		}
- 		//获取查询条件回显
- 	function getStoredCallback_1022(ms1){ 
- 	  var bl = $('#fromtype').val();
- 	  if(bl == ''||0==bl) return;
- 	  var array = bl.split(","); 
- 	  //设置延迟，否则取不到数据
- 	  setTimeout(function (){
-     	  ms1.setValue(array);
-     	  }, 200);
- 	}
- 	
+	
+ 	// FORM表单校验
 	jQuery(document).ready(function() {
-		getmagicSuggest_1022();
 		$("#form1").Validform({tiptype : 1,
-		ignoreHidden : false,
-		dragonfly : false,
-		tipSweep : false,
-		showAllError : true,
-		postonce : true,
-		ajaxPost : false,
-		datatype:{mOe:/^$|^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/},
-		beforeSubmit:function(cur){
-			if($('#fromtypeBig').val() == '1' && $('input[id="fromtype"]').val()=='0'){
-				layer.alert("请选择来源！");
-				return false;
-			}else{
-			    return true;
+			ignoreHidden : false,
+			dragonfly : false,
+			tipSweep : false,
+			showAllError : true,
+			postonce : true,
+			ajaxPost : false,
+			datatype:{mOe:/^$|^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/},
+			beforeSubmit:function(cur){
+				var flag = true;
+				$(".select_org select").each(function(){
+					if($(this).find("option:selected").text()=="请选择"){
+						flag = false;
+						return;//返回匿名函数
+					}
+				});
+				 if(!flag){
+				 	layer.alert("请选择来源");
+				  	return false;
+				 }
+				 
+				if($('#callResult').val() == '3' && $('#sidName').val()==''){
+					layer.alert("请选择客户经理");
+					return false;
+				}
+				return true;
 			}
-		}
 		});
 	});
-		
-		$("#fromtypeBig option").each(function(i,o){
-					if($(this).prop("selected")){
-						$(".fromtype").hide();
-						if(i!=0){
-							$(".fromtype").eq(i).removeAttr("disabled");
-							$(".fromtype").eq(i).show();
-						}
-					}else{
-						$(".fromtype").eq(i).attr("disabled",true);
-					}
-				});
-		
-		$("#fromtypeBig").on("change",function(){
-				$("#fromtypeBig option").each(function(i,o){
-					if($(this).prop("selected")){
-						$(".fromtype").hide();
-						if(i!=0){
-							if(i==1){
-								$(".fromtype").eq(i).removeAttr("disabled");
-								$(".fromtype").eq(i).find("#fromtype").removeAttr("disabled");
-								$(".fromtype").eq(i).find("#fromtype").attr("datatype","*").attr("nullmsg","请选择线索类型");
-							}else{
-								$(".fromtype").eq(i).attr("datatype","*").attr("nullmsg","请选择线索类型");
-								$(".fromtype").eq(i).removeAttr("disabled");
-							}
-							
-							$(".fromtype").eq(i).show();
-						}
-					}else{
-						if(i==1){
-							$(".fromtype").eq(i).find("#fromtype").attr("disabled",true);
-							$(".fromtype").eq(i).find("#fromtype").removeAttr("datatype").removeAttr("nullmsg");
-						}else{
-							$(".fromtype").eq(i).removeAttr("datatype").removeAttr("nullmsg");
-							$(".fromtype").eq(i).attr("disabled",true);
-						}
-						
-					}
-				});
-			});
-		
+	
+	// 电话外呼
+	$("#dialout").click(function(){
+		var tel = $("#tel").val();
+		if($.trim(tel)==""){
+			layer.alert("请填写手机号！");
+			return false;
+		}else{
+			var reg = /^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+			if(!reg.test(tel)){
+				layer.alert("请填写正确的手机号码！");
+				return false;
+			}
+		}
+		var load = layer.load();
+		$.ajax({
+			type: "POST",
+			url: "${contextPath}/leads/client/dialout.do?tel="+tel,
+			success: function(resp){
+				layer.close(load);
+				if(resp.length>0){
+					layer.alert(resp);
+				}else{
+					layer.alert("电话呼叫中...");
+				}
+			}
+		});
+	});
+	
+	// 级联选择	
+	jQuery("#bigPid").on("change", function(){
+		jQuery.ajax({
+			type:"post",
+			url:"${contextPath}/leads/client/querySub.do?bigPid="+jQuery("#bigPid").val(),
+			data:"",
+			async:true,
+			dataType:"text",
+			success:function(data){			
+				var $samllPidDiv=jQuery("#samllPidDiv");
+				var v=$samllPidDiv.attr("data-defvalue");
+				if(v=='-1' || v=='0'){
+					v='';
+				}
+				$samllPidDiv.empty().html(data).find("select").attr("datatype","*").addClass("form-control").val(v);
+				$samllPidDiv.attr("data-defvalue","");	
+			}
+		});	
+	});
 
 		
-		jQuery("#bigPid").on("change", function(){
-			jQuery.ajax({
-				type:"post",
-				url:"${contextPath}/leads/client/querySub.do?bigPid="+jQuery("#bigPid").val(),
-				data:"",
-				async:true,
-				dataType:"text",
-				success:function(data){			
-					var $samllPidDiv=jQuery("#samllPidDiv");
-					var v=$samllPidDiv.attr("data-defvalue");
-					if(v=='-1' || v=='0'){
-						v='';
-					}
-					$samllPidDiv.empty().html(data).find("select").attr("datatype","*").addClass("form-control").val(v);
-					$samllPidDiv.attr("data-defvalue","");	
-				}
-			});	
-		});
-		
-		function filter(node) {
-			if(jQuery("#filName").val()=="")
-				return false;
-		    return node.name.indexOf(jQuery("#filName").val())>-1;
+	// 动态展示树节点
+	function setOpen(){
+		var zTree = jQuery.fn.zTree.getZTreeObj("treeDemo");
+		var showNodes = zTree.getNodesByFilter(filter);
+		for(var i = 0; i < showNodes.length; i++){
+			var node = showNodes[i];
+			zTree.showNode(node);
+			showParentNode(zTree, node);
 		}
-		function setOpen(){
-			var zTree = jQuery.fn.zTree.getZTreeObj("treeDemo");
+		var rootNode = zTree.getNodeByParam("name","总公司",null);
+		zTree.showNode(rootNode);
+		if($("#filName").val()==""){
+			var childNodes = zTree.getNodesByParam("isHidden",true,rootNode);
+			zTree.showNodes(childNodes);
 			zTree.expandAll(false);
-			
-			//总公司一层全部打开。
-			var nodes = zTree.getNodes();
-			//nodes[0].children
-			zTree.expandNode(nodes[0], true, false, true);
-			
-			
-			//var node = zTree.getNodeByParam("name", "北京分公司", null);alert(node);
-			var node = zTree.getNodesByFilter(filter, true); // 仅查找一个节点
-			zTree.expandNode(node, true, true, true);
-			showMenu();
+		}else{
+			hideRootChildrenLeafNode(zTree,rootNode);
+			zTree.expandAll(true);
 		}
+		showMenu();
+	}
+	
+	// ZTREE过滤器	
+	function filter(node){
+		var zTree = jQuery.fn.zTree.getZTreeObj("treeDemo");
+		var filterReg = jQuery("#filName").val();
+		if(filterReg == ""){
+			var allHiddenNodes = zTree.getNodesByParam("isHidden",true,null);
+			zTree.showNodes(allHiddenNodes);
+			return false;
+		}else{
+			if(node.name.indexOf(filterReg)>-1){
+				return true;
+			}else{
+				if(node.isParent){
+					zTree.hideNode(node);
+				}
+			};
+		}
+	}
+	
+	// 显示上级节点	
+	function showParentNode(zTree, node){
+		if(node!=null && node.getParentNode()!=null){
+			zTree.showNode(node.getParentNode());
+			showParentNode(zTree, node.getParentNode());
+		}
+	}
+	
+	//隐藏根节点下的叶子节点
+	function hideRootChildrenLeafNode(zTree, node){
+		var nodes = node.children;
+		for(var i = 0; i<nodes.length; i++){
+			if(nodes[i].isParent == false) {
+				zTree.hideNode(nodes[i]);
+			}
+		}
+	}
+		
 			var setting = {
 				check: {
 					enable: true,
@@ -344,6 +346,8 @@
 					onCheck: onCheck
 				}
 			};
+			
+		
 			
 			jQuery(function() {
 				var zNodes;

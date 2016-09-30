@@ -144,6 +144,8 @@ public class VistController extends WebAction {
     public Map<String, String> saveClientAndTrace() throws Exception {
         AuthorUser user = getUser();
         ClientVO clientVo = (ClientVO) this.getBean(ClientVO.class);
+        String fromtype = request.getParameter("code");
+        clientVo.setFromtype(Integer.valueOf(fromtype));
         ClientTraceVO clientTraceVo = (ClientTraceVO) this.getBean(ClientTraceVO.class);
         String msg = clientService.processClientAndTrace(user, clientVo, clientTraceVo);
         Map<String, String> map = new HashMap<>();
@@ -180,6 +182,24 @@ public class VistController extends WebAction {
             mv.addObject("flag", "Y");
         }
 
+        return mv;
+    }
+
+    /**
+     * 进件
+     * 
+     * @throws Exception
+     */
+    @RequestMapping(value = "toERP")
+    public ModelAndView toERP() throws Exception {
+        ModelAndView mv = new ModelAndView("leads/vist/addTrace");
+        AuthorUser user = getUser();
+        ClientVO vo = (ClientVO) getBean(ClientVO.class);
+        
+        String msg = clientService.processToErp(user, vo);
+
+        mv.addObject("comform", "0");
+        mv.addObject("message", msg);
         return mv;
     }
 

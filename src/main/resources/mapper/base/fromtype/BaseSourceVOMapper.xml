@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.base.fromtype.BaseSourceVODao">
+	<resultMap id="BaseResultMap" type="com.jiezh.dao.base.fromtype.BaseSourceVO">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PID" property="pid" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CODE_LEVEL" property="codeLevel" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="CREATED_USER_ID" property="createdUserId"
+			jdbcType="DECIMAL" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATED_USER_ID" property="updatedUserId"
+			jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, PID, CODE, NAME, CODE_LEVEL, STATUS, CREATED_TIME, CREATED_USER_ID,
+		UPDATED_TIME,
+		UPDATED_USER_ID
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from T_BASE_SOURCE
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_BASE_SOURCE
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.jiezh.dao.base.fromtype.BaseSourceVO">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			select s_base_source_id.nextval as id from dual
+		</selectKey>
+		insert into T_BASE_SOURCE (ID, PID, CODE,
+		NAME, CODE_LEVEL, STATUS,
+		CREATED_TIME, CREATED_USER_ID, UPDATED_TIME,
+		UPDATED_USER_ID)
+		select #{id,jdbcType=DECIMAL}, #{pid,jdbcType=DECIMAL},
+		(select nvl(max(a.code)+1,#{pid,jdbcType=VARCHAR}||'000') from t_base_source a where a.pid = #{pid,jdbcType=VARCHAR} ),
+		#{name,jdbcType=VARCHAR}, (select b.code_level+1 from t_base_source b where b.code = #{pid,jdbcType=VARCHAR} ), #{status,jdbcType=VARCHAR},
+		#{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=DECIMAL},
+		#{updatedTime,jdbcType=TIMESTAMP},
+		#{updatedUserId,jdbcType=DECIMAL} from dual
+	</insert>
+	<insert id="insertSelective" parameterType="com.jiezh.dao.base.fromtype.BaseSourceVO">
+		insert into T_BASE_SOURCE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="pid != null">
+				PID,
+			</if>
+			<if test="code != null">
+				CODE,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="codeLevel != null">
+				CODE_LEVEL,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME,
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID,
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME,
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="pid != null">
+				#{pid,jdbcType=DECIMAL},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="codeLevel != null">
+				#{codeLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				#{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				#{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				#{updatedUserId,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jiezh.dao.base.fromtype.BaseSourceVO">
+		update T_BASE_SOURCE
+		<set>
+			<if test="pid != null">
+				PID = #{pid,jdbcType=DECIMAL},
+			</if>
+			<if test="code != null">
+				CODE = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="codeLevel != null">
+				CODE_LEVEL = #{codeLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdUserId != null">
+				CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+			</if>
+			<if test="updatedTime != null">
+				UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedUserId != null">
+				UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jiezh.dao.base.fromtype.BaseSourceVO">
+		update T_BASE_SOURCE
+		set PID = #{pid,jdbcType=DECIMAL},
+		CODE = #{code,jdbcType=VARCHAR},
+		NAME = #{name,jdbcType=VARCHAR},
+		CODE_LEVEL = #{codeLevel,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=VARCHAR},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		CREATED_USER_ID = #{createdUserId,jdbcType=DECIMAL},
+		UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+		UPDATED_USER_ID = #{updatedUserId,jdbcType=DECIMAL}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<select id="selectVoByMap" parameterType="map" resultType="map">
+		select t.code CODE,t.name NAME,t.code_level CODELEVEL from t_base_source t
+		<where>
+			<if test="pid != null">
+				and t.pid = #{pid,jdbcType=VARCHAR}
+			</if>
+			<if test="level != null">
+			    and t.code_level = #{level,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectListByVo" parameterType="com.jiezh.dao.base.fromtype.BaseSourceVO" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_base_source t
+		<where>
+			<if test="code != null">
+				and t.code like #{code,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="status != null">
+				and t.status = #{status,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

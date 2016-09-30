@@ -75,9 +75,10 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
             clientVO.setTel(vo.getTel());
             clientVO.setRid(Integer.valueOf(param.get("rid").toString()));
             clientVO.setSex("1");
-	    clientVO.setPersonid(vo.getIdNo());
-	    
-            clientVO.setQdate(vo.getCreatedTime());
+            clientVO.setPersonid(vo.getIdNo());
+            clientVO.setTitle(vo.getCouponeCode());
+
+            clientVO.setQdate(new Date());
             clientVO.setAllotdate(new Date());
             clientVO.setCompanyid(param.get("organId").toString());
             if (!StringUtils.isBlank(vo.getFromTypeBig())) {
@@ -85,7 +86,7 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
                 if (vo.getFromTypeBig().equals("2")) {
                     clientVO.setChannel(vo.getChannel());
                 } else {
-                    clientVO.setFromtype(vo.getFromType() == null ? 0 : vo.getFromType().intValue());
+                    clientVO.setFromtype(vo.getFromType() == null ? 0 : Integer.valueOf(vo.getFromType()));
                 }
             }
             clientDao.insert(clientVO);
@@ -103,7 +104,7 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
     /**
      * 线索导入
      */
-    public Map<String, Object> importExcel(InputStream in, String fileName) {
+    public Map<String, Object> importExcel(InputStream in, String fileName, AuthorUser currenUser) throws Exception {
         Map<String, Object> dataMap = new HashMap<String, Object>();
         try {
             Map<String, Object> paraMap = new HashMap<String, Object>();
@@ -117,19 +118,20 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
             if (dataList == null || dataList.size() == 0) {
                 throw new Exception("没有获取到有效的导入数据！");
             }
-            saveImportDatas(dataList);
+            dataMap.put("errorMsg", saveImportDatas(dataList, currenUser));
             dataMap.put("page", getPageList(1, new ClientImportVO()));
-            dataMap.put("msg", "导入成功！");
         } catch (Exception e) {
             dataMap.put("msg", e.getMessage());
             log.error(e.getMessage(), e);
+            throw e;
         }
         return dataMap;
     }
 
     // 处理导入数据，保存到数据库
-    public void saveImportDatas(List<List<Object>> rowList) throws Exception {
+    public byte[] saveImportDatas(List<List<Object>> rowList, AuthorUser currenUser) throws Exception {
         try {
+            StringBuilder errorMsg = new StringBuilder();
             List<ClientImportVO> voList = new ArrayList<ClientImportVO>();
             Set<String> telSet = new HashSet<String>();
             for (int x = 0; x < rowList.size(); x++) {
@@ -139,66 +141,58 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
 
                 String clientName = (String) cellList.get(0);
                 if (StringUtils.isBlank(clientName)) {
-                    throw new Exception("第" + (x + 2) + "行数据的客户姓名不能为空！");
+                    errorMsg.append("-第" + (x + 2) + "行数据的客户姓名不能为空！\r\n");
+                } else {
+                    importVO.setClientName(clientName);
                 }
-                importVO.setClientName(clientName);
 
                 String tel = (String) cellList.get(1);
                 if (StringUtils.isBlank(tel)) {
-                    throw new Exception("第" + (x + 2) + "行数据的手机号不能为空！");
+                    errorMsg.append("-第" + (x + 2) + "行数据的手机号不能为空！\r\n");
                 } else {
                     if (telSet.contains(tel)) {
-                        throw new Exception("导入文件中存在多条手机号码为【" + tel + "】的用户，请修改后重新导入！");
+                        errorMsg.append("-导入文件中存在多条手机号码为【" + tel + "】的用户，请修改后重新导入！\r\n");
                     } else {
                         telSet.add(tel);
                         int num = clientImportVODao.queryClientIsExistByTel(tel);
                         if (num > 0) {
-                            throw new Exception("手机号码为【" + tel + "】的用户在系统中已存在，请勿重复导入！");
+                            errorMsg.append("-手机号码为【" + tel + "】的用户在系统中已存在，请勿重复导入！\r\n");
+                        } else {
+                            importVO.setTel(tel);
                         }
                     }
                 }
-                importVO.setTel(tel);
 
-                String fromTypeBig = (String) cellList.get(2);
-                if (StringUtils.isBlank(fromTypeBig)) {
-                    throw new Exception("第" + (x + 2) + "行数据的来源大类不能为空！");
-                }
-                importVO.setFromTypeBig(getSourceCode(fromTypeBig, "1044"));
-                if (StringUtils.equals("互联网", fromTypeBig)) {
-                    importVO.setFromType(Long.valueOf(getSourceCode((String) cellList.get(3), "1025")));
-                } else if (StringUtils.equals("直销", fromTypeBig)) {
-                    importVO.setFromType(Long.valueOf(getSourceCode((String) cellList.get(3), "1045")));
+                String sourceLabel = (String) cellList.get(2);
+                if (StringUtils.isBlank(sourceLabel)) {
+                    errorMsg.append("-第" + (x + 2) + "行数据的来源不能为空！\r\n");
                 } else {
-                    importVO.setChannel((String) cellList.get(5));
+                    importVO.setFromType(getSourceCode(sourceLabel, errorMsg));
                 }
-                importVO.setCity((String) cellList.get(4));
+                importVO.setCreatedTime(new Date());
+                importVO.setCreatedUserId(currenUser.getUserId());
+                importVO.setCity((String) cellList.get(3));
+                importVO.setCouponeCode((String) cellList.get(4));
                 importVO.setStatus("0");
-
                 voList.add(importVO);
             }
-            clientImportVODao.insertByList(voList);
+            if (errorMsg.length() > 0) {
+                return ("导入文件包含错误信息如下：\r\n" + errorMsg.toString()).getBytes();
+            } else {
+                clientImportVODao.insertByList(voList);
+            }
+            return null;
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new Exception(StringUtils.isBlank(e.getMessage()) ? "导入文件数据与模板数据不一致，请重新导入！" : e.getMessage());
         }
     }
 
-    public String getSourceCode(String label, String type) throws Exception {
-        Map<String, Object> paraMap = new HashMap<String, Object>();
-        paraMap.put("label", label);
-        paraMap.put("type", type);
-        paraMap.put("column", "CODE_ITEM_ID");
-        if (StringUtils.equals("1044", type)) {
-            paraMap.put("column", "VALUE");
+    public String getSourceCode(String label, StringBuilder errorMsg) throws Exception {
+        String code = clientImportVODao.queryCodeByLabel(label);
+        if (StringUtils.isBlank(code)) {
+            errorMsg.append("-系统无法识别来源为【" + label + "】的数据，请核对后重新导入！\r\n");
         }
-        try {
-            String code = clientImportVODao.queryCodeByLabel(paraMap);
-            if (code == null) {
-                throw new Exception();
-            }
-            return code;
-        } catch (Exception e) {
-            throw new Exception("系统无法识别来源为【" + label + "】的数据，请核对后重新导入！");
-        }
+        return code;
     }
 }

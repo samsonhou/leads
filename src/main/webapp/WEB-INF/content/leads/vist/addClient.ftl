@@ -34,15 +34,9 @@
                             
                              <div class="form-group ">
                                 <label class="col-sm-2 control-label  required">来源 <font color="#ff0000">*</font></label>
-                                <div class="col-sm-2">
-                                    <@select type='0' codeType="1044" fieldId="fromtypeBig" fieldName="fromtypeBig" props=" datatype='*' nullmsg='请选择线索来源' class='form-control' " />
-                                </div>
-                                <div class="col-sm-2">
-                                    <select style='display:none;'  class='form-control fromtype'"></select>
-                                    <@select type='1' codeType="1022" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
-                                    <input id="channel" name="channel" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
-                                    <@select type='1' codeType="1046" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
-                                </div>
+                                <div class="select_org col-sm-4">
+                                <@fromtype defValue="${clientVO.fromtype}" props=" class='form-control' datatype='*' "/>
+								</div>
                                 <label class="col-sm-2 control-label">手机1</label>
                                 <div class="col-sm-4 ">
                                     <input type="text" name="tel1" id="tel1" maxlength="11"  value="${clientVO.tel1!''}" datatype="mOe" onblur="codeCheckTel(this)" class="form-control">
@@ -109,7 +103,7 @@
                             <div class="form-group">
                             	<label class="col-sm-2 control-label  required">租赁产品</label>
                             	<div class="col-sm-4">
-                            	<@select type='0' codeType="1036"  fieldId="product" fieldName="product"  props=" class='form-control' " />
+                            	<@select type='0' codeType="1036"  fieldId="product" fieldName="product"  props=" class='form-control' datatype='*' " />
                             	</div>
                             	<label class="col-sm-2 control-label">外部订单号</label>
                                 <div class="col-sm-4 ">
@@ -189,7 +183,7 @@
                                 <input type="hidden" id="init_rank" name="init_rank"> 
                                 <label class="col-sm-2 control-label">等级 <font color="#ff0000">*</font></label>
                                 <div class="col-sm-4 ">                                   
-                                    <@select type='1' codeType="1053" fieldId="rank" fieldName="rank"  props=" class='form-control' " />                               
+                                    <@select type='1' codeType="1053" fieldId="rank" fieldName="rank"  props=" class='form-control' datatype='*' " />                               
                                 </div>
                                 <div id="staid" class="col-sm-6" style="display:none;">
                                      <input name="status" id = "status" value="1"  type="radio"> 无人接听
@@ -258,22 +252,6 @@
     	laydate(nextdate);
 	
 		$(document).ready(function(){
-			$("#fromtypeBig").on("change",function(){
-				$("#fromtypeBig option").each(function(i,o){
-					if($(this).prop("selected")||$(this).attr("selected")){
-						$(".fromtype").hide();
-						if(i!=0){
-							$(".fromtype").eq(i).attr("datatype","*").attr("nullmsg","请选择线索类型");
-							$(".fromtype").eq(i).removeAttr("disabled");
-							$(".fromtype").eq(i).show();
-						}
-					}else{
-						$(".fromtype").eq(i).removeAttr("datatype","*").removeAttr("nullmsg","请选择线索类型");
-						$(".fromtype").eq(i).attr("disabled","true");
-					}
-				});
-			});
-			
 			
 			jQuery("#bigPid").on("change", function(){
 				jQuery.ajax({
@@ -356,31 +334,25 @@
 	
 	function  formValidate(){
 	    	var saveform = $('#form1');
-	       
-	        var isgetcar = saveform.find('#isGetCar').val();
-	        if(isgetcar==''){
-	        	//swal({title:"",text:"请选择是否提车！"});
-	        	layer.alert("请选择是否提车！");
-	        	return false;
-	        }
-	        
-	        var lv = saveform.find('#getCarDate').val();
-	        if(lv=='' && isgetcar =='1'){
-	        	//swal({title:"",text:"请输入提车时间！"});
-	        	layer.alert("请输入提车时间！");
-	        	return false;
-	        }
-	        
-	        var lv = saveform.find('#carNo').val();
-	        if(lv=='' && isgetcar =='1'){
-	        	//swal({title:"",text:"请输入车牌号！"});
-	        	layer.alert("请输入车牌号！");
-	        	return false;
-	        }
-	        
-	        var rk= saveform.find('#rank').val()
-	        var isCheck = $("input[name='reason']").is(':checked')
+			var flag = true;
+				$(".select_org select").each(function(){
+					if($(this).find("option:selected").text()=="请选择"){
+						flag = false;
+						return;//返回匿名函数
+					}
+				});
+				 if(!flag){
+				 	layer.alert("请选择来源");
+				  	return false;
+				 }
+	        var rk= saveform.find('#rank').val();
+	        var isCheck = $("input[name='reason']").is(':checked');
 	        var checkValue = $("input[name='reason']:checked").val();
+	        var telReson = $("input[name='status']").is(':checked');
+	        if(telReson==false&&rk=='D'){
+	        	layer.alert("请选择电话具体原因！");
+	        	return false;
+	        }
 	        if(isCheck==false&&rk=='C'){
 	        	//swal({title:"",text:"请选择放弃原因!"});
 	        	layer.alert("请选择放弃原因!");

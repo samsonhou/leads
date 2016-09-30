@@ -24,7 +24,7 @@ public interface ClientImportVODao {
 
     int insertByList(List<ClientImportVO> voList);
 
-    String queryCodeByLabel(Map<String, Object> paraMap);
+    String queryCodeByLabel(String label);
 
     int queryClientIsExistByTel(String tel);
 }

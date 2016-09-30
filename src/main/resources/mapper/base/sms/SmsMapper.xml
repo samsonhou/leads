@@ -128,11 +128,11 @@
 			<if test="clientTel != null and clientTel != ''">
 			AND C.TEL LIKE CONCAT('%', CONCAT(#{clientTel}, '%'))
 			</if>
-			AND C.COMPANYID IN (
+			AND (C.COMPANYID IN (
 	        	SELECT F.ORGAN_ID FROM T_ORGAN_COMPANY F WHERE F.STATUS = '1'
 	        	START WITH F.ORGAN_ID = 1
 	        	CONNECT BY F.PARENT_ID = PRIOR F.ORGAN_ID
-	      	) 
+	      	) or C.COMPANYID IS NULL)
 	      	ORDER BY C.QDATE DESC
 	</select>
 

@@ -254,7 +254,7 @@ select a.user_name USERNAME,
   	and a.user_name like CONCAT('%', CONCAT(#{userName}, '%'))
   </if>
   <if test="organId != null and '' != organId">
-  	and a.organ_id = #{organId,jdbcType=DECIMAL}
+  	and a.organ_id in (select t.organ_id from t_organ_company t start with t.organ_id =#{organId,jdbcType=VARCHAR} connect by prior t.organ_id = t.parent_id) 
   </if>
 </select>
 

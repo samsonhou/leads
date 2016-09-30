@@ -38,7 +38,7 @@ public class ClientForJyServiceImp implements ClientForJyService {
         vo.setCreatedUserId(user.getUserId());
         vo.setFromTypeBig("3");// 直销
         vo.setStatus("0");
-        vo.setFromType(Long.valueOf(1030));// 捷越
+        vo.setFromType("1001001010");// 捷越
         return clientImportVODao.insert(vo);
     }
 
@@ -46,7 +46,7 @@ public class ClientForJyServiceImp implements ClientForJyService {
     public PageInfo<ClientImportVO> getPageInfo(int curPage, ClientImportVO vo) {
         PageHelper.startPage(curPage, Env.PAGE_SIZE);
         vo.setFromTypeBig("3");
-        vo.setFromType(Long.valueOf(1030));
+        vo.setFromType("1001001010");
         Page<ClientImportVO> page = (Page<ClientImportVO>) clientImportVODao.selectByVo(vo);
         if (page == null) {
             page = new Page<>();

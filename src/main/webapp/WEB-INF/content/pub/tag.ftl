@@ -21,6 +21,10 @@
 <#macro organ showLevel=""  defValue="" fieldId="" fieldName="" showAreaId='_organTag_'  props="">
 	${htmlUtil('organ','${showLevel}','${defValue}','${fieldId}','${fieldName}','${showAreaId}','${props}')}
 </#macro>
+<#-- 来源级联下拉列表 标签 -->
+<#macro fromtype showLevel=""  defValue="" fieldId="" fieldName="" showAreaId='_organTag_'  props="">
+	${htmlUtil('fromtype','${showLevel}','${defValue}','${fieldId}','${fieldName}','${showAreaId}','${props}')}
+</#macro>
 <#macro queryselect codeType="" type="0" defValue="" whereCase="" paramName="" paramValue=""  >${htmlUtil('queryselect','${type}','${codeType}','${defValue}','${whereCase}','${paramName}','${paramValue}')}</#macro>
 <#-- token -->
 <#macro token >

@@ -71,8 +71,8 @@ public class HttpService extends WebAction {
                 clientImportVO.setCreatedTime(new Date());
                 clientImportVO.setStationNo(stationNo);
                 clientImportVO.setStatus("0");// 未分配
-                clientImportVO.setFromType(Long.valueOf(1010));// 咕啦彩票
-                clientImportVO.setFromTypeBig("1");// 互联网
+                clientImportVO.setFromType("1000002002");// 咕啦彩票
+//                clientImportVO.setFromTypeBig("1");// 互联网
 
                 int flag1 = clientDao.selectTel(tel);
                 int flag2 = clientImportVODao.selectByTel(tel);

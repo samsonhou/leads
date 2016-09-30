@@ -15,7 +15,7 @@ import com.jiezh.dao.leads.client.ClientVO;
 public interface ClientService {
     public int addClient(ClientVO recode) throws Exception;
 
-    public int updateClient(ClientVO recode,AuthorUser user) throws Exception;
+    public int updateClient(ClientVO recode, AuthorUser user) throws Exception;
 
     public PageInfo<Map<String, Object>> search(int currenPage, ClientVO vo);
 
@@ -146,18 +146,26 @@ public interface ClientService {
     public byte[] exportReport(String stime, String etime, String organId) throws Exception;
 
     public List<Map<String, Object>> getDDReport(Map<String, Object> paras);
-    
-    public List<Map<String,Object>> getDDRank(Map<String, Object> paras);
-    
-    public List<Map<String,Object>> getDDStatistics(Map<String, Object> paras);
-    
-    public List<Map<String,Object>> getDDStatisticsByTime(Map<String, Object> paras);
-    
+
+    public List<Map<String, Object>> getDDRank(Map<String, Object> paras);
+
+    public List<Map<String, Object>> getDDStatistics(Map<String, Object> paras);
+
+    public List<Map<String, Object>> getDDStatisticsByTime(Map<String, Object> paras);
+
     public List<Map<String, Object>> getServiceTrace(ClientVO clientVO);
-    
-    public String processClientAndTrace(AuthorUser user,ClientVO clientVo, ClientTraceVO clientTraceVo);
-    
+
+    public String processClientAndTrace(AuthorUser user, ClientVO clientVo, ClientTraceVO clientTraceVo);
+
     public ActivityConfigVO getActivityConf(Long id);
-    
+
     public CodeItemVO findOneCodeType(long codeItemId);
+
+    public String findSourceNameByCode(String code);
+
+    public List<Map<String, Object>> queryShortTimeCustomerList(long rid);
+
+    public String dialout(AuthorUser currenUser, String tel) throws Exception;
+    
+    public String processToErp(AuthorUser user,ClientVO vo) throws Exception;
 }

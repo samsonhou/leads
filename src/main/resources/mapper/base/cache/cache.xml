@@ -48,10 +48,14 @@
 		(s_lm_login_id.nextval||dbms_random.string('a',72 )) uuid,
 		(select
 		t_user_lock.lock_status from t_user_lock where t_user_lock.user_id =
-		t_user.user_id and t_user_lock.lock_status = '1' and rownum =1) isLock,
-		(select t_organ_company.organ_level from t_organ_company where t_organ_company.organ_id=T_USER.ORGAN_ID) organLevel
-		from T_USER LEFT JOIN T_ORGAN on T_USER.Organ_Code=T_ORGAN.ORGAN_CODE
-		where USER_NAME = #{userName}
+		t_user.user_id and t_user_lock.lock_status = '1' and rownum =1)
+		isLock,
+		(select t_organ_company.organ_level from t_organ_company where
+		t_organ_company.organ_id=T_USER.ORGAN_ID) organLevel
+		from T_USER LEFT
+		JOIN T_ORGAN on T_USER.Organ_Code=T_ORGAN.ORGAN_CODE
+		where USER_NAME =
+		#{userName}
 	</select>
 
 	<select id="getModuleGroup" parameterType="java.lang.Long"
@@ -193,6 +197,29 @@
 		= 00
 		CONNECT BY PRIOR organ_id =
 		PARENT_ID
+	</select>
+
+	<select id="getFromtype" parameterType="map" resultType="map">
+		select t.name NAME,t.code CODE,t.code_level CODELEVEL from t_base_source t
+		<where>
+			<if test="codeLevel != null">
+				and t.code_level = #{codeLevel,jdbcType=VARCHAR}
+			</if>
+			<if test="code != null">
+				and t.pid = (select a.pid from t_base_source a where a.code =#{code,jdbcType=VARCHAR})
+			</if>
+			<if test="pid != null">
+				and t.pid = #{pid,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getFromtypePid" parameterType="map" resultType="map">
+		select t.pid PID,t.code CODE from t_base_source t
+		where t.status='1' 
+		connect by prior t.pid = t.code
+		start with t.code = #{code,jdbcType=VARCHAR}
+		order by t.code_level
 	</select>
 
 </mapper>
