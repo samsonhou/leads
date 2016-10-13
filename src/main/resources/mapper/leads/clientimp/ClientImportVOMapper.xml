@@ -21,11 +21,12 @@
     <result column="ID_NO" property="idNo" jdbcType="VARCHAR" />
     <result column="CUSTOMER_MANAGER" property="customerManager" jdbcType="VARCHAR" />
     <result column="COUPONE_CODE" property="couponeCode" jdbcType="VARCHAR" />
+    <result column="ORGAN" property="organ" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     ID, CLIENT_NAME, TEL, STATION_NO, CITY, FROM_TYPE_BIG, FROM_TYPE, STATUS, CREATED_TIME, 
     CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, REMARK, CHANNEL,ID_NO, CUSTOMER_MANAGER, 
-    COUPONE_CODE 
+    COUPONE_CODE,ORGAN
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -45,12 +46,13 @@
       STATION_NO, CITY, FROM_TYPE_BIG, 
       FROM_TYPE, STATUS, CREATED_TIME, 
       CREATED_USER_ID, UPDATED_TIME, UPDATED_USER_ID, 
-      REMARK, CHANNEL,ID_NO,CUSTOMER_MANAGER)
+      REMARK, CHANNEL,ID_NO,CUSTOMER_MANAGER,ORGAN)
     values (#{id,jdbcType=DECIMAL}, #{clientName,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
       #{stationNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{fromTypeBig,jdbcType=VARCHAR}, 
       #{fromType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
       #{createdUserId,jdbcType=DECIMAL}, #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=DECIMAL}, 
-      #{remark,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR},#{customerManager,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR},#{customerManager,jdbcType=VARCHAR},
+      (select real_name from t_user where user_id = #{createdUserId:DECIMAL}))
   </insert>
   <insert id="insertSelective" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" >
     insert into LM_CLIENT_IMPORT
@@ -234,6 +236,7 @@
 				and t.status = #{status,jdbcType=VARCHAR}
 			</if>
 		</where>
+		order by t.created_time desc
 	</select>
 	
 	<select id="selectByMap" parameterType="map"
@@ -250,6 +253,24 @@
 				</foreach>
 			</if>
 		</where>
+	</select>
+	
+	<select id="selectAllStringByVo" parameterType="com.jiezh.dao.leads.clientimp.ClientImportVO" resultType="map">
+		select a.client_name CLIENTNAME,a.id_no IDNO,a.tel TEL,a.city CITY,a.organ ORGAN,a.customer_manager CUSTOMERMANAGER,
+		       to_char(a.created_time,'yyyy-mm-dd hh24:mi:ss') CREATEDTIME,decode(a.status,'1','已分配','未分配') STATUS
+		  from lm_client_import a left join t_user b 
+		    on a.created_user_id = b.user_id
+		 <where>
+		 	<if test="clientName != null">
+		 		and a.client_name = #{clientName:VARCHAR}
+		 	</if>
+		 	<if test="tel != null">
+		 		and a.tel = #{tel:VARCHAR}
+		 	</if>
+		 	<if test="customerManager != null">
+		 		and a.customer_manager = #{customerManager:VARCHAR}
+		 	</if>
+		 </where>
 	</select>
 	
 	
@@ -299,5 +320,16 @@
 			UNION ALL 
 			SELECT B.ID FROM LM_CLIENT B WHERE B.TEL=#{tel:VARCHAR}
 		) T 
+	</select>
+	
+	
+	<!-- 查询待分配线索 -->
+	<select id="queryCustomerListForAssign" resultType="java.util.Map">
+		<![CDATA[
+		SELECT I.ID,I.CLIENT_NAME AS CLIENTNAME,I.TEL,S.NAME AS COMEFROM 
+		FROM LM_CLIENT_IMPORT I LEFT JOIN T_BASE_SOURCE S 
+		     ON I.FROM_TYPE=S.CODE 
+		WHERE I.STATUS='0'
+		]]>
 	</select>
 </mapper>

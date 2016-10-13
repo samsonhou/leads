@@ -38,6 +38,8 @@
 	                                   <input type="button" onclick="search();" value="查 询" class="btn btn-primary btn-sm zd-btn-pd1">
 	                                   &nbsp; &nbsp; 
 	                                   <input type="button" value="新 增" class="btn btn-primary btn-sm zd-btn-pd1"  data-toggle="modal" data-target="#myModal">
+	                                   &nbsp; &nbsp; 
+	                                   <input type="button" value="导出" onclick="exp();" class="btn btn-primary btn-sm zd-btn-pd1">
 
 	                             </div>
                             </div>
@@ -57,6 +59,7 @@
                                         <th style="text-align: center;">身份证</th>
                                         <th style="text-align: center;">手机</th>
                                         <th style="text-align: center;">城市</th>
+                                        <th style="text-align: center;">门店</th>
                                         <th style="text-align: center;">客户经理</th>
                                         <th style="text-align: center;">填写时间</th>
                                         <th style="text-align: center;">状态</th>
@@ -70,6 +73,7 @@
                                         <td>${client.idNo}</td>
                                         <td>${client.tel}</td>
                                         <td>${client.city}</td>
+                                        <td>${client.organ}</td>
                                         <td>${client.customerManager}</td>
                                         <td>${(client.createdTime?string("yyyy-MM-dd HH:mm:ss"))!}</td>
                                         <td>${(client.status='1')?string('已分配','未分配')}</td>
@@ -111,7 +115,7 @@
 	                            <div class="form-group ziding-ibox-modal model_alert_1">
 	                            	<label class="col-sm-2 control-label">电话</label>
 	                                <div class="col-sm-4 ">
-	                                	<input type="text" ajaxurl="${contextPath}/leads/jy/checkTel.do" name="tel" id="tel" datatype="m" nullmsg="请填写客户电话！" errormsg="请填写正确的电话号码！" class="form-control"/>
+	                                	<input type="text" ajaxurl="${contextPath}/leads/jy/checkTel.do" name="tel" id="tel" maxlength="11" datatype="m" nullmsg="请填写客户电话！" errormsg="请填写正确的电话号码！" class="form-control"/>
 	                                </div>
 	                            	<label class="col-sm-2 control-label">城市</label>
 	                                <div class="col-sm-4 ">
@@ -152,6 +156,7 @@
 		
 		var saveForm=$("#saveform").Validform({
 				showAllError:true,
+				postonce:true,
 				datatype:{
 					"idcard":function(gets,obj,curform,datatype){
 						//该方法由佚名网友提供;
@@ -221,6 +226,11 @@
 		function openModal(){
 		 var mymodal = $("#myModal");
 		 mymodal.modal("show");
+		}
+		
+		function exp(){
+			form1.action = "${contextPath}/leads/jy/exp.do";
+			form1.submit();
 		}
 		
 	</script>

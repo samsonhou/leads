@@ -47,6 +47,18 @@
 		    			  			<@select type='1' codeType="1021" defValue="${clientVO.smallPid!-1}" fieldId="samllPid" fieldName="samllPid"  paramName="pid" paramValue="111" props=" class='form-control' " />
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">分配时间</label>
+                                <div class="col-sm-2">
+                                	<input type="text" value="${clientVO.assignStartDate}" readonly placeholder="开始时间" id="assignStartDate" name="assignStartDate" class="form-control layer-date">
+                                </div>
+                                <div class="col-sm-2">
+                                	<input type="text" value="${clientVO.assignEndDate}" readonly placeholder="结束时间" id="assignEndDate" name="assignEndDate" class="form-control layer-date">
+                                </div>
+                                
+                            </div>
+                            
                             <div class="form-group">
 	                            <div class="col-sm-4 col-sm-offset-8">
 	                                   <input type="button" onclick="search();" value="查 询" class="btn btn-primary btn-sm zd-btn-pd1">
@@ -117,6 +129,16 @@
 	</form>
 	<#include "/pub/footer_res_detail.ftl"/>
 	<script type="text/javascript">
+		var dateStart = {
+			elem:"#assignStartDate",
+			format:"YYYY-MM-DD"
+		};
+		laydate(dateStart);
+		var dateEnd = {
+			elem:"#assignEndDate",
+			format:"YYYY-MM-DD"
+		};
+		laydate(dateEnd);
 		function search(){
 			form1.action="${contextPath}/leads/vist/queryList.do";
 			form1.submit();

@@ -75,6 +75,7 @@ public class AssignController extends WebAction {
         AuthorUser user = getUser();
         clientVO.setRid(user.getUserId().intValue());
         clientVO.setSysOrganCode(user.getOrganCode());
+        clientVO.setCompanyid(user.getOrganId());
         // 是否管理员 管理员查询它所在机构下所有的
         if ("1".endsWith(checkRole(Env.ROLE_MANAGE))) {
             clientVO.setCompanyid(user.getOrganId());

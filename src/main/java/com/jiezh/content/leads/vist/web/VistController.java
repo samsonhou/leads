@@ -147,7 +147,7 @@ public class VistController extends WebAction {
         String fromtype = request.getParameter("code");
         clientVo.setFromtype(Integer.valueOf(fromtype));
         ClientTraceVO clientTraceVo = (ClientTraceVO) this.getBean(ClientTraceVO.class);
-        String msg = clientService.processClientAndTrace(user, clientVo, clientTraceVo);
+        clientService.processClientAndTrace(user, clientVo, clientTraceVo);
         Map<String, String> map = new HashMap<>();
         map.put("status", "y");
         map.put("info", "保存成功！");

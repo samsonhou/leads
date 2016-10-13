@@ -258,6 +258,7 @@ public class ExcelUtil {
                 int cellNum = 1; // 去掉一列序号，因此从1开始
                 if (fieldNames != null) {
                     for (int num = 0; num < fieldNames.length; num++) {
+
                         Object value = null;
                         // 对象为map集合时，不需要反射调用属性值
                         // moidfy by houjq for jira36
@@ -266,6 +267,9 @@ public class ExcelUtil {
                         } else {
                             value = ReflectionUtil.invokeGetterMethod(obj, fieldNames[num]);
                         }
+                        int title1Len = sheets[sheetNum].getColumnWidth(num);
+                        int len = value != null ? value.toString().getBytes().length * 256 : 0;
+                        sheets[sheetNum].setColumnWidth(num + 1, (short) title1Len > len ? title1Len : len);
 
                         cells[cellNum].setCellValue(value == null ? "" : value.toString());
                         cellNum++;
@@ -273,7 +277,7 @@ public class ExcelUtil {
                 }
                 rowNum++;
             }
-            adjustColumnSize(sheets, sheetNum, fieldNames); // 自动调整列宽
+            // adjustColumnSize(sheets, sheetNum, fieldNames); // 自动调整列宽
             sheetNum++;
         }
         wb.write(outputStream);
@@ -563,10 +567,6 @@ public class ExcelUtil {
         headStyle.setBorderBottom(CellStyle.BORDER_THIN);
         headStyle.setBorderLeft(CellStyle.BORDER_THIN);
         headStyle.setBorderRight(CellStyle.BORDER_THIN);
-        headStyle.setTopBorderColor(IndexedColors.BLUE.index);
-        headStyle.setBottomBorderColor(IndexedColors.BLUE.index);
-        headStyle.setLeftBorderColor(IndexedColors.BLUE.index);
-        headStyle.setRightBorderColor(IndexedColors.BLUE.index);
     }
 
     /**
@@ -580,10 +580,6 @@ public class ExcelUtil {
         contentStyle.setBorderBottom(CellStyle.BORDER_THIN);
         contentStyle.setBorderLeft(CellStyle.BORDER_THIN);
         contentStyle.setBorderRight(CellStyle.BORDER_THIN);
-        contentStyle.setTopBorderColor(IndexedColors.BLUE.index);
-        contentStyle.setBottomBorderColor(IndexedColors.BLUE.index);
-        contentStyle.setLeftBorderColor(IndexedColors.BLUE.index);
-        contentStyle.setRightBorderColor(IndexedColors.BLUE.index);
         contentStyle.setWrapText(true); // 字段换行
     }
 
@@ -595,7 +591,6 @@ public class ExcelUtil {
         titleFont.setFontHeightInPoints((short) 16);
         titleFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
         titleFont.setCharSet(Font.DEFAULT_CHARSET);
-        titleFont.setColor(IndexedColors.BLUE_GREY.index);
     }
 
     /**
@@ -603,10 +598,6 @@ public class ExcelUtil {
      */
     private static void initDateFont() {
         dateFont.setFontName("微软雅黑");
-        dateFont.setFontHeightInPoints((short) 10);
-        dateFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        dateFont.setCharSet(Font.DEFAULT_CHARSET);
-        dateFont.setColor(IndexedColors.BLUE_GREY.index);
     }
 
     /**
@@ -615,20 +606,12 @@ public class ExcelUtil {
     private static void initHeadFont() {
         headFont.setFontName("微软雅黑");
         headFont.setFontHeightInPoints((short) 10);
-        headFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        headFont.setCharSet(Font.DEFAULT_CHARSET);
-        headFont.setColor(IndexedColors.BLUE_GREY.index);
     }
 
     /**
      * @Description: 初始化内容行字体
      */
     private static void initContentFont() {
-        contentFont.setFontName("微软雅黑");
-        contentFont.setFontHeightInPoints((short) 10);
-        contentFont.setBoldweight(Font.BOLDWEIGHT_NORMAL);
-        contentFont.setCharSet(Font.DEFAULT_CHARSET);
-        contentFont.setColor(IndexedColors.BLUE_GREY.index);
     }
 
     /**

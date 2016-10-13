@@ -26,7 +26,6 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,6 +33,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,8 +250,10 @@ public class ClientServiceImp implements ClientService {
         param.put("ids", ids);
         if (StringUtils.equals("3", roleid)) {
             param.put("newUserOrganId", "");
-            param.put("newUserId", "");
+            param.put("newUserId", 0);
             param.put("rid", newUserId);
+            param.put("qdate", new Date());
+            
         }
 
         return clientDao.updateAssign(param);
@@ -465,7 +467,6 @@ public class ClientServiceImp implements ClientService {
      * @throws IOException
      * @see com.jiezh.content.leads.service.ClientService#exportExcel(java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     @Override
     public byte[] exportExcel(Map<String, Object> paras) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -497,7 +498,7 @@ public class ClientServiceImp implements ClientService {
         // add by cj 处理Excel head信息
         listHead = excuteBodyList_head(listHead, mapping);
         cellLength = listHead.size();
-        Map<Integer, Integer> mp = getMapping(listBooy);
+        // Map<Integer, Integer> mp = getMapping(listBooy);
         // 全部都为0时返回空文件
         if (listHead.size() < 4) {
             // return new byte[]{};
@@ -624,8 +625,6 @@ public class ClientServiceImp implements ClientService {
     }
 
     private void setTitle(SXSSFWorkbook workbook, Sheet sheet, int cellLength, Map<String, Object> paras) {
-        Date date = new Date();
-        SimpleDateFormat dateFm = new SimpleDateFormat("EEEE");
         // String strTitle = "统计区间："+paras.get("stime")+"至"+paras.get("etime")
         // +" 导出时间："+ DateUtil.date2String(date, "yyyy-MM-dd HH:mm:ss") + " " +
         // dateFm.format(date);
@@ -814,13 +813,13 @@ public class ClientServiceImp implements ClientService {
     }
 
     // add by cj 处理excel X轴行数据都为0时不显示问题
-    private List<Map<String, Object>> excuteBodyList_x(List<Map<String, Object>> list) {
-        List<Map<String, Object>> listResult = new ArrayList<Map<String, Object>>();
-        for (Map<String, Object> map : list) {
-            if (!map.get("MADD").toString().equals("0")) listResult.add(map);
-        }
-        return listResult;
-    }
+    // private List<Map<String, Object>> excuteBodyList_x(List<Map<String, Object>> list) {
+    // List<Map<String, Object>> listResult = new ArrayList<Map<String, Object>>();
+    // for (Map<String, Object> map : list) {
+    // if (!map.get("MADD").toString().equals("0")) listResult.add(map);
+    // }
+    // return listResult;
+    // }
 
     // add by cj 处理excel Y轴行数据都为0时不显示问题
     private Map<String, Integer> excuteBodyList_y(List<Map<String, Object>> list) {
@@ -850,7 +849,6 @@ public class ClientServiceImp implements ClientService {
         for (int x = 0; x < list.size(); x++) {
             Iterator<String> it = list.get(x).keySet().iterator();
             while (it.hasNext()) {
-                String key = it.next();
                 if (x < 2 || x == list.size() - 1) {
                     listResult.add(list.get(x));
                 } else {
@@ -953,7 +951,6 @@ public class ClientServiceImp implements ClientService {
         int flag = 1;
         Iterator<String> it = map.keySet().iterator();
         while (it.hasNext()) {
-            String key = it.next();
             if (map.get("M" + flag) == null) {
                 flag++;
                 continue;
@@ -1022,19 +1019,19 @@ public class ClientServiceImp implements ClientService {
         }
     }
 
-    private Map<Integer, Integer> getMapping(List<Map<String, Object>> listBooy) {
-
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-        for (Map<String, Object> maps : listBooy) {
-            int organId = Integer.valueOf(maps.get("ORGAN_ID").toString()).intValue();
-            int tmp = map.get(organId) == null ? 0 : map.get(organId);
-            int value = Integer.valueOf(maps.get("MADD").toString()).intValue();
-            map.put(organId, value + tmp);
-        }
-
-        return map;
-    }
+    // private Map<Integer, Integer> getMapping(List<Map<String, Object>> listBooy) {
+    //
+    // Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+    //
+    // for (Map<String, Object> maps : listBooy) {
+    // int organId = Integer.valueOf(maps.get("ORGAN_ID").toString()).intValue();
+    // int tmp = map.get(organId) == null ? 0 : map.get(organId);
+    // int value = Integer.valueOf(maps.get("MADD").toString()).intValue();
+    // map.put(organId, value + tmp);
+    // }
+    //
+    // return map;
+    // }
 
     // add by cj 查询线索总数
     @Override
@@ -1089,68 +1086,83 @@ public class ClientServiceImp implements ClientService {
                     : obj.get("BIG_PID") + "" + " - " + obj.get("SMALL_PID") == null ? "" : obj.get("SMALL_PID") + "");
                 row.createCell(4).setCellValue(obj.get("TEL") == null ? "" : obj.get("TEL") + "");
                 row.createCell(5).setCellValue(obj.get("RID") == null ? "" : obj.get("RID") + "");
-                row.createCell(6).setCellValue(obj.get("COMNAME") == null ? "" : obj.get("COMNAME") + "");
-                row.createCell(7).setCellValue(obj.get("SID") == null ? "" : obj.get("SID") + "");
-                row.createCell(8).setCellValue(obj.get("FROMTYPE") == null ? "" : obj.get("FROMTYPE") + "");
-                row.createCell(9).setCellValue(obj.get("PRODUCT") == null ? "" : obj.get("PRODUCT") + "");
-                String depositStatus = obj.get("DEPOSITSTATUS") == null ? "" : obj.get("DEPOSITSTATUS").toString();
-                if (depositStatus.equals("1")) {
-                    row.createCell(10).setCellValue("无定金模式（普通来源）");
-                } else if (depositStatus.equals("2")) {
-                    row.createCell(10).setCellValue("已支付");
-                } else if (depositStatus.equals("3")) {
-                    row.createCell(10).setCellValue("未支付");
-                } else if (depositStatus.equals("4")) {
-                    row.createCell(10).setCellValue("已退回");
-                } else {
-                    row.createCell(10).setCellValue("");
-                }
-                row.createCell(11).setCellValue(obj.get("CREDIT_STATUS") == null ? "" : obj.get("CREDIT") + "-" + obj.get("CREDIT_STATUS"));
-                row.createCell(12).setCellValue(obj.get("ISCANCLE") == null ? "" : obj.get("ISCANCLE").toString());
-                row.createCell(13).setCellValue(obj.get("QDATE") == null ? "" : obj.get("QDATE") + "");
-                row.createCell(14).setCellValue(obj.get("TITLE") == null ? "" : obj.get("TITLE") + "");
-                row.createCell(15).setCellValue(obj.get("ALLOTDATE") == null ? "" : obj.get("ALLOTDATE") + "");
-
-                row.createCell(16).setCellValue(obj.get("FDATE") == null ? "" : obj.get("FDATE") + "");
-                row.createCell(17).setCellValue(obj.get("FDETAIL") == null ? "" : obj.get("FDETAIL") + "");
-                row.createCell(18).setCellValue(obj.get("SDATE") == null ? "" : obj.get("SDATE") + "");
-                row.createCell(19).setCellValue(obj.get("SDETAIL") == null ? "" : obj.get("SDETAIL") + "");
-                row.createCell(20).setCellValue(obj.get("TDATE") == null ? "" : obj.get("TDATE") + "");
-                row.createCell(21).setCellValue(obj.get("TDETAIL") == null ? "" : obj.get("TDETAIL") + "");
-                row.createCell(22).setCellValue(obj.get("LDATE") == null ? "" : obj.get("LDATE") + "");
-                row.createCell(23).setCellValue(obj.get("LDETAIL") == null ? "" : obj.get("LDETAIL") + "");
-                row.createCell(24).setCellValue(obj.get("RANK") == null ? "" : obj.get("RANK") + "");
-                if ((obj.get("RANK") == null ? "" : obj.get("RANK") + "").startsWith("C")) {
-                    String reason = obj.get("REASON") == null ? "" : obj.get("REASON") + "";
-                    if (reason.equals("1")) {
-                        row.createCell(25).setCellValue("A 车型不匹配");
-                    } else if (reason.equals("2")) {
-                        row.createCell(25).setCellValue("B 金融方案不满意");
-                    } else if (reason.equals("3")) {
-                        row.createCell(25).setCellValue("C 风控原因  (审核未通过)");
-                    } else if (reason.equals("4")) {
-                        row.createCell(25).setCellValue(obj.get("REASONCONT") == null ? "" : "D (" + obj.get("REASONCONT") + ")");
-                    } else {
-                        row.createCell(25).setCellValue("");
+                if (obj.get("COMNAME") != null) {
+                    String[] comnames = obj.get("COMNAME").toString().split("-");
+                    try {
+                        row.createCell(6).setCellValue(comnames[1]);
+                        row.createCell(7).setCellValue(comnames[2]);
+                        row.createCell(8).setCellValue(comnames[3]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 } else {
-                    row.createCell(25).setCellValue("");
+                    row.createCell(6).setCellValue("");
+                    row.createCell(7).setCellValue("");
+                    row.createCell(8).setCellValue("");
+                }
+                // row.createCell(6).setCellValue(obj.get("COMNAME") == null ? "" : obj.get("COMNAME") + "");
+                row.createCell(9).setCellValue(obj.get("SID") == null ? "" : obj.get("SID") + "");
+                row.createCell(10).setCellValue(obj.get("FROMTYPE") == null ? "" : obj.get("FROMTYPE") + "");
+                row.createCell(11).setCellValue(obj.get("PRODUCT") == null ? "" : obj.get("PRODUCT") + "");
+                String depositStatus = obj.get("DEPOSITSTATUS") == null ? "" : obj.get("DEPOSITSTATUS").toString();
+                if (depositStatus.equals("1")) {
+                    row.createCell(12).setCellValue("无定金模式（普通来源）");
+                } else if (depositStatus.equals("2")) {
+                    row.createCell(12).setCellValue("已支付");
+                } else if (depositStatus.equals("3")) {
+                    row.createCell(12).setCellValue("未支付");
+                } else if (depositStatus.equals("4")) {
+                    row.createCell(12).setCellValue("已退回");
+                } else {
+                    row.createCell(12).setCellValue("");
+                }
+                row.createCell(13).setCellValue(obj.get("CREDIT_STATUS") == null ? "" : obj.get("CREDIT") + "-" + obj.get("CREDIT_STATUS"));
+                row.createCell(14).setCellValue(obj.get("ISCANCLE") == null ? "" : obj.get("ISCANCLE").toString());
+                row.createCell(15).setCellValue(obj.get("QDATE") == null ? "" : obj.get("QDATE") + "");
+                row.createCell(16).setCellValue(obj.get("TITLE") == null ? "" : obj.get("TITLE") + "");
+                row.createCell(17).setCellValue(obj.get("ALLOTDATE") == null ? "" : obj.get("ALLOTDATE") + "");
+
+                row.createCell(18).setCellValue(obj.get("FDATE") == null ? "" : obj.get("FDATE") + "");
+                row.createCell(19).setCellValue(obj.get("FDETAIL") == null ? "" : obj.get("FDETAIL") + "");
+                row.createCell(20).setCellValue(obj.get("SDATE") == null ? "" : obj.get("SDATE") + "");
+                row.createCell(21).setCellValue(obj.get("SDETAIL") == null ? "" : obj.get("SDETAIL") + "");
+                row.createCell(22).setCellValue(obj.get("TDATE") == null ? "" : obj.get("TDATE") + "");
+                row.createCell(23).setCellValue(obj.get("TDETAIL") == null ? "" : obj.get("TDETAIL") + "");
+                row.createCell(24).setCellValue(obj.get("LDATE") == null ? "" : obj.get("LDATE") + "");
+                row.createCell(25).setCellValue(obj.get("LDETAIL") == null ? "" : obj.get("LDETAIL") + "");
+                row.createCell(26).setCellValue(obj.get("RANK") == null ? "" : obj.get("RANK") + "");
+                if ((obj.get("RANK") == null ? "" : obj.get("RANK") + "").startsWith("C")) {
+                    String reason = obj.get("REASON") == null ? "" : obj.get("REASON") + "";
+                    if (reason.equals("1")) {
+                        row.createCell(27).setCellValue("A 车型不匹配");
+                    } else if (reason.equals("2")) {
+                        row.createCell(27).setCellValue("B 金融方案不满意");
+                    } else if (reason.equals("3")) {
+                        row.createCell(27).setCellValue("C 风控原因  (审核未通过)");
+                    } else if (reason.equals("4")) {
+                        row.createCell(27).setCellValue(obj.get("REASONCONT") == null ? "" : "D (" + obj.get("REASONCONT") + ")");
+                    } else {
+                        row.createCell(27).setCellValue("");
+                    }
+
+                } else {
+                    row.createCell(27).setCellValue("");
                 }
 
-                row.createCell(26).setCellValue(obj.get("STATUS") == null ? "" : obj.get("STATUS") + "");
-                row.createCell(27).setCellValue(obj.get("FIRSTTIMECOMING") == null ? "" : obj.get("FIRSTTIMECOMING") + "");
-                row.createCell(28).setCellValue(obj.get("IDD") == null ? "否" : obj.get("IDD").equals("1") ? "是" : "否");
-                row.createCell(29).setCellValue(obj.get("INNDEPOSIT") == null ? "" : obj.get("INNDEPOSIT") + "");
-                row.createCell(30).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
-                row.createCell(31).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
-                row.createCell(32).setCellValue(obj.get("ISINCOME") == null ? "否" : obj.get("ISINCOME").toString().equals("1") ? "是" : "否");
-                row.createCell(33).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
-                row.createCell(34).setCellValue(obj.get("ISDEAL") == null ? "否" : obj.get("ISDEAL").toString().equals("1") ? "是" : "否");
-                row.createCell(35).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
-                row.createCell(36).setCellValue(obj.get("ISGETCAR") == null ? "未提车" : obj.get("ISGETCAR") + "");
-                row.createCell(37).setCellValue(obj.get("CONTRACTNO") == null ? "" : obj.get("CONTRACTNO").toString());
-                row.createCell(38).setCellValue(obj.get("ISRECYCLE") == null ? "" : obj.get("ISRECYCLE").toString());
+                row.createCell(28).setCellValue(obj.get("STATUS") == null ? "" : obj.get("STATUS") + "");
+                row.createCell(29).setCellValue(obj.get("FIRSTTIMECOMING") == null ? "" : obj.get("FIRSTTIMECOMING") + "");
+                row.createCell(30).setCellValue(obj.get("IDD") == null ? "否" : obj.get("IDD").equals("1") ? "是" : "否");
+                row.createCell(31).setCellValue(obj.get("INNDEPOSIT") == null ? "" : obj.get("INNDEPOSIT") + "");
+                row.createCell(32).setCellValue(obj.get("LMTNUM") == null ? "" : ("" + obj.get("LMTNUM")).equals("0") ? "否" : "是");
+                row.createCell(33).setCellValue(obj.get("INCOMEDATE") == null ? "" : obj.get("INCOMEDATE") + "");
+                row.createCell(34).setCellValue(obj.get("ISINCOME") == null ? "否" : obj.get("ISINCOME").toString().equals("1") ? "是" : "否");
+                row.createCell(35).setCellValue(obj.get("DEALDATE") == null ? "" : obj.get("DEALDATE") + "");
+                row.createCell(36).setCellValue(obj.get("ISDEAL") == null ? "否" : obj.get("ISDEAL").toString().equals("1") ? "是" : "否");
+                row.createCell(37).setCellValue(obj.get("GETCARDATE") == null ? "" : obj.get("GETCARDATE") + "");
+                row.createCell(38).setCellValue(obj.get("ISGETCAR") == null ? "未提车" : obj.get("ISGETCAR") + "");
+                row.createCell(39).setCellValue(obj.get("CONTRACTNO") == null ? "" : obj.get("CONTRACTNO").toString());
+                row.createCell(40).setCellValue(obj.get("ISRECYCLE") == null ? "" : obj.get("ISRECYCLE").toString());
 
                 String gift = obj.get("GIFT") == null ? null : obj.get("GIFT").toString();
                 String gifts = "";
@@ -1166,7 +1178,7 @@ public class ClientServiceImp implements ClientService {
                     }
                 }
                 if (gifts.startsWith(",")) gifts = gifts.substring(1);
-                row.createCell(39).setCellValue(gifts);
+                row.createCell(41).setCellValue(gifts);
 
                 row.setRowStyle(contentStyle);
                 rowIndex++;
@@ -1218,7 +1230,7 @@ public class ClientServiceImp implements ClientService {
                     lmurgeVo.setUrgeToPersonName(userVo.getRealName());
                     lmurgeVo.setUrgeToOrganId(userVo.getOrganId());
                     lmurgeVo.setUrgeStatus("0");
-                    List lmurgeList = lmurgeVODao.selectByLmurge(lmurgeVo);
+                    List<LmurgeVO> lmurgeList = lmurgeVODao.selectByLmurge(lmurgeVo);
                     if (lmurgeList.size() == 0) {
                         lmurgeVo.setUrgeFirstOrganId(user.getOrganId());
                         lmurgeVo.setUrgeFirstPersonId(user.getUserId());
@@ -2070,6 +2082,7 @@ public class ClientServiceImp implements ClientService {
         return finalList;
     }
 
+    @SuppressWarnings("unchecked")
     public byte[] exportReport(String stime, String etime, String organId) throws Exception {
         NumberFormat format = NumberFormat.getPercentInstance();
         format.setMinimumFractionDigits(2);
@@ -2296,6 +2309,9 @@ public class ClientServiceImp implements ClientService {
         param.put("storeSpecNo", dataVo.getOrganCode());
         param.put("channel", dataVo.getSourceName());
         param.put("orderSource", "201");
+        param.put("sale_name", dataVo.getsName());
+        param.put("sale_code", dataVo.getsCode());
+        
         // param.put("customerIdcardno", "");
         // param.put("schemeFirstpay", "");
         // param.put("schemeMonthpay", "");

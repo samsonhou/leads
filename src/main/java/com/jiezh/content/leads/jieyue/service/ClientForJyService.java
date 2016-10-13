@@ -1,5 +1,6 @@
 package com.jiezh.content.leads.jieyue.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -19,5 +20,7 @@ public interface ClientForJyService {
     public PageInfo<ClientImportVO> getPageInfo(int curPage, ClientImportVO vo);
 
     public Map<String, Object> queryByTel(String tel);
+
+    public List<Map<String, Object>> getVoList(ClientImportVO vo);
 
 }

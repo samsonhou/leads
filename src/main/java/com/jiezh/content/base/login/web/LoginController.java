@@ -20,6 +20,7 @@ import com.jiezh.content.base.pub.author.AuthorUser;
 import com.jiezh.content.base.pub.util.SpringUtil;
 import com.jiezh.content.base.pub.web.WebAction;
 import com.jiezh.content.base.user.service.BaseUserService;
+import com.jiezh.content.leads.assign.service.WaitingAssignService;
 import com.jiezh.content.leads.service.ClientService;
 import com.jiezh.content.leads.urge.service.LmurgeService;
 import com.jiezh.dao.base.user.UserVO;
@@ -41,6 +42,8 @@ public class LoginController extends WebAction {
     // add by cj
     @Autowired
     ClientService clientService;
+    @Autowired
+    WaitingAssignService waitingAssignService;
     // add by cj
     @Autowired
     LmurgeService lmurgeService;
@@ -202,6 +205,16 @@ public class LoginController extends WebAction {
             ModelAndView mav = new ModelAndView("base/login/customer_service");
             // 查询客服待呼叫信息
             List<Map<String, Object>> customerList = clientService.queryShortTimeCustomerList(getUser().getUserId().longValue());
+            mav.addObject("size", customerList.size());
+            mav.addObject("customerList", customerList);
+            return mav;
+        }
+
+        // 管理员，返回待分配线索提醒
+        if ("1".equals(checkRole(Env.ROLE_MANAGE)) && getUser().getOrganId().equals("00")) {
+            ModelAndView mav = new ModelAndView("base/login/admin_index");
+            // 查询待分配线索信息
+            List<Map<String, Object>> customerList = waitingAssignService.queryCustomerListForAssign();
             mav.addObject("size", customerList.size());
             mav.addObject("customerList", customerList);
             return mav;

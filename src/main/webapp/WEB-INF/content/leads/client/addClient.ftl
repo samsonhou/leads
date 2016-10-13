@@ -94,7 +94,7 @@
                                 </div>
                             <label class="col-sm-2 control-label">呼叫状态</label>
                                 <div class="col-sm-4 ">
-                                   <@select type='0' codeType="1055" defValue="${clientVO.callResult!''}" fieldId="callResult" fieldName="callResult" props="datatype='*' nullmsg='请选择沟通结果' class='form-control' " />
+                                   <@select type='0' codeType="1055" defValue="${clientVO.callResult!''}" fieldId="callResult" fieldName="callResult" props="datatype='*' nullmsg='请选择呼叫状态' class='form-control' " />
                                 </div>
                             </div>
 		                 

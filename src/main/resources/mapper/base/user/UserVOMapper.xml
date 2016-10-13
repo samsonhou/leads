@@ -273,4 +273,31 @@ select a.user_name USERNAME,
 <select id="selectSmsInfo" parameterType="map" resultType="map">
 	select a.tel TEL,a.real_name NAME,b.address ADDRESS from t_user a,t_organ_company b where a.organ_id = b.organ_id and a.user_id=#{userId,jdbcType=DECIMAL} and rownum=1 
 </select>
+<select id="selectUserAndOrg" parameterType="map" resultType="map">
+	select t.organ_id ID, t.name NAME, t.parent_id PID
+	  from (select organ_id, name, parent_id
+	          from t_organ_company
+	         where status = '1' and organ_id != '6868') t
+	 start with t.organ_id = #{organId:VARCHAR}
+	connect by prior t.organ_id = t.parent_id
+	union all
+	select 'U'||to_char(a.user_id) ID,
+	       decode(b.role_id, 1, '管理员:', 3, '客服:') || a.real_name NAME,
+	       a.organ_id PID
+	  from t_user a, t_user_role b
+	 where a.user_id = b.user_id
+	   and b.role_id in 
+	   <foreach collection="roles" open="(" close=")" item="role" separator=",">
+	   		#{role:DECIMAL}
+	   </foreach>
+	   and a.status = '1'
+	   and a.organ_id != '6868'
+	   and exists (select 1
+          from (select c.organ_id, c.parent_id
+                  from t_organ_company c
+                 where c.status = '1') d
+         where d.organ_id = a.organ_id
+         start with d.organ_id = #{organId:VARCHAR}
+        connect by prior d.organ_id = d.parent_id)
+</select>
 </mapper>

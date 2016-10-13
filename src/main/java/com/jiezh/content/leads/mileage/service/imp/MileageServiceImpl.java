@@ -168,7 +168,7 @@ public class MileageServiceImpl implements MileageService {
             }
             rowList.add(cellMap);
         }
-        return ExcelUtil.export2Excel(sheetName, titles, rowList, map);
+        return ExcelUtil.export2Excel(sheetName, titles, rowList, map, null);
     }
 
     /**

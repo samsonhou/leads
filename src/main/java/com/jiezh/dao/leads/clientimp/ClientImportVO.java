@@ -43,6 +43,8 @@ public class ClientImportVO extends GeneralBean {
 
     private String couponeCode;
 
+    private String organ;
+
     public Long getId() {
         return id;
     }
@@ -193,6 +195,14 @@ public class ClientImportVO extends GeneralBean {
 
     public void setCouponeCode(String couponeCode) {
         this.couponeCode = couponeCode;
+    }
+
+    public String getOrgan() {
+        return organ;
+    }
+
+    public void setOrgan(String organ) {
+        this.organ = organ;
     }
 
 }

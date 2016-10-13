@@ -120,6 +120,27 @@ public class ClientVO extends GeneralBean {
     private String getCarStart;
     // 推送ERP
     private String toErp;
+    //分配开始时间
+    private String assignStartDate;
+    //分配结束时间
+    private String assignEndDate;
+    
+    
+    public String getAssignStartDate() {
+        return assignStartDate;
+    }
+
+    public void setAssignStartDate(String assignStartDate) {
+        this.assignStartDate = assignStartDate;
+    }
+
+    public String getAssignEndDate() {
+        return assignEndDate;
+    }
+
+    public void setAssignEndDate(String assignEndDate) {
+        this.assignEndDate = assignEndDate;
+    }
 
     public String getGetCarEnd() {
         return getCarEnd;

@@ -31,6 +31,10 @@ public class ErpDataVO extends GeneralBean {
 
     private String remark;
 
+    private String sName;
+
+    private String sCode;
+
     public Long getId() {
         return id;
     }
@@ -133,6 +137,22 @@ public class ErpDataVO extends GeneralBean {
 
     public void setSourceName(String sourceName) {
         this.sourceName = sourceName;
+    }
+
+    public String getsName() {
+        return sName;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public String getsCode() {
+        return sCode;
+    }
+
+    public void setsCode(String sCode) {
+        this.sCode = sCode;
     }
 
 }

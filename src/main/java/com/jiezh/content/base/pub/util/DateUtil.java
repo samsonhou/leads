@@ -8,6 +8,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DateUtil {
+
+    public static Date getDateOfLastMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+        return calendar.getTime();
+    }
+
     public static Timestamp getTimestamp(String sDate) {
         return Tools.getTimestamp(sDate);
     }
@@ -100,6 +108,7 @@ public class DateUtil {
     public static String getChineseDate(Date d) {
         return Tools.getChineseDate(d);
     }
+
     public static int getMonthAmount(Date startDate, Date endDate) {
         return Tools.getMonthAmount(startDate, endDate);
     }
@@ -187,8 +196,7 @@ public class DateUtil {
      */
     public static Timestamp StringToTimestamp(String pData, String pFormat) {
         Timestamp ts = null;
-        if (pData == null || "".equals(pData))
-            return null;
+        if (pData == null || "".equals(pData)) return null;
         if (pFormat.equalsIgnoreCase("YYYY-MM-DD")) {
             String date = pData.substring(0, 10);
             ts = Timestamp.valueOf(date + " 00:00:00.000000000");
@@ -218,8 +226,7 @@ public class DateUtil {
     public static String TimestampToString(Timestamp pData, String pFormat) {
         String sReturn = "";
         String division = "-";
-        if (pData == null || "".equals(pData))
-            return null;
+        if (pData == null || "".equals(pData)) return null;
         Calendar cal = Calendar.getInstance();
         cal.setTime(pData);
         int year = cal.get(Calendar.YEAR);
@@ -232,24 +239,18 @@ public class DateUtil {
         // System.out.println("am-pm==="+AMorPM);
         int hour = cal.get(Calendar.HOUR);
         // System.out.println("hour==="+hour);
-        if (AMorPM == 1)
-            hour = hour + 12;
+        if (AMorPM == 1) hour = hour + 12;
         String sHour = "" + hour;
         int minute = cal.get(Calendar.MINUTE);
         String sMinute = "" + minute;
         int second = cal.get(Calendar.SECOND);
         String sSecond = "" + second;
         // sReturn += division;
-        if (month < 10)
-            sMonth = "0" + month;
-        if (day < 10)
-            sDay = "0" + day;
-        if (hour < 10)
-            sHour = "0" + hour;
-        if (minute < 10)
-            sMinute = "0" + minute;
-        if (second < 10)
-            sSecond = "0" + second;
+        if (month < 10) sMonth = "0" + month;
+        if (day < 10) sDay = "0" + day;
+        if (hour < 10) sHour = "0" + hour;
+        if (minute < 10) sMinute = "0" + minute;
+        if (second < 10) sSecond = "0" + second;
         if (pFormat.equalsIgnoreCase("YYYY-MM-DD")) {
             // return dateToString(new Date(pData.getTime()),"-");
             sReturn = sYear + division + sMonth + division + sDay;
@@ -283,7 +284,7 @@ public class DateUtil {
      * @param date 日期
      * @param num int
      * @return blooean
-     * */
+     */
     public static boolean checkDate(String date, int num) {
         boolean bl = true;
         try {
@@ -291,7 +292,8 @@ public class DateUtil {
             Date lastTime = formatter.parse(date);
             // 把当前时间格式化成 yyyy-MM-dd HH:mm:ss 的形式
             Calendar c = Calendar.getInstance();
-            String s = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+            String s = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE) + " " + c.get(Calendar.HOUR_OF_DAY) + ":"
+                + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
 
             System.out.println("the request date:" + date);
             System.out.println("system      date:" + s);
@@ -320,7 +322,7 @@ public class DateUtil {
      * @param date 日期
      * @param num int
      * @return blooean
-     * */
+     */
     public static boolean checkMinutes(String date, int num) {
         boolean bl = true;
         try {
@@ -328,7 +330,8 @@ public class DateUtil {
             Date lastTime = formatter.parse(date);
             // 把当前时间格式化成 yyyy-MM-dd HH:mm:ss 的形式
             Calendar c = Calendar.getInstance();
-            String s = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+            String s = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE) + " " + c.get(Calendar.HOUR_OF_DAY) + ":"
+                + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
 
             System.out.println("the request date:" + date);
             System.out.println("system      date:" + s);

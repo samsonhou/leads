@@ -15,7 +15,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,6 +27,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.jiezh.content.base.pub.Env;
@@ -37,43 +40,32 @@ public class ExcelUtil {
 
     // ######################## EXCEL导出 #########################
 
-    public static byte[] export2Excel(List<String> titles, List<String> getMethods, List<Object> dataList) throws Exception {
-        return export2Excel("sheet1", titles, getMethods, dataList, null);
-    }
-
-    public static byte[] export2Excel(List<String> titles, List<String> getMethods, List<Object> dataList, Map<Integer, Integer> widthMap)
-        throws Exception {
-        return export2Excel("sheet1", titles, getMethods, dataList, widthMap);
-    }
-
-    public static byte[] export2Excel(List<String> titles, List<Map<Integer, Object>> dataList) throws Exception {
-        return export2Excel("sheet1", titles, dataList, null);
-    }
-
-    public static byte[] export2Excel(List<String> titles, List<Map<Integer, Object>> dataList, Map<Integer, Integer> widthMap) throws Exception {
-        return export2Excel("sheet1", titles, dataList, widthMap);
-    }
-
     /**
-     * 数据导出到EXCEL表格 - 填充已格式化的Excel表格数据
+     * 将静态数据导出到Excel
      * 
-     * @param sheetName Sheet页名称
-     * @param titles 标题列
-     * @param dataList Excel表格数据
-     * @param widthMap 指定列宽
+     * @param sheetName sheet页名称
+     * @param titles 标题名称
+     * @param dataList 静态数据
+     * @param widthMap 自定列宽
+     * @param header sheet页表格头名称
      * @return
      * @throws Exception
      */
-    public static byte[] export2Excel(String sheetName, List<String> titles, List<Map<Integer, Object>> dataList, Map<Integer, Integer> widthMap)
-        throws Exception {
+    public static byte[] export2Excel(String sheetName, List<String> titles, List<Map<Integer, Object>> dataList, Map<Integer, Integer> widthMap,
+        String header) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             Workbook workbook = new HSSFWorkbook();
             // 创建sheet页
-            Sheet sheet = createExcel(workbook, sheetName, titles, widthMap);
+            Sheet sheet = createExcel(workbook, sheetName, titles, widthMap, header);
             // 写入数据
             for (int i = 0; i < dataList.size(); i++) {
-                Row row = sheet.createRow(i + 1); // 从第二行开始填充
+                Row row;
+                if (StringUtils.isBlank(header)) {
+                    row = sheet.createRow(i + 1); // 从第二行开始填充
+                } else {
+                    row = sheet.createRow(i + 2);
+                }
                 Map<Integer, Object> valueMap = dataList.get(i);
                 for (Map.Entry<Integer, Object> entry : valueMap.entrySet()) {
                     Cell dataCell = row.createCell(entry.getKey());
@@ -105,7 +97,7 @@ public class ExcelUtil {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             Workbook workbook = new HSSFWorkbook();
-            Sheet sheet = createExcel(workbook, sheetName, titles, widthMap);
+            Sheet sheet = createExcel(workbook, sheetName, titles, widthMap, null);
             // 写入数据
             for (int i = 0; i < dataList.size(); i++) {
                 Row row = sheet.createRow(i + 1); // 从第二行开始填充
@@ -124,11 +116,23 @@ public class ExcelUtil {
     }
 
     // 构建EXCEL表格
-    private static Sheet createExcel(Workbook workbook, String sheetName, List<String> titles, Map<Integer, Integer> widthMap) {
+    private static Sheet createExcel(Workbook workbook, String sheetName, List<String> titles, Map<Integer, Integer> widthMap, String header) {
         // 创建sheet页
         Sheet sheet = workbook.createSheet(sheetName);
-        // 创建表头 - 第一行作为表头
-        Row titleRow = sheet.createRow(0);
+        // 创建表头
+        Row titleRow;
+        if (StringUtils.isBlank(header)) {
+            titleRow = sheet.createRow(0);
+        } else {
+            CellRangeAddress titleRange = new CellRangeAddress(0, 0, 0, titles.size() - 1);
+            sheet.addMergedRegion(titleRange);
+            Row headerRow = sheet.createRow(0);
+            Cell headerCell = headerRow.createCell(0);
+            headerCell.setCellValue(header);
+            headerCell.setCellStyle(initHeaderStyle(workbook));
+            headerRow.setHeight((short) 500);
+            titleRow = sheet.createRow(1);
+        }
         titleRow.setHeight((short) 350);
         // 写入表头名称
         for (int i = 0; i < titles.size(); i++) {
@@ -174,6 +178,16 @@ public class ExcelUtil {
     }
 
     // 设置表头字体
+    private static Font initHeaderFont(Workbook workbook) {
+        Font titleFont = workbook.createFont(); // 表头字体
+        titleFont.setFontName("宋体");
+        titleFont.setFontHeightInPoints((short) 16);
+        titleFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        titleFont.setCharSet(Font.DEFAULT_CHARSET);
+        titleFont.setColor(IndexedColors.BLACK.index);
+        return titleFont;
+    }
+
     private static Font initTitleFont(Workbook workbook) {
         Font titleFont = workbook.createFont(); // 表头字体
         titleFont.setFontName("宋体");
@@ -195,12 +209,29 @@ public class ExcelUtil {
     }
 
     // 设置表头样式
+    private static CellStyle initHeaderStyle(Workbook workbook) {
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setAlignment(CellStyle.ALIGN_CENTER); // 表头样式
+        headerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        headerStyle.setFont(initHeaderFont(workbook));
+        headerStyle.setWrapText(true);
+        headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        return headerStyle;
+    }
+
     private static CellStyle initTitleStyle(Workbook workbook) {
         CellStyle titleStyle = workbook.createCellStyle();
         titleStyle.setAlignment(CellStyle.ALIGN_CENTER); // 表头样式
         titleStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         titleStyle.setFont(initTitleFont(workbook));
         titleStyle.setWrapText(true);
+        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
         return titleStyle;
     }
 
@@ -211,6 +242,10 @@ public class ExcelUtil {
         dataStyle.setVerticalAlignment(CellStyle.VERTICAL_TOP);
         dataStyle.setFont(initDataFont(workbook));
         dataStyle.setWrapText(true);
+        dataStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        dataStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        dataStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        dataStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
         return dataStyle;
     }
 

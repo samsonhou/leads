@@ -116,9 +116,10 @@ public class SearchController extends WebAction {
     public ModelAndView index() throws Exception {
         ModelAndView mv = new ModelAndView("leads/search/clientlist");
         Page<ClientVO> page = new Page<ClientVO>();
-
+        ClientVO clientVo = new ClientVO();
         AuthorUser user = getUser();
         String flag = "";
+
         // 是否管理员 管理员查询它所在机构下所有的
         if ("1".endsWith(checkRole(Env.ROLE_MANAGE)) && user.getOrganId().equals("00")) {
             // add by cj
@@ -127,13 +128,19 @@ public class SearchController extends WebAction {
             // add by cj
             flag = "1";
         }
+
         mv.addObject("flag", flag);
 
         mv.addObject("page", new PageInfo<ClientVO>(page));
-        mv.addObject("clientVO", new ClientVO());
+        mv.addObject("clientVO", clientVo);
         mv.addObject("count", clientService.getClientCount());
         // add by cj
         mv.addObject("ogId", user.getOrganId());
+        // 捷越管理员视为总部管理员
+        if ("6868".equals(user.getOrganId())) {
+            clientVo.setFromtype(1001001010);// 只能查询来源为捷越的线索
+            mv.addObject("ogId", "00");
+        }
         return mv;
     }
 
@@ -149,6 +156,7 @@ public class SearchController extends WebAction {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
         }
         AuthorUser user = getUser();
+
         clientVO.setRid(user.getUserId().intValue());
         clientVO.setSysOrganCode(user.getOrganCode());
         clientVO.setCompanyid(user.getOrganId());
@@ -164,14 +172,22 @@ public class SearchController extends WebAction {
         clientVO.setTitle(etime);
         clientVO.setGetCarStart(getCarStart);
         clientVO.setGetCarEnd(getCarEnd);
-        
+
         String flag = "";
         if ("1".endsWith(checkRole(Env.ROLE_MANAGE))) {
-            clientVO.setCadTmp(companyid);
+            clientVO.setCadTmp(companyid); // 管理员查询所选机构
             flag = "0";
         } else {
-            clientVO.setCadTmp(user.getOrganId());
+            clientVO.setCadTmp(user.getOrganId());// 非管理员查询本级机构
             flag = "1";
+        }
+        // 当为捷越用户时，只查询捷越来源的线索
+        if ("6868".equals(user.getOrganId())) {
+            clientVO.setFromtype(1001001010);
+            clientVO.setCadTmp(companyid);
+            mv.addObject("ogId", "00");
+        }else{
+            mv.addObject("ogId", user.getOrganId());
         }
         mv.addObject("flag", flag);
 
@@ -185,10 +201,8 @@ public class SearchController extends WebAction {
         mv.addObject("dealPerson", dealPerson);
         mv.addObject("stnextdate", stime);
         mv.addObject("nextdate", etime);
-        mv.addObject("ogId", user.getOrganId());
         mv.addObject("getCarStart", getCarStart);
         mv.addObject("getCarEnd", getCarEnd);
-        
 
         mv.addObject("organId", clientVO.getCadTmp());
         mv.addObject("count", clientService.getClientCount());
@@ -312,12 +326,12 @@ public class SearchController extends WebAction {
         String getCarEnd = request.getParameter("getCarEnd");
         clientVO.setGetCarStart(getCarStart);
         clientVO.setGetCarEnd(getCarEnd);
-        
+
         // 查询条件临时存进去vo
         clientVO.setEmail(stime);
         clientVO.setTitle(etime);
         clientVO.setCadTmp(companyid);
-
+        
         mv.addObject("clientVO", clientVO);
         mv.addObject("dealPerson", dealPerson);
         mv.addObject("stnextdate", stime);
@@ -371,7 +385,7 @@ public class SearchController extends WebAction {
         paras.put("month", month == null || "".equals(month) ? date : month);
         paras.put("plan_num", num);
         Map<String, Object> result = clientService.getPlan(paras);
-        int count = clientService.updatePlan(result, paras);
+        clientService.updatePlan(result, paras);
         response.getWriter().print("保存成功!");
         return null;
     }
@@ -389,7 +403,6 @@ public class SearchController extends WebAction {
     @ResponseBody
     public String getData(String id, String num) throws Exception {
         String date = new SimpleDateFormat("yyyy-MM").format(new Date());
-        Map<String, Object> paras = new HashMap<String, Object>();
         response.getWriter().print(date);
         return null;
     }
@@ -482,4 +495,5 @@ public class SearchController extends WebAction {
         os.close();
         return null;
     }
+
 }

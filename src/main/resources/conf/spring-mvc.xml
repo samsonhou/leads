@@ -11,12 +11,25 @@
     http://www.springframework.org/schema/mvc
     http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 	<context:component-scan base-package="com.jiezh">
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
-	
+
 	<mvc:interceptors>
 		<bean class="com.jiezh.content.base.pub.web.SessionInterceptor"></bean>
 		<bean class="com.jiezh.content.base.pub.token.TokenInterceptor"></bean>
@@ -28,29 +41,31 @@
 		<property name="supportedMediaTypes">
 			<list>
 				<value>text/html;charset=UTF-8</value>
+				<value>text/plain;charset=UTF-8</value>
 			</list>
 		</property>
 	</bean>
-
+	
 	<bean id="freemarkerResolver"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="order" value="1" />
 		<property name="suffix" value=".ftl" />
 		<property name="contentType" value="text/html;charset=utf-8" />
-		<property name="exposeRequestAttributes" value="true" /> 
-	    <property name="exposeSessionAttributes" value="true" /> 
-	    <property name="exposeSpringMacroHelpers" value="true" /> 
-	    <property name="requestContextAttribute" value="request" />
-	    <property name="viewClass">
-		  <value>org.springframework.web.servlet.view.freemarker.FreeMarkerView</value>
-	    </property>
-	    <property name="attributesMap">
-	    	<map>
-	    		<entry key="htmlUtil">
-	    			<bean class="com.jiezh.content.base.pub.tag.HtmlUtil"/>
-	    		</entry>
-	    	</map>
-	    </property>
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="requestContextAttribute" value="request" />
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.freemarker.FreeMarkerView
+			</value>
+		</property>
+		<property name="attributesMap">
+			<map>
+				<entry key="htmlUtil">
+					<bean class="com.jiezh.content.base.pub.tag.HtmlUtil" />
+				</entry>
+			</map>
+		</property>
 	</bean>
 
 	<bean id="freemarkerConfig"
@@ -76,7 +91,8 @@
 			</props>
 		</property>
 	</bean>
-	<!-- 支持上传文件 --> 
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/> 
+	<!-- 支持上传文件 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
 </beans>

@@ -118,4 +118,13 @@ public interface BaseUserDao {
     void updateBatchUserLock(Map<String, Object> map);
 
     Map<String, Object> selectSmsInfo(Map<String, Object> map);
+
+    /**
+     * 查询用户及机构信息
+     * 
+     * @param
+     * @return
+     *         Exception
+     */
+    List<Map<String, Object>> selectUserAndOrg(Map<String, Object> map);
 }

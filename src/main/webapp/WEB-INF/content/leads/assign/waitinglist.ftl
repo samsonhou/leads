@@ -66,6 +66,7 @@
                             <th style="text-align: center;">手机</th>
                             <th style="text-align: center;">城市</th>
                             <th style="text-align: center;">来源</th>
+                            <th style="text-align: center;">录入时间</th>
                             <th style="text-align: center;">状态</th>
 					 	</tr>
 					 </thead>
@@ -80,6 +81,7 @@
                                         <td>${client.tel}</td>
                                         <td>${client.city}</td>
                                         <td>${client.fromTypeDesc}</td>
+                                        <td>${(client.createdTime)?string('yyyy-MM-dd hh:mm:ss')}</td>
                                         <td>${(client.status='1')?string('已分配','未分配')}</td>
                                     </tr>  
                                     </#list>

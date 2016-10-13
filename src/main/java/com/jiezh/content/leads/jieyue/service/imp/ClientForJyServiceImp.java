@@ -2,6 +2,7 @@ package com.jiezh.content.leads.jieyue.service.imp;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,18 @@ public class ClientForJyServiceImp implements ClientForJyService {
     @Override
     public PageInfo<ClientImportVO> getPageInfo(int curPage, ClientImportVO vo) {
         PageHelper.startPage(curPage, Env.PAGE_SIZE);
-        vo.setFromTypeBig("3");
         vo.setFromType("1001001010");
         Page<ClientImportVO> page = (Page<ClientImportVO>) clientImportVODao.selectByVo(vo);
         if (page == null) {
             page = new Page<>();
         }
         return new PageInfo<ClientImportVO>(page);
+    }
+    
+    @Override
+    public List<Map<String, Object>> getVoList(ClientImportVO vo) {
+        vo.setFromType("1001001010");
+        return clientImportVODao.selectAllStringByVo(vo);
     }
 
     @Override

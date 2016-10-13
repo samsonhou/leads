@@ -199,8 +199,12 @@ public interface ClientDao {
     List<Map<String, Object>> queryShortTimeCustomerList(long rid);
 
     String queryUserRoleByUserId(Long userId);
-    
+
     ErpDataVO selectErpInfoById(long clientId);
-    //属性不为空更新 
+
+    // 属性不为空更新
     int updateByPrimaryKeySelective(ClientVO record);
+
+    // 调用存过，处理工作交接
+    public void dealHandover(Map<String, Object> param);
 }

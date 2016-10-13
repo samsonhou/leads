@@ -420,7 +420,6 @@
 			<if test="tel != null and '' != tel">
 				AND lmc.tel like '%${tel}%'
 			</if>
-			AND lmc.companyid in (select t.organ_id from t_organ_company t where t.status='1' start with t.organ_id = #{companyid,jdbcType=VARCHAR} connect by prior t.organ_id = t.parent_id)
 		</where>
 		order by lmc.id desc
 	</select>
@@ -435,7 +434,7 @@
 		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype) FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
-		'YYYY-MM-DD') QDATE,
+		'yyyy-MM-dd hh:mm') QDATE,
 		nvl((select title from LM_CATEGORY where
 		ID=lmc.big_pid),'') BIG_PID,
 		nvl((select title from LM_CATEGORY where
@@ -636,9 +635,7 @@
 		lmc.TEL,
 		lmc.PERSONID,
 		lmc.EMAIL,
-		nvl((select name from t_code_item where code_item_id =
-		lmc.fromtype),'')
-		FROMTYPE,
+		(select listagg(a.name,'-')  within group(order by a.code_level) from t_base_source a connect by prior a.pid=a.code start with a.code=lmc.fromtype) FROMTYPE,
 		lmc.title TITLE,
 		to_char(lmc.QDATE,
 		'YYYY-MM-DD') QDATE,
@@ -932,6 +929,9 @@
 		<if test="rid != null and 0 != rid">
 			RID=#{rid},
 		</if>
+		<if test="qdate != null">
+			QDATE = #{qdate:TIMESTAMP},
+		</if>
 		ALLOTDATE=SYSDATE
 		where id in
 		<foreach item="item" index="index" collection="ids" open="("
@@ -1060,6 +1060,14 @@
 			<if test="ifurgent != null and '' != ifurgent">
 				AND lmc.ifurgent = #{ifurgent,jdbcType=CHAR}
 			</if>
+			<if test="assignStartDate != null and '' != assignStartDate">
+				AND lmc.allotdate >= to_date(#{assignStartDate:VARCHAR}||' 00:00:00','yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="assignEndDate != null and '' != assignEndDate">
+			
+				AND lmc.allotdate <![CDATA[<= ]]> to_date(#{assignEndDate:VARCHAR}||' 23:59:59','yyyy-mm-dd hh24:mi:ss')
+			</if>
+			
 		</where>
 		order by IFURGENT desc, lmc.id desc
 	</select>
@@ -1178,6 +1186,10 @@
 			lmc.rid = b.user_id and lmc.sex = '1'
 			<if test="tel != null and '' != tel">
 				AND lmc.tel like '%${tel}%'
+			</if>
+			<if test="companyid != null">
+				AND (lmc.companyid in (select t.organ_id from t_organ_company t where t.status='1' start with t.organ_id = #{companyid,jdbcType=VARCHAR} connect by prior t.organ_id = t.parent_id)
+				     or lmc.companyid is null)
 			</if>
 		</where>
 		order by IFURGENT desc, lmc.id desc
@@ -1539,6 +1551,11 @@
 		parameterType="map">
   	<![CDATA[  
     {call analyze_repleat_client (#{in_organ_id,mode=IN,jdbcType=VARCHAR},#{in_start_date,mode=IN,jdbcType=VARCHAR},#{in_end_date ,mode=IN,jdbcType=VARCHAR},#{in_query_id,mode=OUT,jdbcType=VARCHAR})}  
+	]]>
+	</select>
+	<select id="dealHandover" statementType="CALLABLE">
+  	<![CDATA[  
+    {call pro_handover (#{sid,mode=IN,jdbcType=DECIMAL},#{companyid,mode=IN,jdbcType=VARCHAR},#{count ,mode=OUT,jdbcType=DECIMAL},#{msg,mode=OUT,jdbcType=VARCHAR})}  
 	]]>
 	</select>
 
@@ -2953,10 +2970,13 @@
 	       a.tel         clientTel,
 	       a.fromtype    sourceCode,
 	       b.name        sourceName,
-	       c.store_id    organCode
+	       c.store_id    organCode,
+	       d.real_name   sName,
+	       d.jz_code     sCode 
 	  from lm_client a
 	  left join t_base_source b on a.fromtype = b.code
 	  left join t_organ_syn c on a.companyid = c.organ_id
+	  left join t_user  d on a.sid = d.user_id
 	 where a.id = #{clientId,jdbcType=DECIMAL}
 	</select>
 </mapper>

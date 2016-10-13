@@ -27,4 +27,9 @@ public interface ClientImportVODao {
     String queryCodeByLabel(String label);
 
     int queryClientIsExistByTel(String tel);
+
+    List<Map<String, Object>> queryCustomerListForAssign();
+    
+    //查询所有字段都为中午字符串
+    List<Map<String, Object>> selectAllStringByVo(ClientImportVO vo);
 }

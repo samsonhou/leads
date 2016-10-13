@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiezh.dao.leads.jdstore.JDStoreDao">
+
+	<!-- 保存店铺交易信息-->
+	<insert id="insertJDStoreTransaction" parameterType="com.jiezh.dao.leads.jdstore.JDStoreVO">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT S_PURCHASE_JDSTORE.NEXTVAL AS id FROM DUAL
+		</selectKey>
+		INSERT INTO T_PURCHASE_JDSTORE(
+			ID, CLIENT_NAME, IDCARD, 
+			TEL, PRODUCT_TYPE, ORDER_NO, 
+			ORDER_STATUS, ORDER_AMOUNT, PAY_TIME,
+			STORE_ID, SIGNED_USER, CONTRACT_NO,
+			CAR_TYPE, CAR_VIN, CREATE_USER,
+			CREATE_DATE
+		) VALUES (
+			#{id:DECIMAL},#{clientName:VARCHAR},#{idcard:VARCHAR},
+			#{tel:VARCHAR},#{productType:VARCHAR},#{orderNo:VARCHAR},
+			#{orderStatus:VARCHAR},#{orderAmount:DECIMAL},#{payTime:TIMESTAMP},
+			#{storeId:VARCHAR},#{signedUser:VARCHAR},#{contractNo:VARCHAR},
+			#{carType:VARCHAR},#{carVin:VARCHAR},#{createUser:DECIMAL},
+			SYSDATE
+		)
+	</insert>
+	
+	<!-- 更新交易基本信息 -->
+	<update id="updateJDStoreTransaction" parameterType="com.jiezh.dao.leads.jdstore.JDStoreVO">
+		UPDATE T_PURCHASE_JDSTORE 
+			SET CLIENT_NAME = #{clientName:VARCHAR},
+				IDCARD = #{idcard:VARCHAR},
+				TEL = #{tel:VARCHAR}, 
+				PRODUCT_TYPE = #{productType:VARCHAR}, 
+				ORDER_NO = #{orderNo:VARCHAR}, 
+				ORDER_STATUS = #{orderStatus:VARCHAR}, 
+				ORDER_AMOUNT = #{orderAmount:DECIMAL},
+				PAY_TIME = #{payTime:TIMESTAMP},
+				STORE_ID = #{storeId:VARCHAR},
+				SIGNED_USER = #{signedUser:VARCHAR},
+				CONTRACT_NO = #{contractNo:VARCHAR},
+				CAR_TYPE = #{carType:VARCHAR},
+				CAR_VIN = #{carVin:VARCHAR},
+				UPDATE_USER = #{updateUser:DECIMAL},
+				UPDATE_DATE = SYSDATE
+		WHERE ID = #{id:DECIMAL}
+	</update>
+	
+	<!-- 查询单条交易明细 -->
+	<select id="queryJDStoreTransactionById" parameterType="java.lang.Long" resultMap="jdstoreMap">
+		SELECT S.ID, S.CLIENT_NAME, S.IDCARD, S.TEL,
+	      S.PRODUCT_TYPE, S.ORDER_NO, S.ORDER_STATUS, S.ORDER_AMOUNT,
+	      S.PAY_TIME, S.STORE_ID, C.NAME AS STORE_NAME, S.SIGNED_USER, S.CONTRACT_NO,
+	      S.CAR_TYPE, S.CAR_VIN, S.CREATE_USER, S.CREATE_DATE, 
+	      S.UPDATE_USER, S.UPDATE_DATE 
+	    FROM T_PURCHASE_JDSTORE S LEFT JOIN T_ORGAN_COMPANY C 
+	         ON S.STORE_ID=C.ORGAN_ID  
+       	WHERE S.ID = #{id:DECIMAL}
+	</select>
+	
+	<!-- 分页查询店铺交易信息 -->
+	<select id="queryJDStoreTransactionList" parameterType="com.jiezh.dao.leads.jdstore.JDStoreVO" resultMap="jdstoreMap">
+		SELECT S.ID, S.CLIENT_NAME, S.IDCARD, S.TEL,
+			S.PRODUCT_TYPE, S.ORDER_NO, S.ORDER_STATUS, S.ORDER_AMOUNT,
+			S.PAY_TIME, S.STORE_ID, C.NAME AS STORE_NAME, S.SIGNED_USER, S.CONTRACT_NO,
+			S.CAR_TYPE, S.CAR_VIN, S.CREATE_USER, S.CREATE_DATE, 
+			S.UPDATE_USER, S.UPDATE_DATE 
+		FROM T_PURCHASE_JDSTORE S LEFT JOIN T_ORGAN_COMPANY C 
+		     ON S.STORE_ID=C.ORGAN_ID 
+		<where>
+			<if test="clientName != null and '' != clientName">
+				AND S.CLIENT_NAME LIKE '%${clientName}%'
+			</if>
+			<if test="tel != null and '' != tel">
+				AND S.TEL LIKE '%${tel}%'
+			</if>
+			<if test="idcard != null and '' != idcard">
+				AND S.IDCARD LIKE '%${idcard}%'
+			</if>
+			<if test="orderNo != null and '' != orderNo">
+				AND S.ORDER_NO LIKE '%${orderNo}%'
+			</if>
+			<if test="contractNo != null and '' != contractNo">
+				AND S.CONTRACT_NO LIKE '%${contractNo}%'
+			</if>
+			<if test="lastMonthDate != null">
+			<![CDATA[
+				AND S.CREATE_DATE >= #{lastMonthDate:TIMESTAMP}
+			]]>
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 交易明细Map -->
+	<resultMap id="jdstoreMap" type="com.jiezh.dao.leads.jdstore.JDStoreVO">
+		<id column="ID" property="id"/>
+		<result column="CLIENT_NAME" property="clientName"/>
+		<result column="IDCARD" property="idcard"/>
+		<result column="TEL" property="tel"/>
+		<result column="PRODUCT_TYPE" property="productType"/>
+		<result column="ORDER_NO" property="orderNo"/>
+		<result column="ORDER_STATUS" property="orderStatus"/>
+		<result column="ORDER_AMOUNT" property="orderAmount"/>
+		<result column="PAY_TIME" property="payTime"/>
+		<result column="STORE_ID" property="storeId"/>
+		<result column="STORE_NAME" property="storeName"/>
+		<result column="SIGNED_USER" property="signedUser"/>
+		<result column="CONTRACT_NO" property="contractNo"/>
+		<result column="CAR_TYPE" property="carType"/>
+		<result column="CAR_VIN" property="carVin"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+		
+</mapper>

@@ -22,4 +22,6 @@ public interface WaitingAssignService {
     public int processAssign(AuthorUser user, Map<String, Object> param);
 
     public Map<String, Object> importExcel(InputStream in, String fileName, AuthorUser currenUser) throws Exception;
+
+    public List<Map<String, Object>> queryCustomerListForAssign();
 }

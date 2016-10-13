@@ -1,5 +1,6 @@
 package com.jiezh.content.base.user.web;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,21 +108,21 @@ public class UserController extends WebAction {
         vo = baseUserService.findOne(userId);
         AuthorUser voUser = getUser();
         RoleVO roleVO = new RoleVO();
-        //modify by hjq for JZLM-89
-       if("3".equals(voUser.getOrganLevel())){
-           vo.setOrganId(voUser.getOrganId());
+        // modify by hjq for JZLM-89
+        if ("3".equals(voUser.getOrganLevel())) {
+            vo.setOrganId(voUser.getOrganId());
             vo.setOrganCode(voUser.getOrganCode());
             vo.setOrganName(voUser.getOrganName());
             vo.setOrganCompanyName(voUser.getOrganCompanyName());
             roleVO.setId(2); // 2 为销售 角色
-       }
-//        if (!"00".equals(voUser.getOrganId())) { // 分公司人 员
-//            vo.setOrganId(voUser.getOrganId());
-//            vo.setOrganCode(voUser.getOrganCode());
-//            vo.setOrganName(voUser.getOrganName());
-//            vo.setOrganCompanyName(voUser.getOrganCompanyName());
-//            roleVO.setId(2); // 2 为销售 角色
-//        }
+        }
+        // if (!"00".equals(voUser.getOrganId())) { // 分公司人 员
+        // vo.setOrganId(voUser.getOrganId());
+        // vo.setOrganCode(voUser.getOrganCode());
+        // vo.setOrganName(voUser.getOrganName());
+        // vo.setOrganCompanyName(voUser.getOrganCompanyName());
+        // roleVO.setId(2); // 2 为销售 角色
+        // }
         List<RoleVO> usreRoles = baseUserService.selectUsreRoles(roleVO); // 全部角色
         List<RoleVO> selectrole = baseUserService.selectUsreRolesByUserId(userId); // 当前用户选择过的角色
         for (int i = 0; i < usreRoles.size(); i++) {
@@ -157,21 +158,21 @@ public class UserController extends WebAction {
         UserVO vo = new UserVO();
         AuthorUser voUser = getUser();
         RoleVO roleVO = new RoleVO();
-      //modify by hjq for JZLM-89
-        if("3".equals(voUser.getOrganLevel())){
+        // modify by hjq for JZLM-89
+        if ("3".equals(voUser.getOrganLevel())) {
             vo.setOrganId(voUser.getOrganId());
-             vo.setOrganCode(voUser.getOrganCode());
-             vo.setOrganName(voUser.getOrganName());
-             vo.setOrganCompanyName(voUser.getOrganCompanyName());
-             roleVO.setId(2); // 2 为销售 角色
+            vo.setOrganCode(voUser.getOrganCode());
+            vo.setOrganName(voUser.getOrganName());
+            vo.setOrganCompanyName(voUser.getOrganCompanyName());
+            roleVO.setId(2); // 2 为销售 角色
         }
-//        if (!"00".equals(voUser.getOrganId())) { // 分公司人 员
-//            vo.setOrganId(voUser.getOrganId());
-//            vo.setOrganCode(voUser.getOrganCode());
-//            vo.setOrganName(voUser.getOrganName());
-//            vo.setOrganCompanyName(voUser.getOrganCompanyName());
-//            roleVO.setId(2); // 2 为销售 角色
-//        }
+        // if (!"00".equals(voUser.getOrganId())) { // 分公司人 员
+        // vo.setOrganId(voUser.getOrganId());
+        // vo.setOrganCode(voUser.getOrganCode());
+        // vo.setOrganName(voUser.getOrganName());
+        // vo.setOrganCompanyName(voUser.getOrganCompanyName());
+        // roleVO.setId(2); // 2 为销售 角色
+        // }
 
         List<RoleVO> list = baseUserService.selectUsreRoles(roleVO);
         vo.setTemproles(list);
@@ -282,5 +283,17 @@ public class UserController extends WebAction {
         Map<String, String> result = new HashMap<String, String>();
         result.put("ischeck", baseUserService.checkUserOnly(userCode, userId));
         return result;
+    }
+
+    @RequestMapping("userTree")
+    @ResponseBody
+    public void userTree() throws Exception {
+        AuthorUser user = getUser();
+        String roles = request.getParameter("roles");
+        Map<String, Object> param = new HashMap<>();
+        param.put("roles", Arrays.asList(roles.split(",")));
+        param.put("organId", user.getOrganId());
+
+        response.getWriter().print(baseUserService.getUserAndOrg(param));
     }
 }

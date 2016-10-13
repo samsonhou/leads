@@ -289,9 +289,8 @@
 	                            <div class="col-sm-4 col-sm-offset-8">
 	                                  <input id="btn" name ="btn" type="button" value="提 交" onclick="save();" class="btn btn-sm btn-primary zd-btn-pd1"  data-toggle="modal" data-target="#myModal">
 	                             	  &nbsp; &nbsp; 
-	                             	  <!--
 	                                  <input id="btn" name ="btn" type="button" value="进件" onclick="toErp();" ${(cMap.TOERP=='1')?string('disabled','')} class="btn btn-sm btn-primary zd-btn-pd1"  data-toggle="modal" data-target="#myModal">
-	                             	  &nbsp; &nbsp; -->
+	                             	  &nbsp; &nbsp;
 	                            	  <input type="button" value="关 闭" id="closeBtn" onclick="closeWin();" class="btn btn-sm btn-primary zd-btn-pd1" >
 	                             </div>
                             </div>

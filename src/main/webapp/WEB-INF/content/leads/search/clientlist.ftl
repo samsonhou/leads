@@ -74,20 +74,6 @@ div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:w
 		    			  			<input type="text" readonly name="nextdate" id="nextdate" value="${nextdate!''}" maxlength="30"  placeholder="结束日期" class="form-control layer-date" >
                                 </div>
                                 <label class="col-sm-2 control-label">来源</label>
-                                <!--
-                                 <div class="col-sm-2">
-                                    <@select type='0' codeType="1044" defValue="${clientVO.fromtypeBig}" fieldId="fromtypeBig" fieldName="fromtypeBig" props=" datatype='*' nullmsg='请选择线索来源' class='form-control' " />
-                                </div>
-                                <div class="col-sm-2">
-                                    <select style='display:none;'  class='form-control fromtype'"></select>
-                                    <div class="fromtype" style='display:none;'>
-                                    <div id="magicsuggest_1022"></div>
-                                	<input type="hidden" id="fromtype" name="fromtype" value="${clientVO.fromtype}" class="form-control">
-                                	</div>
-                                    <input id="channel" name="channel" value="${clientVO.channel}" placeholder="请填写" style='display:none;' class='form-control fromtype'/>
-                                    <@select type='1' codeType="1046" defValue="${clientVO.fromtype}" fieldId="fromtype" fieldName="fromtype" paramName="pid" paramValue="0" props=" style='display:none;' class='form-control fromtype'" />
-                                </div>   
-                                -->
                                 <div class="select_org">
                                 <@fromtype defValue="${clientVO.fromtype}" props=" class='form-control' "/>
 								</div>   

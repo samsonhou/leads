@@ -188,6 +188,10 @@ public class WaitingAssignServiceImp implements WaitingAssignService {
         }
     }
 
+    public List<Map<String, Object>> queryCustomerListForAssign() {
+        return clientImportVODao.queryCustomerListForAssign();
+    }
+
     public String getSourceCode(String label, StringBuilder errorMsg) throws Exception {
         String code = clientImportVODao.queryCodeByLabel(label);
         if (StringUtils.isBlank(code)) {

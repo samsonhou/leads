@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,7 @@ public class WaitingAssignController extends WebAction {
         ClientImportVO vo = (ClientImportVO) getBean(ClientImportVO.class);
         String fromType = request.getParameter("code");
         vo.setFromType(fromType);
-        
+
         int currenPage = 1;
         if (request.getParameter("currenPage") != null && !"".equals(request.getParameter("currenPage"))) {
             currenPage = Integer.parseInt(request.getParameter("currenPage"));
@@ -65,6 +66,10 @@ public class WaitingAssignController extends WebAction {
     public ModelAndView toAssginPage() throws Exception {
         ModelAndView mv = new ModelAndView("leads/assign/waitinginfo");
         String assginItems = request.getParameter("assginItems");
+        String type = request.getParameter("from");
+        if (StringUtils.equals("index", type)) {
+            mv.setViewName("leads/assign/waitinginfo2");
+        }
         Map<String, Object> param = new HashMap<>();
         if (assginItems != null && !"".equals(assginItems)) {
             param.put("ids", Arrays.asList(assginItems.split(",")));
@@ -81,6 +86,10 @@ public class WaitingAssignController extends WebAction {
         String newUserId = request.getParameter("newUserId");
         String newUserOrganId = request.getParameter("newUserOrganId");
         String newUserCode = request.getParameter("newUserCode");
+        String type = request.getParameter("from");
+        if (StringUtils.equals("index", type)) {
+            mv.setViewName("leads/assign/waitinginfo2");
+        }
 
         Map<String, Object> param = new HashMap<>();
         param.put("ids", ids);
